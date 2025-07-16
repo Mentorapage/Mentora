@@ -1751,11 +1751,9 @@ function initGraduationCapAnimation() {
   
   console.log('Found elements:', { heroCap, navCap, mainContent });
   
-  // Start with nav cap hidden and main content hidden
+  // Start with nav cap hidden only
   navCap.style.opacity = '0';
   navCap.style.transform = 'scale(0)';
-  mainContent.style.opacity = '0';
-  mainContent.style.transform = 'translateY(20px)';
   
   // After 2 seconds (entrance animation completes), start the flight animation
   setTimeout(() => {
@@ -1777,10 +1775,8 @@ function testAnimation() {
   if (heroCap && navCap && mainContent) {
     console.log('Elements found, triggering animation...');
     
-    // Reset main content to hidden state
-    mainContent.classList.remove('visible');
-    mainContent.style.opacity = '0';
-    mainContent.style.transform = 'translateY(20px)';
+    // Reset main content animation
+    mainContent.classList.remove('animate-in');
     
     // Use pure JavaScript animation
     animateCapToNav(heroCap, navCap);
@@ -1886,10 +1882,10 @@ function animateCapToNav(heroCap, navCap) {
       // Phase 3: Ensure text is in final position
       navTitle.style.marginLeft = '12px';
       
-      // Phase 4: Show main content with smooth transition
+      // Phase 4: Add subtle animation to main content
       setTimeout(() => {
-        mainContent.classList.add('visible');
-        console.log('Main content should now be visible');
+        mainContent.classList.add('animate-in');
+        console.log('Main content animation added');
       }, 500); // Small delay for smooth transition
       
       console.log('Nav cap integrated seamlessly into header');

@@ -117,13 +117,12 @@
 
 /* Main content smooth entry animation */
 #main-content {
-  opacity: 0;
-  transform: translateY(20px);
+  opacity: 1;
+  transform: translateY(0);
   transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-  transition-delay: 2.5s; /* Delay until logo animation completes */
 }
 
-#main-content.visible {
+#main-content.animate-in {
   opacity: 1;
   transform: translateY(0);
 }
