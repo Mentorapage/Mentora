@@ -441,6 +441,10 @@ function matchesLanguages(tutor, selectedLanguages) {
 
 // Vercel serverless function handler
 export default async function handler(req, res) {
+  console.log('🚀 AI Tutor endpoint called');
+  console.log('📝 Method:', req.method);
+  console.log('🔑 OpenAI Key available:', process.env.OPENAI_API_KEY ? 'Yes' : 'No');
+  
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -448,29 +452,36 @@ export default async function handler(req, res) {
   
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
+    console.log('✅ CORS preflight request handled');
     res.status(200).end();
     return;
   }
   
   // Only allow POST requests
   if (req.method !== 'POST') {
+    console.log('❌ Method not allowed:', req.method);
     return res.status(405).json({ error: 'Method not allowed' });
   }
   
   try {
     const { prompt, conversationState } = req.body;
     
+    console.log('📨 Request body:', { prompt: prompt?.substring(0, 50) + '...', conversationState });
+    
     if (!prompt || typeof prompt !== 'string') {
+      console.log('❌ Invalid prompt:', prompt);
       return res.status(400).json({ error: 'Invalid prompt' });
     }
     
     console.log('🤖 Using EXACT filter logic for AI response');
     const result = await strictStepByStepProcess(prompt, conversationState);
     
+    console.log('✅ Response generated successfully');
     res.status(200).json(result);
     
   } catch (error) {
     console.error('❌ Error in AI tutor endpoint:', error);
+    console.error('❌ Error stack:', error.stack);
     res.status(500).json({ 
       error: 'Internal server error',
       type: 'error',
