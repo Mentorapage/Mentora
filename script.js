@@ -772,28 +772,26 @@ function renderTeachers() {
   const grid = document.getElementById('teachers-grid');
   if (!grid) return;
   
-  console.log('Rendering teachers with filters:', {
-    advancedFilters
-  });
+  console.log('Rendering teachers with enhanced effects...');
   
   // Start with all teachers
   let filtered = [...TEACHERS];
   
-  // Step 1: Apply mandatory subject filter
+  // Apply filters (existing logic)
   if (advancedFilters.subject) {
     filtered = filtered.filter(t => matchesSubject(t, advancedFilters.subject));
   } else {
-    // If no subject selected, show message requiring subject selection
+    // Show message requiring subject selection
     grid.innerHTML = `
       <div class="col-span-full text-center py-12">
         <div class="text-gray-400 mb-6">
           <svg class="w-20 h-20 mx-auto mb-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
           </svg>
-          <h3 class="text-xl font-semibold text-gray-300 mb-2">
+          <h3 class="text-xl font-semibold text-gray-300 mb-2 gradient-text">
             ${currentLang === 'en' ? 'Please select a subject' : 'Пожалуйста, выберите предмет'}
           </h3>
-          <p class="text-sm text-gray-500">
+          <p class="text-sm text-gray-500 text-reveal">
             ${currentLang === 'en' 
               ? 'Choose a subject from the dropdown above to find matching tutors'
               : 'Выберите предмет из выпадающего списка выше, чтобы найти подходящих преподавателей'
@@ -805,37 +803,29 @@ function renderTeachers() {
     return;
   }
   
-  // Step 2: Apply mandatory availability filter (if selected)
+  // Apply other filters (existing logic)
   if (advancedFilters.availability.length > 0) {
     filtered = filtered.filter(t => matchesAvailability(t, advancedFilters.availability));
   }
   
-  // Step 3: Apply mandatory language filter (if selected)
   if (advancedFilters.languages.length > 0) {
     filtered = filtered.filter(t => matchesLanguages(t, advancedFilters.languages));
   }
   
-  // Step 4: Apply ranking based on hobby matches (optional)
   if (advancedFilters.hobbies.length > 0) {
-    // Filter to show only tutors with matching hobbies, then sort by match score
     const tutorsWithHobbies = filtered.filter(t => matchesHobbies(t, advancedFilters.hobbies));
     const tutorsWithoutHobbies = filtered.filter(t => !matchesHobbies(t, advancedFilters.hobbies));
     
-    // Sort tutors with hobbies by match score (descending)
     tutorsWithHobbies.sort((a, b) => {
       const scoreA = calculateHobbyMatchScore(a, advancedFilters.hobbies);
       const scoreB = calculateHobbyMatchScore(b, advancedFilters.hobbies);
       return scoreB - scoreA;
     });
     
-    // Put tutors with matching hobbies first, then others
     filtered = [...tutorsWithHobbies, ...tutorsWithoutHobbies];
   } else {
-    // Default sort by name
     filtered.sort((a, b) => a.name[currentLang].localeCompare(b.name[currentLang]));
   }
-  
-  console.log(`Filtered ${filtered.length} tutors from ${TEACHERS.length} total`);
   
   // Clear existing content
   grid.innerHTML = '';
@@ -844,56 +834,25 @@ function renderTeachers() {
   const hasActiveFilters = advancedFilters.subject || advancedFilters.availability.length > 0 || 
                           advancedFilters.languages.length > 0 || advancedFilters.hobbies.length > 0;
   
-  if (hasActiveFilters && filtered.length < TEACHERS.length) {
+  if (hasActiveFilters && filtered.length > 0) {
     const resultsDiv = document.createElement('div');
     resultsDiv.className = 'col-span-full text-center mb-6';
     resultsDiv.innerHTML = `
-      <div class="bg-cyan-500/10 border border-cyan-400/30 rounded-xl p-4">
-        <h3 class="text-lg font-semibold text-cyan-300 mb-2">
-          ${currentLang === 'en' ? 'Filter Results' : 'Результаты фильтрации'}
-        </h3>
-        <p class="text-gray-300">
-          ${currentLang === 'en' 
-            ? `Showing ${filtered.length} of ${TEACHERS.length} tutors`
-            : `Показано ${filtered.length} из ${TEACHERS.length} преподавателей`
-          }
-        </p>
+      <div class="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/20 rounded-full border border-cyan-400/30">
+        <span class="text-cyan-300 font-semibold">${filtered.length}</span>
+        <span class="text-gray-300">
+          ${currentLang === 'en' ? 'tutors found' : 'преподавателей найдено'}
+        </span>
+        <span class="text-cyan-400 sparkle">✨</span>
       </div>
     `;
     grid.appendChild(resultsDiv);
   }
   
-  if (filtered.length === 0) {
-    // No results found
-    const noResultsDiv = document.createElement('div');
-    noResultsDiv.className = 'col-span-full text-center py-12';
-    noResultsDiv.innerHTML = `
-      <div class="text-gray-400 mb-6">
-        <svg class="w-20 h-20 mx-auto mb-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.47-.881-6.08-2.33"></path>
-        </svg>
-        <h3 class="text-xl font-semibold text-gray-300 mb-2">
-          ${currentLang === 'en' ? 'No tutors found matching your criteria' : 'Преподаватели не найдены'}
-        </h3>
-        <p class="text-sm text-gray-500 mb-4">
-          ${currentLang === 'en' 
-            ? 'Try adjusting your filters or search criteria'
-            : 'Попробуйте изменить фильтры или критерии поиска'
-          }
-        </p>
-        <button onclick="clearAllFilters()" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg transition-all duration-300">
-          ${currentLang === 'en' ? 'Clear All Filters' : 'Очистить все фильтры'}
-        </button>
-      </div>
-    `;
-    grid.appendChild(noResultsDiv);
-    return;
-  }
-  
-  // Render filtered tutors with enhanced ranking information
+  // Render filtered tutors with enhanced effects
   filtered.forEach((t, idx) => {
     const card = document.createElement('div');
-    card.className = 'teacher-card bg-gray-800 rounded-xl shadow-lg p-4 flex flex-col items-center transition-all duration-300 ease-in-out transform opacity-0 scale-95 cursor-pointer select-none hover:scale-105 hover:shadow-xl hover:ring-2 hover:ring-cyan-400/50';
+    card.className = 'teacher-card bg-gray-800 rounded-xl shadow-lg p-4 flex flex-col items-center transition-all duration-300 ease-in-out transform opacity-0 scale-95 cursor-pointer select-none hover:scale-105 hover:shadow-xl hover:ring-2 hover:ring-cyan-400/50 particle-trail sparkle';
     card.setAttribute('data-tutor-id', idx);
     
     // Calculate hobby match score for display
@@ -902,16 +861,16 @@ function renderTeachers() {
       const score = calculateHobbyMatchScore(t, advancedFilters.hobbies);
       if (score > 0) {
         const percentage = Math.round(score * 100);
-        hobbyMatchInfo = `<div class="text-xs text-green-400 mt-1">🎯 ${percentage}% hobby match</div>`;
+        hobbyMatchInfo = `<div class="text-xs text-green-400 mt-1 neon-glow">🎯 ${percentage}% hobby match</div>`;
       }
     }
     
-    // Create enhanced card content
+    // Create enhanced card content with new effects
     card.innerHTML = `
-      <img src="${t.photo}" alt="${t.name[currentLang]}" class="w-24 h-24 rounded-full mb-3 object-cover border-4 border-cyan-400 select-none pointer-events-none"/>
-      <div class="font-bold text-lg mb-1 select-none pointer-events-none">${t.name[currentLang]}</div>
-      <div class="text-cyan-200 text-sm mb-2 select-none pointer-events-none">${capitalize(t.subject)}</div>
-      <div class="text-sm text-center mb-2 select-none pointer-events-none line-clamp-2">${t.bio[currentLang]}</div>
+      <img src="${t.photo}" alt="${t.name[currentLang]}" class="w-24 h-24 rounded-full mb-3 object-cover border-4 border-cyan-400 select-none pointer-events-none float-animation"/>
+      <div class="font-bold text-lg mb-1 select-none pointer-events-none gradient-text">${t.name[currentLang]}</div>
+      <div class="text-cyan-200 text-sm mb-2 select-none pointer-events-none neon-glow">${capitalize(t.subject)}</div>
+      <div class="text-sm text-center mb-2 select-none pointer-events-none line-clamp-2 text-reveal">${t.bio[currentLang]}</div>
       <div class="text-xs text-gray-400 text-center select-none pointer-events-none">
         ${t.teachingLanguages[currentLang]}
       </div>
@@ -926,10 +885,15 @@ function renderTeachers() {
     
     grid.appendChild(card);
     
-    // Staggered entrance animation
+    // Enhanced staggered entrance animation with new effects
     setTimeout(() => {
       card.classList.remove('opacity-0', 'scale-95');
       card.classList.add('opacity-100', 'scale-100', 'teacher-card-entrance');
+      
+      // Add floating animation after entrance
+      setTimeout(() => {
+        card.classList.add('float-animation');
+      }, 400);
     }, idx * 120);
   });
 }
@@ -1762,6 +1726,80 @@ function initVisualEnhancements() {
   enhanceInteractiveElements();
   addCustomAnimations();
   initFAQAccordion();
+  
+  // NEW: Apply new dynamic effects
+  applyNewDynamicEffects();
+}
+
+// NEW: Apply all the new dynamic effects
+function applyNewDynamicEffects() {
+  console.log('Applying new dynamic effects...');
+  
+  // Apply typing animation to hero title
+  const heroTitle = document.querySelector('#hero-title');
+  if (heroTitle) {
+    heroTitle.classList.add('typing-animation');
+  }
+  
+  // Apply magnetic effect to primary buttons
+  document.querySelectorAll('.btn-primary, .gradient-button').forEach(btn => {
+    btn.classList.add('magnetic-button', 'ripple-effect');
+  });
+  
+  // Apply particle trail to special elements
+  document.querySelectorAll('.nav-btn, .teacher-card').forEach(el => {
+    el.classList.add('particle-trail');
+  });
+  
+  // Apply floating animation to value cards
+  document.querySelectorAll('.grid.grid-cols-1.sm\\:grid-cols-3.gap-6.mb-10 > div').forEach((card, index) => {
+    card.classList.add('float-animation');
+    card.style.animationDelay = `${index * 0.2}s`;
+  });
+  
+  // Apply sparkle effect to emojis
+  document.querySelectorAll('.text-6xl').forEach(emoji => {
+    emoji.classList.add('sparkle');
+  });
+  
+  // Apply gradient text to special headings
+  document.querySelectorAll('h1, h2').forEach(heading => {
+    if (heading.textContent.includes('Mentora') || heading.textContent.includes('Free')) {
+      heading.classList.add('gradient-text');
+    }
+  });
+  
+  // Apply neon glow to important text
+  document.querySelectorAll('.text-cyan-300, .text-cyan-400').forEach(text => {
+    text.classList.add('neon-glow');
+  });
+  
+  // Apply wave animation to emojis in testimonials
+  document.querySelectorAll('.testimonial .text-4xl').forEach(emoji => {
+    emoji.classList.add('wave-animation');
+  });
+  
+  // Apply morphing background to special sections
+  document.querySelectorAll('.bg-gradient-to-r').forEach(bg => {
+    bg.classList.add('morphing-bg');
+  });
+  
+  // Apply text reveal animation to bios
+  document.querySelectorAll('.teacher-card .text-sm').forEach(bio => {
+    bio.classList.add('text-reveal');
+  });
+  
+  // Apply glitch effect to special elements on hover
+  document.querySelectorAll('.teacher-card').forEach(card => {
+    card.classList.add('glitch-effect');
+  });
+  
+  // Apply bounce on scroll to testimonials
+  document.querySelectorAll('.testimonial-slide').forEach(slide => {
+    slide.classList.add('bounce-on-scroll');
+  });
+  
+  console.log('New dynamic effects applied successfully!');
 }
 
 // Call initialization when DOM is ready
