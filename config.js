@@ -9,7 +9,7 @@ const config = {
   EMAILJS_TEMPLATE_ID: 'template_dw4xdjj',
   
   // Server Configuration
-  API_BASE_URL: '',
+  API_BASE_URL: typeof window !== 'undefined' ? window.location.origin : '',
   
   // Development flag
   IS_DEVELOPMENT: false
