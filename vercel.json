@@ -1,11 +1,3 @@
 {
-  "version": 2,
-  "functions": {
-    "api/health.js": {
-      "maxDuration": 10
-    },
-    "api/ai-tutor.js": {
-      "maxDuration": 30
-    }
-  }
+  "version": 2
 } 
