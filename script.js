@@ -2705,49 +2705,7 @@ function initRealAITutorModal() {
 
 // Old AI modal close function removed - replaced with AI Support system
 
-// Global close function for AI Support modal
-window.closeRealAITutorModal = function() {
-  console.log('[AI Support] 🔥 closeRealAITutorModal called');
-  const modal = document.getElementById('real-ai-modal');
-  if (modal) {
-    modal.classList.add('hidden');
-    document.body.classList.remove('modal-open');
-    // Reset conversation state when closing
-    resetRealAIConversationState();
-    console.log('[AI Support] ✅ Modal closed successfully!');
-  }
-};
 
-
-
-// Function to open AI Support modal
-window.openRealAITutorModal = function() {
-  console.log('[AI Support] 🔥 openRealAITutorModal called');
-  
-  // Ensure modal is initialized
-  if (!document.getElementById('real-ai-modal')) {
-    console.log('[AI Support] Modal not found, initializing...');
-    initRealAITutorModal();
-  }
-  
-  const modal = document.getElementById('real-ai-modal');
-  if (modal) {
-    modal.classList.remove('hidden');
-    document.body.classList.add('modal-open');
-    
-    // Focus on input for better UX
-    setTimeout(() => {
-      const input = document.getElementById('real-ai-input');
-      if (input) {
-        input.focus();
-      }
-    }, 100);
-    
-    console.log('[AI Support] ✅ Modal opened successfully!');
-  } else {
-    console.error('[AI Support] Modal still not found after initialization!');
-  }
-};
 
 
 // Example usage:
@@ -2786,9 +2744,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
 
   
-  // Initialize AI Support Modal
-  console.log('[DOM] Initializing AI Support Modal...');
-  initRealAITutorModal();
+
   
   // Initialize Teacher Application Form with EmailJS retry
   console.log('[DOM] Initializing Teacher Application Form...');
