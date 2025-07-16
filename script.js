@@ -1752,7 +1752,7 @@ function initGraduationCapAnimation() {
   navCap.style.opacity = '0';
   navCap.style.transform = 'scale(0)';
   
-  // After 3 seconds (allowing entrance animation to complete), animate the cap to the navigation
+  // After 2.5 seconds, start the flight animation
   setTimeout(() => {
     console.log('Starting graduation cap animation to navigation...');
     
@@ -1762,10 +1762,10 @@ function initGraduationCapAnimation() {
     // After animation completes, show nav cap
     setTimeout(() => {
       navCap.classList.add('appear');
-      // Don't hide the hero cap - let it fade out naturally
+      console.log('Nav cap should now appear');
     }, 2000);
     
-  }, 3000);
+  }, 2500);
 }
 
 // NEW: Apply all the new dynamic effects
@@ -1841,8 +1841,15 @@ function applyNewDynamicEffects() {
 
 // Call initialization when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM loaded, initializing...');
   renderTeachers();
   initVisualEnhancements();
+  
+  // Ensure graduation cap animation is called
+  setTimeout(() => {
+    console.log('Calling graduation cap animation...');
+    initGraduationCapAnimation();
+  }, 100);
 });
 
 // Re-initialize enhancements when sections change
