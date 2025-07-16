@@ -1909,7 +1909,7 @@ function runMentoraAnimations() {
   enhanceValueCards();
   
   // Initialize new features
-  initCounters();
+  // initCounters(); // (Commented out: Counters removed from UI)
   initTestimonials();
   initJoinBanner();
   enhanceLanguageToggle();
@@ -1968,47 +1968,6 @@ function updateValueCardsLang() {
   document.querySelectorAll('.grid.grid-cols-1.sm\\:grid-cols-3.gap-6.mb-10 [data-en]').forEach(el => {
     el.textContent = el.dataset[currentLang];
   });
-}
-
-// --- Live Animated Counters ---
-function initCounters() {
-  const studentsCounter = document.getElementById('counter-students');
-  const tutorsCounter = document.getElementById('counter-tutors');
-  
-  if (!studentsCounter || !tutorsCounter) return;
-  
-  const targetStudents = 84;
-  const targetTutors = 17;
-  
-  function animateCounter(element, target, duration = 2000) {
-    let start = 0;
-    const increment = target / (duration / 16); // 60fps
-    
-    function updateCounter() {
-      start += increment;
-      if (start < target) {
-        element.textContent = Math.floor(start);
-        requestAnimationFrame(updateCounter);
-      } else {
-        element.textContent = target;
-      }
-    }
-    
-    updateCounter();
-  }
-  
-  // Use Intersection Observer to trigger animation when counters come into view
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        animateCounter(studentsCounter, targetStudents);
-        animateCounter(tutorsCounter, targetTutors);
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.5 });
-  
-  observer.observe(studentsCounter);
 }
 
 // --- Testimonials Carousel ---
