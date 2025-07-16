@@ -7,10 +7,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- EmailJS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <!-- Configuration -->
+    <script src="config.js"></script>
+    
     <script>
         (function() {
-            emailjs.init('jqDn0eJgHsEGzhMjA');
-            console.log('EmailJS initialized with key: jqDn0eJgHsEGzhMjA');
+            emailjs.init(window.APP_CONFIG.EMAILJS_PUBLIC_KEY);
+            console.log('EmailJS initialized with key:', window.APP_CONFIG.EMAILJS_PUBLIC_KEY);
             console.log('EmailJS version:', emailjs.version);
         })();
     </script>

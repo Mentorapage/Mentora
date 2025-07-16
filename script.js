@@ -2247,9 +2247,9 @@ function initTeacherApplicationForm() {
     }
     
     console.log('Sending email via EmailJS...');
-    console.log('Service ID: service_ifxv35f');
-    console.log('Template ID: template_dw4xdjj');
-    console.log('Public Key: jqDn0eJgHsEGzhMjA');
+    console.log('Service ID:', window.APP_CONFIG.EMAILJS_SERVICE_ID);
+    console.log('Template ID:', window.APP_CONFIG.EMAILJS_TEMPLATE_ID);
+    console.log('Public Key:', window.APP_CONFIG.EMAILJS_PUBLIC_KEY);
     console.log('EmailJS available:', typeof emailjs !== 'undefined');
     console.log('EmailJS version:', emailjs?.version);
     
@@ -2260,10 +2260,10 @@ function initTeacherApplicationForm() {
     
     // Use emailjs.sendForm with the correct parameters
     emailjs.sendForm(
-      'service_ifxv35f',          // Service ID
-      'template_dw4xdjj',         // Template ID
-      this,                       // Form element
-      'jqDn0eJgHsEGzhMjA'         // Public Key
+      window.APP_CONFIG.EMAILJS_SERVICE_ID,    // Service ID
+      window.APP_CONFIG.EMAILJS_TEMPLATE_ID,   // Template ID
+      this,                                     // Form element
+      window.APP_CONFIG.EMAILJS_PUBLIC_KEY     // Public Key
     ).then((response) => {
       console.log('EmailJS Success:', response);
       console.log('Email sent to mentora.auth@gmail.com');
