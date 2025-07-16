@@ -45,6 +45,61 @@
   animation: fadeInScale 0.4s ease-out forwards;
 }
 
+/* NEW: Graduation Cap Logo Animations */
+@keyframes graduation-cap-entrance {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) translateY(50px);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1) translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes graduation-cap-fly-to-nav {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+  50% {
+    transform: scale(0.8) translate(-40vw, -20vh);
+  }
+  100% {
+    transform: scale(0.3) translate(-45vw, -45vh);
+  }
+}
+
+@keyframes nav-cap-appear {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(-180deg);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.5) rotate(-90deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+#hero-graduation-cap {
+  animation: graduation-cap-entrance 2s ease-out forwards;
+}
+
+#hero-graduation-cap.fly-to-nav {
+  animation: graduation-cap-fly-to-nav 1.5s ease-in-out forwards;
+}
+
+#nav-cap.appear {
+  animation: nav-cap-appear 0.8s ease-out forwards;
+}
+
 /* Enhanced teacher card styles */
 .teacher-card {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -975,12 +1030,9 @@ button:focus, .btn:focus {
 .animate-bounce-gentle { animation: bounce-gentle 3s ease-in-out infinite; }
 
 /* Particle positioning */
-.particle:nth-child(1) { top: 20%; left: 10%; }
-.particle:nth-child(2) { top: 60%; right: 15%; }
-.particle:nth-child(3) { top: 30%; right: 25%; }
-.particle:nth-child(4) { bottom: 30%; left: 20%; }
-.particle:nth-child(5) { bottom: 60%; right: 30%; }
-.particle:nth-child(6) { top: 80%; left: 60%; }
+.particle:nth-child(1) { top: 60%; right: 15%; }
+.particle:nth-child(2) { top: 30%; right: 25%; }
+.particle:nth-child(3) { bottom: 60%; right: 30%; }
 
 /* Testimonials */
 .testimonial-slide {

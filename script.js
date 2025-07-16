@@ -1740,33 +1740,32 @@ function initVisualEnhancements() {
 function initGraduationCapAnimation() {
   console.log('Initializing graduation cap animation...');
   
-  const graduationCap = document.getElementById('graduation-cap');
+  const heroCap = document.getElementById('hero-graduation-cap');
   const navCap = document.getElementById('nav-cap');
   
-  if (!graduationCap || !navCap) {
+  if (!heroCap || !navCap) {
     console.error('Graduation cap elements not found');
     return;
   }
   
   // Start with nav cap hidden
   navCap.style.opacity = '0';
+  navCap.style.transform = 'scale(0)';
   
-  // After 3 seconds, animate the cap to the navigation
+  // After 2 seconds, animate the cap to the navigation
   setTimeout(() => {
-    // Hide the hero cap
-    graduationCap.style.opacity = '0';
-    graduationCap.style.transform = 'scale(0.8)';
+    console.log('Starting graduation cap animation to navigation...');
     
-    // Show the nav cap
-    navCap.style.opacity = '1';
-    navCap.style.transform = 'scale(1.2)';
+    // Add fly-to-nav class to trigger animation
+    heroCap.classList.add('fly-to-nav');
     
-    // Add a bounce effect to the nav cap
+    // After animation completes, show nav cap
     setTimeout(() => {
-      navCap.style.transform = 'scale(1)';
-    }, 200);
+      navCap.classList.add('appear');
+      heroCap.style.display = 'none'; // Hide the hero cap
+    }, 1500);
     
-  }, 3000);
+  }, 2000);
 }
 
 // NEW: Apply all the new dynamic effects
