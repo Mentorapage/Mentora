@@ -1752,7 +1752,7 @@ function initGraduationCapAnimation() {
   navCap.style.opacity = '0';
   navCap.style.transform = 'scale(0)';
   
-  // After 2 seconds, animate the cap to the navigation
+  // After 3 seconds (allowing entrance animation to complete), animate the cap to the navigation
   setTimeout(() => {
     console.log('Starting graduation cap animation to navigation...');
     
@@ -1762,10 +1762,10 @@ function initGraduationCapAnimation() {
     // After animation completes, show nav cap
     setTimeout(() => {
       navCap.classList.add('appear');
-      heroCap.style.display = 'none'; // Hide the hero cap
-    }, 1500);
+      // Don't hide the hero cap - let it fade out naturally
+    }, 2000);
     
-  }, 2000);
+  }, 3000);
 }
 
 // NEW: Apply all the new dynamic effects
