@@ -138,7 +138,14 @@
 <body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 min-h-screen text-white">
   <!-- Navbar -->
   <nav class="flex items-center justify-between px-6 py-4 bg-gray-900/80 backdrop-blur sticky top-0 z-30">
-    <div class="text-2xl font-bold tracking-wide text-cyan-400">Mentora</div>
+    <div id="nav-logo" class="flex items-center space-x-3">
+      <div id="nav-cap" class="w-6 h-6 text-cyan-400 opacity-0 transition-opacity duration-1000">
+        <svg fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <div class="text-2xl font-bold tracking-wide text-cyan-400">Mentora</div>
+    </div>
     <div class="flex gap-4 items-center">
       <button class="nav-btn px-4 py-2 rounded-lg hover:bg-cyan-700 transition" data-section="home" id="nav-home">Home</button>
       <button class="nav-btn px-4 py-2 rounded-lg hover:bg-cyan-700 transition" data-section="teachers" id="nav-teachers">Teachers</button>
@@ -178,13 +185,13 @@
         <!-- Animated Illustration -->
         <div class="mb-8 flex justify-center">
           <div class="relative">
-            <div class="w-24 h-24 bg-gradient-to-br from-cyan-400 to-purple-500 rounded-full flex items-center justify-center animate-bounce-gentle">
+            <div id="graduation-cap" class="w-24 h-24 bg-gradient-to-br from-cyan-400 to-purple-500 rounded-full flex items-center justify-center animate-bounce-gentle">
               <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
               </svg>
             </div>
             <div class="absolute -top-2 -right-2 w-8 h-8 bg-green-400 rounded-full animate-pulse"></div>
-            <div class="absolute -bottom-2 -left-2 w-6 h-6 bg-purple-400 rounded-full animate-pulse delay-1000"></div>
+ 
           </div>
         </div>
         
@@ -281,11 +288,17 @@
             <div class="relative">
                 <select id="subject-filter" class="w-full appearance-none bg-white/10 backdrop-blur-sm border border-cyan-400/50 rounded-lg px-3 py-2 text-white hover:bg-white/20 focus:bg-white/20 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30 transition-all duration-150 pr-8">
                   <option value="" data-en="Select a subject..." data-ru="Выберите предмет...">Select a subject...</option>
-                <option value="math" data-en="Math" data-ru="Математика">Math</option>
-                <option value="english" data-en="English" data-ru="Английский">English</option>
+                  <option value="math" data-en="Math" data-ru="Математика">Math</option>
+                  <option value="english" data-en="English" data-ru="Английский">English</option>
                   <option value="physics" data-en="Physics" data-ru="Физика">Physics</option>
                   <option value="chemistry" data-en="Chemistry" data-ru="Химия">Chemistry</option>
                   <option value="biology" data-en="Biology" data-ru="Биология">Biology</option>
+                  <option value="history" data-en="History" data-ru="История">History</option>
+                  <option value="astronomy" data-en="Astronomy" data-ru="Астрономия">Astronomy</option>
+                  <option value="literature" data-en="Literature" data-ru="Литература">Literature</option>
+                  <option value="geography" data-en="Geography" data-ru="География">Geography</option>
+                  <option value="art" data-en="Art" data-ru="Искусство">Art</option>
+                  <option value="philosophy" data-en="Philosophy" data-ru="Философия">Philosophy</option>
               </select>
               <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                 <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -395,6 +408,54 @@
                   <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
                     <input type="checkbox" value="Russian" class="language-filter mr-2">
                     <span>Russian</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="checkbox" value="Kyrgyz" class="language-filter mr-2">
+                    <span>Kyrgyz</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="checkbox" value="Uzbek" class="language-filter mr-2">
+                    <span>Uzbek</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="checkbox" value="Chinese" class="language-filter mr-2">
+                    <span>Chinese</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="checkbox" value="Japanese" class="language-filter mr-2">
+                    <span>Japanese</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="checkbox" value="Korean" class="language-filter mr-2">
+                    <span>Korean</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="checkbox" value="Arabic" class="language-filter mr-2">
+                    <span>Arabic</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="checkbox" value="French" class="language-filter mr-2">
+                    <span>French</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="checkbox" value="German" class="language-filter mr-2">
+                    <span>German</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="checkbox" value="Spanish" class="language-filter mr-2">
+                    <span>Spanish</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="checkbox" value="Portuguese" class="language-filter mr-2">
+                    <span>Portuguese</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="checkbox" value="Hindi" class="language-filter mr-2">
+                    <span>Hindi</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="checkbox" value="Turkish" class="language-filter mr-2">
+                    <span>Turkish</span>
                   </label>
                 </div>
               </div>

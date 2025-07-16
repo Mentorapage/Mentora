@@ -768,6 +768,7 @@ function calculateHobbyMatchScore(tutor, selectedHobbies) {
   return matches.length / selectedHobbies.length; // Returns 0-1 score
 }
 
+// NEW: Enhanced teacher card rendering with more effects
 function renderTeachers() {
   const grid = document.getElementById('teachers-grid');
   if (!grid) return;
@@ -780,28 +781,8 @@ function renderTeachers() {
   // Apply filters (existing logic)
   if (advancedFilters.subject) {
     filtered = filtered.filter(t => matchesSubject(t, advancedFilters.subject));
-  } else {
-    // Show message requiring subject selection
-    grid.innerHTML = `
-      <div class="col-span-full text-center py-12">
-        <div class="text-gray-400 mb-6">
-          <svg class="w-20 h-20 mx-auto mb-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-          </svg>
-          <h3 class="text-xl font-semibold text-gray-300 mb-2 gradient-text">
-            ${currentLang === 'en' ? 'Please select a subject' : 'Пожалуйста, выберите предмет'}
-          </h3>
-          <p class="text-sm text-gray-500 text-reveal">
-            ${currentLang === 'en' 
-              ? 'Choose a subject from the dropdown above to find matching tutors'
-              : 'Выберите предмет из выпадающего списка выше, чтобы найти подходящих преподавателей'
-            }
-          </p>
-        </div>
-      </div>
-    `;
-    return;
   }
+  // REMOVED: No longer require subject selection - show all teachers by default
   
   // Apply other filters (existing logic)
   if (advancedFilters.availability.length > 0) {
@@ -1547,23 +1528,44 @@ function initFAQAccordion() {
     const answer = item.querySelector('.faq-answer');
     const arrow = item.querySelector('.faq-arrow');
     
-    question.addEventListener('click', () => {
+    if (!question || !answer || !arrow) return;
+    
+    // Set initial state
+    answer.style.maxHeight = '0px';
+    answer.style.overflow = 'hidden';
+    answer.style.transition = 'max-height 0.3s ease-in-out';
+    arrow.style.transition = 'transform 0.3s ease-in-out';
+    
+    question.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      
       const isOpen = answer.style.maxHeight && answer.style.maxHeight !== '0px';
       
-      // Close all other items
+      // Close all other items smoothly
       faqItems.forEach(otherItem => {
-        const otherAnswer = otherItem.querySelector('.faq-answer');
-        const otherArrow = otherItem.querySelector('.faq-arrow');
-        otherAnswer.style.maxHeight = '0px';
-        otherArrow.style.transform = 'rotate(0deg)';
-        otherItem.classList.remove('ring-2', 'ring-cyan-400/50');
+        if (otherItem !== item) {
+          const otherAnswer = otherItem.querySelector('.faq-answer');
+          const otherArrow = otherItem.querySelector('.faq-arrow');
+          if (otherAnswer && otherArrow) {
+            otherAnswer.style.maxHeight = '0px';
+            otherArrow.style.transform = 'rotate(0deg)';
+            otherItem.classList.remove('ring-2', 'ring-cyan-400/50');
+          }
+        }
       });
       
-      // Toggle current item
+      // Toggle current item smoothly
       if (!isOpen) {
+        // Open the item
         answer.style.maxHeight = answer.scrollHeight + 'px';
         arrow.style.transform = 'rotate(180deg)';
         item.classList.add('ring-2', 'ring-cyan-400/50');
+      } else {
+        // Close the item
+        answer.style.maxHeight = '0px';
+        arrow.style.transform = 'rotate(0deg)';
+        item.classList.remove('ring-2', 'ring-cyan-400/50');
       }
     });
   });
@@ -1729,6 +1731,42 @@ function initVisualEnhancements() {
   
   // NEW: Apply new dynamic effects
   applyNewDynamicEffects();
+  
+  // NEW: Initialize graduation cap animation
+  initGraduationCapAnimation();
+}
+
+// NEW: Graduation cap animation
+function initGraduationCapAnimation() {
+  console.log('Initializing graduation cap animation...');
+  
+  const graduationCap = document.getElementById('graduation-cap');
+  const navCap = document.getElementById('nav-cap');
+  
+  if (!graduationCap || !navCap) {
+    console.error('Graduation cap elements not found');
+    return;
+  }
+  
+  // Start with nav cap hidden
+  navCap.style.opacity = '0';
+  
+  // After 3 seconds, animate the cap to the navigation
+  setTimeout(() => {
+    // Hide the hero cap
+    graduationCap.style.opacity = '0';
+    graduationCap.style.transform = 'scale(0.8)';
+    
+    // Show the nav cap
+    navCap.style.opacity = '1';
+    navCap.style.transform = 'scale(1.2)';
+    
+    // Add a bounce effect to the nav cap
+    setTimeout(() => {
+      navCap.style.transform = 'scale(1)';
+    }, 200);
+    
+  }, 3000);
 }
 
 // NEW: Apply all the new dynamic effects
