@@ -1758,18 +1758,8 @@ function initGraduationCapAnimation() {
   setTimeout(() => {
     console.log('Starting graduation cap animation to navigation...');
     
-    // Force the animation to work by removing and re-adding the class
-    heroCap.classList.remove('fly-to-nav');
-    void heroCap.offsetWidth; // Force reflow
-    heroCap.classList.add('fly-to-nav');
-    
-    console.log('Added fly-to-nav class to hero cap');
-    
-    // After animation completes, show nav cap
-    setTimeout(() => {
-      navCap.classList.add('appear');
-      console.log('Nav cap should now appear');
-    }, 1500);
+    // Use pure JavaScript animation
+    animateCapToNav(heroCap, navCap);
     
   }, 2000);
 }
@@ -1782,16 +1772,73 @@ function testAnimation() {
   
   if (heroCap && navCap) {
     console.log('Elements found, triggering animation...');
-    heroCap.classList.remove('fly-to-nav');
-    void heroCap.offsetWidth;
-    heroCap.classList.add('fly-to-nav');
     
-    setTimeout(() => {
-      navCap.classList.add('appear');
-    }, 1500);
+    // Use pure JavaScript animation
+    animateCapToNav(heroCap, navCap);
   } else {
     console.error('Elements not found for test animation');
+    console.log('heroCap:', heroCap);
+    console.log('navCap:', navCap);
   }
+}
+
+// Pure JavaScript animation function
+function animateCapToNav(heroCap, navCap) {
+  console.log('Starting pure JS animation...');
+  
+  // Get initial position
+  const heroRect = heroCap.getBoundingClientRect();
+  const navRect = navCap.getBoundingClientRect();
+  
+  // Calculate target position (top-left corner)
+  const targetX = 20; // 20px from left
+  const targetY = 20; // 20px from top
+  
+  // Set initial styles
+  heroCap.style.position = 'fixed';
+  heroCap.style.top = heroRect.top + 'px';
+  heroCap.style.left = heroRect.left + 'px';
+  heroCap.style.zIndex = '9999';
+  heroCap.style.transition = 'none';
+  
+  // Start animation
+  let startTime = Date.now();
+  const duration = 1500; // 1.5 seconds
+  
+  function animate() {
+    const elapsed = Date.now() - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    
+    // Easing function (ease-in-out)
+    const easeProgress = progress < 0.5 
+      ? 2 * progress * progress 
+      : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+    
+    // Calculate current position
+    const currentX = heroRect.left + (targetX - heroRect.left) * easeProgress;
+    const currentY = heroRect.top + (targetY - heroRect.top) * easeProgress;
+    const currentScale = 1 - (0.75 * easeProgress); // Scale from 1 to 0.25
+    const currentRotation = easeProgress * 180; // Rotate 180 degrees
+    
+    // Apply transforms
+    heroCap.style.transform = `translate(${currentX - heroRect.left}px, ${currentY - heroRect.top}px) scale(${currentScale}) rotate(${currentRotation}deg)`;
+    heroCap.style.opacity = 1 - (0.5 * easeProgress);
+    
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      // Animation complete
+      console.log('Animation complete!');
+      heroCap.style.display = 'none';
+      
+      // Show nav cap
+      navCap.style.opacity = '1';
+      navCap.style.transform = 'scale(1) rotate(0deg)';
+      navCap.style.transition = 'all 0.5s ease-out';
+    }
+  }
+  
+  requestAnimationFrame(animate);
 }
 
 // NEW: Apply all the new dynamic effects
