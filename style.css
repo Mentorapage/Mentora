@@ -66,24 +66,20 @@
     transform: scale(1) translate(0, 0) rotate(0deg);
     opacity: 1;
   }
-  20% {
-    transform: scale(0.9) translate(-15vw, -8vh) rotate(-15deg);
+  25% {
+    transform: scale(0.8) translate(-20vw, -15vh) rotate(-45deg);
     opacity: 1;
   }
-  40% {
-    transform: scale(0.7) translate(-30vw, -20vh) rotate(-30deg);
-    opacity: 0.9;
-  }
-  60% {
-    transform: scale(0.5) translate(-40vw, -35vh) rotate(-45deg);
+  50% {
+    transform: scale(0.6) translate(-35vw, -30vh) rotate(-90deg);
     opacity: 0.8;
   }
-  80% {
-    transform: scale(0.3) translate(-45vw, -45vh) rotate(-60deg);
-    opacity: 0.6;
+  75% {
+    transform: scale(0.4) translate(-45vw, -45vh) rotate(-135deg);
+    opacity: 0.5;
   }
   100% {
-    transform: scale(0.25) translate(-48vw, -48vh) rotate(-90deg);
+    transform: scale(0.25) translate(-50vw, -50vh) rotate(-180deg);
     opacity: 0;
   }
 }

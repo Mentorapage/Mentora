@@ -1748,6 +1748,8 @@ function initGraduationCapAnimation() {
     return;
   }
   
+  console.log('Found elements:', { heroCap, navCap });
+  
   // Start with nav cap hidden
   navCap.style.opacity = '0';
   navCap.style.transform = 'scale(0)';
@@ -1756,8 +1758,12 @@ function initGraduationCapAnimation() {
   setTimeout(() => {
     console.log('Starting graduation cap animation to navigation...');
     
-    // Add fly-to-nav class to trigger animation
+    // Force the animation to work by removing and re-adding the class
+    heroCap.classList.remove('fly-to-nav');
+    void heroCap.offsetWidth; // Force reflow
     heroCap.classList.add('fly-to-nav');
+    
+    console.log('Added fly-to-nav class to hero cap');
     
     // After animation completes, show nav cap
     setTimeout(() => {
@@ -1766,6 +1772,26 @@ function initGraduationCapAnimation() {
     }, 1500);
     
   }, 2000);
+}
+
+// Test function for debugging
+function testAnimation() {
+  console.log('Test animation triggered manually');
+  const heroCap = document.getElementById('hero-graduation-cap');
+  const navCap = document.getElementById('nav-cap');
+  
+  if (heroCap && navCap) {
+    console.log('Elements found, triggering animation...');
+    heroCap.classList.remove('fly-to-nav');
+    void heroCap.offsetWidth;
+    heroCap.classList.add('fly-to-nav');
+    
+    setTimeout(() => {
+      navCap.classList.add('appear');
+    }, 1500);
+  } else {
+    console.error('Elements not found for test animation');
+  }
 }
 
 // NEW: Apply all the new dynamic effects
