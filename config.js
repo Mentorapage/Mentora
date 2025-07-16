@@ -8,8 +8,8 @@ const config = {
   EMAILJS_SERVICE_ID: 'service_ifxv35f',
   EMAILJS_TEMPLATE_ID: 'template_dw4xdjj',
   
-  // Server Configuration
-  API_BASE_URL: typeof window !== 'undefined' ? window.location.origin : '',
+  // Server Configuration (disabled for static deployment)
+  // API_BASE_URL: typeof window !== 'undefined' ? window.location.origin : '',
   
   // Development flag
   IS_DEVELOPMENT: false

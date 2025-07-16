@@ -2501,13 +2501,23 @@ function initRealAITutorModal() {
         conversationState: realAIConversationState
       };
       
-      // Use the new AI tutor API endpoint
-      const apiUrl = window.APP_CONFIG.API_BASE_URL || window.location.origin;
-      const response = await fetch(`${apiUrl}/api/ai-tutor`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestPayload)
-      });
+      // AI functionality disabled for static deployment
+      // const apiUrl = window.APP_CONFIG.API_BASE_URL || window.location.origin;
+      // const response = await fetch(`${apiUrl}/api/ai-tutor`, {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(requestPayload)
+      // });
+      
+      // Mock response for static deployment
+      const response = {
+        ok: true,
+        json: async () => ({
+          type: 'needs_info',
+          response: 'AI functionality is currently disabled in static deployment.',
+          conversationState: { step: 0, subject: null, timeSlots: null, language: null, isTutorSearch: false }
+        })
+      };
       
       console.log('[Real AI Tutor] Response status:', response.status, response.statusText);
       
