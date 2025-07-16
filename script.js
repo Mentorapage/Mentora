@@ -1040,6 +1040,21 @@ function filterAndDisplayMatchedTutors(tutorIds) {
 window.showAllTutors = function() {
   console.log('[AI Filter] Showing all tutors');
   renderTeachers();
+  
+  // Reset any active filters
+  const subjectFilter = document.getElementById('subject-filter');
+  const availabilityCheckboxes = document.querySelectorAll('.availability-filter');
+  const languageCheckboxes = document.querySelectorAll('.language-filter');
+  const hobbyCheckboxes = document.querySelectorAll('.hobby-filter');
+  
+  if (subjectFilter) subjectFilter.value = '';
+  availabilityCheckboxes.forEach(cb => cb.checked = false);
+  languageCheckboxes.forEach(cb => cb.checked = false);
+  hobbyCheckboxes.forEach(cb => cb.checked = false);
+  
+  // Update filter displays
+  updateFilterDisplays();
+  hideFilterSummary();
 };
 
 // Modal Functions
@@ -2232,9 +2247,9 @@ function initTeacherApplicationForm() {
     }
     
     console.log('Sending email via EmailJS...');
-    console.log('Service ID:', window.EMAILJS_CONFIG?.SERVICE_ID || 'service_ifxv35f');
-    console.log('Template ID:', window.EMAILJS_CONFIG?.TEMPLATE_ID || 'template_dw4xdjj');
-    console.log('Public Key:', window.EMAILJS_CONFIG?.PUBLIC_KEY || 'jqDn0eJgHsEGzhMjA');
+    console.log('Service ID: service_ifxv35f');
+    console.log('Template ID: template_dw4xdjj');
+    console.log('Public Key: jqDn0eJgHsEGzhMjA');
     console.log('EmailJS available:', typeof emailjs !== 'undefined');
     console.log('EmailJS version:', emailjs?.version);
     
@@ -2245,10 +2260,10 @@ function initTeacherApplicationForm() {
     
     // Use emailjs.sendForm with the correct parameters
     emailjs.sendForm(
-      window.EMAILJS_CONFIG?.SERVICE_ID || 'service_ifxv35f',          // Service ID
-      window.EMAILJS_CONFIG?.TEMPLATE_ID || 'template_dw4xdjj',         // Template ID
+      'service_ifxv35f',          // Service ID
+      'template_dw4xdjj',         // Template ID
       this,                       // Form element
-      window.EMAILJS_CONFIG?.PUBLIC_KEY || 'jqDn0eJgHsEGzhMjA'         // Public Key
+      'jqDn0eJgHsEGzhMjA'         // Public Key
     ).then((response) => {
       console.log('EmailJS Success:', response);
       console.log('Email sent to mentora.auth@gmail.com');
@@ -2528,7 +2543,7 @@ function initRealAITutorModal() {
       };
       
       // Use the new AI tutor API endpoint
-      const response = await fetch('/api/ai-tutor', {
+      const response = await fetch('http://localhost:3001/api/ai-tutor', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestPayload)
@@ -2705,7 +2720,49 @@ function initRealAITutorModal() {
 
 // Old AI modal close function removed - replaced with AI Support system
 
+// Global close function for AI Support modal
+window.closeRealAITutorModal = function() {
+  console.log('[AI Support] 🔥 closeRealAITutorModal called');
+  const modal = document.getElementById('real-ai-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    document.body.classList.remove('modal-open');
+    // Reset conversation state when closing
+    resetRealAIConversationState();
+    console.log('[AI Support] ✅ Modal closed successfully!');
+  }
+};
 
+
+
+// Function to open AI Support modal
+window.openRealAITutorModal = function() {
+  console.log('[AI Support] 🔥 openRealAITutorModal called');
+  
+  // Ensure modal is initialized
+  if (!document.getElementById('real-ai-modal')) {
+    console.log('[AI Support] Modal not found, initializing...');
+    initRealAITutorModal();
+  }
+  
+  const modal = document.getElementById('real-ai-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    document.body.classList.add('modal-open');
+    
+    // Focus on input for better UX
+    setTimeout(() => {
+      const input = document.getElementById('real-ai-input');
+      if (input) {
+        input.focus();
+      }
+    }, 100);
+    
+    console.log('[AI Support] ✅ Modal opened successfully!');
+  } else {
+    console.error('[AI Support] Modal still not found after initialization!');
+  }
+};
 
 
 // Example usage:
@@ -2744,7 +2801,9 @@ document.addEventListener('DOMContentLoaded', () => {
   
 
   
-
+  // Initialize AI Support Modal
+  console.log('[DOM] Initializing AI Support Modal...');
+  initRealAITutorModal();
   
   // Initialize Teacher Application Form with EmailJS retry
   console.log('[DOM] Initializing Teacher Application Form...');

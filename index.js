@@ -31,39 +31,26 @@ async function strictStepByStepProcess(userMessage, conversationState) {
     step: 0,
     subject: null,
     timeSlots: null,
-    languages: null,
-    hobbies: null,
-    interfaceLanguage: null
+    teachingLanguage: null,
+    preferences: null,
+    isTutorSearch: false
   };
 
   // Step 0: Language selection (interface language)
   if (state.step === 0 && !state.interfaceLanguage) {
-    const message = userMessage.toLowerCase();
-    if (message.includes('russian') || message.includes('русский')) {
+    if (userMessage.toLowerCase().includes('russian') || userMessage.toLowerCase().includes('русский')) {
       return {
         type: 'needs_info',
         response: 'Отлично! Теперь скажите, какой предмет вы хотели бы изучать.',
         conversationState: { ...state, step: 1, interfaceLanguage: 'Russian' }
       };
-    } else if (message.includes('english') || message.includes('англ')) {
+    } else if (userMessage.toLowerCase().includes('english') || userMessage.toLowerCase().includes('англ')) {
       return {
         type: 'needs_info',
         response: "Great! I'll help you in English. What subject do you need help with?",
         conversationState: { ...state, step: 1, interfaceLanguage: 'English' }
       };
     } else {
-      // Check if it's a subject instead of language
-      const subject = detectSubject(userMessage);
-      if (subject) {
-        // User provided a subject directly, assume English interface
-        const responseMessage = `Great! I'll help you in English. Let's find you a ${subject} tutor. When can you study? (Specify days and hours from 15:00 to 22:00)`;
-        return {
-          type: 'needs_info',
-          response: responseMessage,
-          conversationState: { ...state, step: 2, subject: subject, interfaceLanguage: 'English' }
-        };
-      }
-      
       return {
         type: 'needs_info',
         response: 'Which language do you prefer to continue in: English or Russian?',
@@ -72,7 +59,7 @@ async function strictStepByStepProcess(userMessage, conversationState) {
     }
   }
 
-  // Step 1: Subject detection (MANDATORY - 9000 points)
+  // Step 1: Subject detection
   if (state.step === 1 && !state.subject) {
     const subject = detectSubject(userMessage);
     if (subject) {
@@ -97,7 +84,7 @@ async function strictStepByStepProcess(userMessage, conversationState) {
     }
   }
 
-  // Step 2: Time slots (MANDATORY - 900 points)
+  // Step 2: Time slots
   if (state.step === 2 && !state.timeSlots) {
     const timeSlots = parseUserTimeInput(userMessage);
     if (timeSlots.length > 0) {
@@ -112,8 +99,8 @@ async function strictStepByStepProcess(userMessage, conversationState) {
       };
     } else {
       const message = state.interfaceLanguage === 'Russian' 
-        ? 'Укажите время, например: "17:00" или "17-19"'
-        : 'Please specify time, e.g., "17:00" or "17-19"';
+        ? 'Укажите время, например: "17-19" или "Wed 17:00"'
+        : 'Please specify time, e.g., "17-19" or "Wed 17:00"';
       return {
         type: 'needs_info',
         response: message,
@@ -122,23 +109,29 @@ async function strictStepByStepProcess(userMessage, conversationState) {
     }
   }
 
-  // Step 3: Teaching language (MANDATORY - 90 points)
-  if (state.step === 3 && !state.languages) {
-    const languages = detectLanguage(userMessage);
-    if (languages && languages.length > 0) {
+  // Step 3: Teaching language
+  if (state.step === 3 && !state.teachingLanguage) {
+    let teachingLanguage = null;
+    if (userMessage.toLowerCase().includes('english') || userMessage.toLowerCase().includes('англ')) {
+      teachingLanguage = 'English';
+    } else if (userMessage.toLowerCase().includes('russian') || userMessage.toLowerCase().includes('рус')) {
+      teachingLanguage = 'Russian';
+    }
+
+    if (teachingLanguage) {
       const message = state.interfaceLanguage === 'Russian' 
-        ? 'Отлично! Есть ли у вас хобби, предпочтения в стиле обучения или что-то, что вы хотели бы видеть в преподавателе? (Необязательно)'
-        : "Wonderful! Any hobbies or learning preferences you'd like to mention? (Optional)";
+        ? 'Отлично! Есть ли у вас хобби, предпочтения в стиле обучения или что-то, что вы хотели бы видеть в преподавателе?'
+        : "Wonderful! Any hobbies or learning preferences you'd like to mention?";
       
       return {
         type: 'needs_info',
         response: message,
-        conversationState: { ...state, step: 4, languages: languages }
+        conversationState: { ...state, step: 4, teachingLanguage: teachingLanguage }
       };
     } else {
       const message = state.interfaceLanguage === 'Russian' 
-        ? 'Мы поддерживаем английский, русский, китайский, испанский, французский, немецкий, японский, корейский, арабский и хинди.'
-        : 'We support English, Russian, Mandarin, Spanish, French, German, Japanese, Korean, Arabic, and Hindi.';
+        ? 'Мы поддерживаем только английский и русский как языки преподавания.'
+        : 'We support English and Russian for teaching languages.';
       return {
         type: 'needs_info',
         response: message,
@@ -147,40 +140,21 @@ async function strictStepByStepProcess(userMessage, conversationState) {
     }
   }
 
-  // Step 4: Find tutors using AI (OPTIONAL - 10 points for hobbies)
+  // Step 4: Find tutors using EXACT same logic as frontend filter system
   if (state.step === 4) {
-    const hobbies = parseHobbies(userMessage);
-    
-    const userPreferences = {
+    const result = await findTutorsWithExactFilterLogic({
       subject: state.subject,
       timeSlots: state.timeSlots,
-      languages: state.languages,
-      hobbies: hobbies || []
-    };
-    
-    console.log('🔍 FILTERING TUTORS:', userPreferences);
-    
-    const bestMatches = await findBestTutorsWithAI(userPreferences, MOCK_TUTORS);
-    
-    const matchedTutors = bestMatches.map(match => {
-      const tutor = MOCK_TUTORS.find(t => t.name === match.name);
-      return {
-        ...tutor,
-        score: match.score,
-        scoreBreakdown: match.scoreBreakdown,
-        matchingReasons: match.matchingReasons
-      };
+      teachingLanguage: state.teachingLanguage,
+      preferences: userMessage,
+      interfaceLanguage: state.interfaceLanguage
     });
-    
-    const message = state.interfaceLanguage === 'Russian' 
-      ? `Нашел ${matchedTutors.length} отличных репетиторов для вас!`
-      : `Found ${matchedTutors.length} excellent tutors for you!`;
     
     return {
       type: 'tutor_matches',
-      response: message,
-      tutors: matchedTutors,
-      conversationState: { ...state, step: 0, hobbies: hobbies }
+      tutorIds: result.tutorIds,
+      explanation: result.explanation,
+      conversationState: { ...state, step: 0, preferences: userMessage, isTutorSearch: false }
     };
   }
 
@@ -263,284 +237,272 @@ function parseUserTimeInput(userMessage) {
   return timeSlots.length > 0 ? timeSlots : [];
 }
 
-// ✅ NEW: Language detection function
-function detectLanguage(userMessage) {
-  const message = userMessage.toLowerCase();
-  const languages = [];
+// ✅ FIXED: Complete rewrite of tutor availability parsing with proper day and time filtering
+function parseTutorTimeSlots(availableTime) {
+  if (!availableTime || !Array.isArray(availableTime)) {
+    // Default: available all times if no specific availability given
+    return ['15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00'];
+  }
+
+  const timeSlots = [];
+  let timeRange = null;
+  let availableDays = [];
   
-  const languageMap = {
-    'english': 'English',
-    'russian': 'Russian',
-    'mandarin': 'Mandarin',
-    'spanish': 'Spanish',
-    'french': 'French',
-    'german': 'German',
-    'japanese': 'Japanese',
-    'korean': 'Korean',
-    'arabic': 'Arabic',
-    'hindi': 'Hindi',
-    'portuguese': 'Portuguese',
-    'gujarati': 'Gujarati',
-    'punjabi': 'Punjabi',
-    'tamil': 'Tamil',
-    'catalan': 'Catalan',
-    'irish gaelic': 'Irish Gaelic'
-  };
-  
-  for (const [key, value] of Object.entries(languageMap)) {
-    if (message.includes(key)) {
-      languages.push(value);
+  // Parse availability array to extract time ranges and days
+  availableTime.forEach(slot => {
+    if (typeof slot !== 'string') return;
+    
+    // Extract time range like "18:00–21:00"
+    const timeRangeMatch = slot.match(/(\d{1,2}):(\d{2})[–\-](\d{1,2}):(\d{2})/);
+    if (timeRangeMatch) {
+      timeRange = {
+        start: parseInt(timeRangeMatch[1]),
+        end: parseInt(timeRangeMatch[3])
+      };
     }
-  }
+    
+    // Extract day patterns
+    const lowerSlot = slot.toLowerCase();
+    if (lowerSlot.includes('daily')) {
+      availableDays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+    } else if (lowerSlot.includes('weekdays')) {
+      availableDays = ['mon', 'tue', 'wed', 'thu', 'fri'];
+    } else if (lowerSlot.includes('weekends')) {
+      availableDays = ['sat', 'sun'];
+         } else if (lowerSlot.includes('-')) {
+       // Parse patterns like "Mon-Wed-Fri-Sat" or "Tue-Thu-Sat"
+       const dayParts = lowerSlot.split('-');
+       const dayMap = {
+         'mon': 'mon', 'tue': 'tue', 'wed': 'wed', 'thu': 'thu', 
+         'fri': 'fri', 'sat': 'sat', 'sun': 'sun'
+       };
+       dayParts.forEach(part => {
+         const trimmedPart = part.trim();
+         if (dayMap[trimmedPart]) {
+           availableDays.push(dayMap[trimmedPart]);
+         }
+       });
+     }
+  });
   
-  return languages.length > 0 ? languages : null;
-}
-
-// ✅ NEW: Hobby parsing function
-function parseHobbies(userMessage) {
-  const message = userMessage.toLowerCase();
-  const hobbies = [];
-  
-  const hobbyKeywords = {
-    'chess': ['chess', 'шахматы'],
-    'programming': ['programming', 'coding', 'программирование'],
-    'hiking': ['hiking', 'походы', 'trekking'],
-    'basketball': ['basketball', 'баскетбол'],
-    'cooking': ['cooking', 'кулинария'],
-    'music': ['music', 'музыка'],
-    'debate': ['debate', 'дебаты'],
-    'swimming': ['swimming', 'плавание'],
-    'volleyball': ['volleyball', 'волейбол'],
-    'drawing': ['drawing', 'рисование', 'art'],
-    'reading': ['reading', 'чтение'],
-    'tennis': ['tennis', 'теннис'],
-    'dancing': ['dancing', 'танцы'],
-    'singing': ['singing', 'пение'],
-    'baking': ['baking', 'выпечка'],
-    'photography': ['photography', 'фотография'],
-    'gaming': ['gaming', 'игры'],
-    'writing': ['writing', 'письмо'],
-    'theater': ['theater', 'театр'],
-    'poetry': ['poetry', 'поэзия'],
-    'travel': ['travel', 'путешествия'],
-    'languages': ['languages', 'языки'],
-    'astronomy': ['astronomy', 'астрономия'],
-    'robotics': ['robotics', 'робототехника'],
-    'electronics': ['electronics', 'электроника'],
-    'rock climbing': ['rock climbing', 'скалолазание'],
-    'gardening': ['gardening', 'садоводство'],
-    'yoga': ['yoga', 'йога'],
-    'martial arts': ['martial arts', 'боевые искусства'],
-    'anime': ['anime', 'аниме'],
-    'manga': ['manga', 'манга'],
-    'architecture': ['architecture', 'архитектура'],
-    'guitar': ['guitar', 'гитара'],
-    'board games': ['board games', 'настольные игры'],
-    'research': ['research', 'исследование'],
-    'history': ['history', 'история'],
-    'business networking': ['business networking', 'деловые связи'],
-    'wine tasting': ['wine tasting', 'дегустация вина'],
-    'cycling': ['cycling', 'велоспорт'],
-    'storytelling': ['storytelling', 'рассказывание историй'],
-    'environmental activism': ['environmental activism', 'экологическая активность'],
-    'sustainable living': ['sustainable living', 'устойчивый образ жизни'],
-    'medical research': ['medical research', 'медицинские исследования'],
-    'nature photography': ['nature photography', 'фотография природы'],
-    'scuba diving': ['scuba diving', 'дайвинг'],
-    'marine conservation': ['marine conservation', 'охрана моря'],
-    'competitive puzzles': ['competitive puzzles', 'соревновательные головоломки'],
-    'taekwondo': ['taekwondo', 'тхэквондо'],
-    'classical music': ['classical music', 'классическая музыка'],
-    'meditation': ['meditation', 'медитация'],
-    'soccer': ['soccer', 'футбол'],
-    'data analysis': ['data analysis', 'анализ данных'],
-    'wine chemistry': ['wine chemistry', 'химия вина'],
-    'calligraphy': ['calligraphy', 'каллиграфия'],
-    'dance': ['dance', 'танцы'],
-    'art': ['art', 'искусство'],
-    'cultural exchange': ['cultural exchange', 'культурный обмен'],
-    'irish music': ['irish music', 'ирландская музыка'],
-    'space documentaries': ['space documentaries', 'космические документальные фильмы'],
-    'stargazing': ['stargazing', 'наблюдение за звездами'],
-    'ocean photography': ['ocean photography', 'фотография океана']
-  };
-  
-  for (const [hobby, keywords] of Object.entries(hobbyKeywords)) {
-    for (const keyword of keywords) {
-      if (message.includes(keyword)) {
-        hobbies.push(hobby);
-        break;
-      }
-    }
-  }
-  
-  return [...new Set(hobbies)];
-}
-
-// ✅ NEW: AI-powered tutor matching using GPT-4.1-mini
-async function findBestTutorsWithAI(userPreferences, allTutors) {
-  // If OpenAI is not available, use manual matching
-  if (!openai) {
-    console.log('🤖 OpenAI not available, using manual matching');
-    return findTutorsManually(userPreferences, allTutors);
-  }
-
-  const prompt = `
-You are an AI tutor matching system for Mentora. Analyze the user preferences and tutor database to find the best matches.
-
-USER PREFERENCES:
-- Subject: ${userPreferences.subject}
-- Time slots: ${userPreferences.timeSlots.join(', ')}
-- Languages: ${userPreferences.languages.join(', ')}
-- Hobbies/Preferences: ${userPreferences.hobbies.join(', ')}
-
-TUTOR DATABASE (${allTutors.length} tutors):
-${allTutors.map(tutor => `
-Name: ${tutor.name}
-Subject: ${tutor.subject}
-Languages: ${tutor.languagesSpoken.join(', ')}
-Available: ${tutor.availableTime.join(', ')}
-Hobbies: ${tutor.hobbies.join(', ')}
-Bio: ${tutor.bio}
-`).join('\n')}
-
-SCORING SYSTEM:
-- Subject match: 9000 points (exact match required)
-- Time availability: 900 points (at least one time slot matches)
-- Language match: 90 points (at least one language matches)
-- Hobby match: 10 points (at least one hobby matches)
-
-INSTRUCTIONS:
-1. Filter tutors by subject match first (only include exact subject matches)
-2. For each matching tutor, calculate their total score
-3. Return exactly 3 tutors with the highest scores
-4. Format your response as a JSON array with tutor objects
-
-RESPONSE FORMAT:
-[
-  {
-    "name": "Tutor Name",
-    "subject": "subject",
-    "score": 9990,
-    "scoreBreakdown": {
-      "subject": 9000,
-      "time": 900,
-      "language": 90,
-      "hobbies": 0
-    },
-    "matchingReasons": ["Subject matches", "Time available", "Language matches"]
-  }
-]
-
-Only return valid JSON. Do not include any other text.
-`;
-
-  try {
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4.1-mini',
-      messages: [
-        {
-          role: 'system',
-          content: 'You are a precise tutor matching system. Return only valid JSON arrays with exactly 3 tutor matches.'
-        },
-        {
-          role: 'user',
-          content: prompt
+  // Generate time slots only for the actual available hours
+  if (timeRange) {
+    // Only include the exact hours within the range (inclusive start, exclusive end)
+    for (let hour = timeRange.start; hour < timeRange.end; hour++) {
+      if (hour >= 15 && hour <= 22) {
+        const timeSlot = hour.toString().padStart(2, '0') + ':00';
+        if (!timeSlots.includes(timeSlot)) {
+          timeSlots.push(timeSlot);
         }
-      ],
-      temperature: 0.1,
-      max_tokens: 2000
-    });
-
-    const response = completion.choices[0].message.content;
-    console.log('🤖 Using GPT-4.1-mini for AI response');
-    console.log('🔥 USING GPT-4.1-MINI - NOT ALGORITHM!');
-    console.log('✅ GPT-4.1-mini response received');
-    console.log('🔍 Model used:', completion.model);
-
-    const matches = JSON.parse(response);
-    return matches.slice(0, 3);
-  } catch (error) {
-    console.error('❌ AI matching failed:', error);
-    console.log('🔄 Falling back to manual matching');
-    return findTutorsManually(userPreferences, allTutors);
+      }
+    }
   }
+  
+  // Return parsed slots or default if none found
+  return timeSlots.length > 0 ? timeSlots : ['15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00'];
 }
 
-// ✅ NEW: Manual fallback matching logic with exact scoring
-function findTutorsManually(userPreferences, allTutors) {
-  const matches = [];
+// New function to check if tutor is available on a specific day and time
+function isTutorAvailableAt(tutor, requestedTimeSlots, requestedDay = null) {
+  if (!tutor.availableTime || !Array.isArray(tutor.availableTime)) {
+    return true; // Default: assume available if no constraints
+  }
   
-  for (const tutor of allTutors) {
-    let score = 0;
-    const scoreBreakdown = { subject: 0, time: 0, language: 0, hobbies: 0 };
-    const matchingReasons = [];
+  let timeRange = null;
+  let availableDays = [];
+  
+  // Parse tutor's availability
+  tutor.availableTime.forEach(slot => {
+    if (typeof slot !== 'string') return;
     
-    // Subject matching (9000 points) - EXACT MATCH REQUIRED
-    if (tutor.subject === userPreferences.subject) {
-      score += 9000;
-      scoreBreakdown.subject = 9000;
-      matchingReasons.push('Subject matches');
-    } else {
-      continue; // Skip tutors with wrong subject
+    // Extract time range
+    const timeRangeMatch = slot.match(/(\d{1,2}):(\d{2})[–\-](\d{1,2}):(\d{2})/);
+    if (timeRangeMatch) {
+      timeRange = {
+        start: parseInt(timeRangeMatch[1]),
+        end: parseInt(timeRangeMatch[3])
+      };
     }
     
-    // Time matching (900 points)
-    const tutorTimes = tutor.availableTime[0];
-    const [startTime, endTime] = tutorTimes.split('–');
-    const startHour = parseInt(startTime.split(':')[0]);
-    const endHour = parseInt(endTime.split(':')[0]);
+    // Extract available days
+    const lowerSlot = slot.toLowerCase();
+    if (lowerSlot.includes('daily')) {
+      availableDays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+    } else if (lowerSlot.includes('weekdays')) {
+      availableDays = ['mon', 'tue', 'wed', 'thu', 'fri'];
+    } else if (lowerSlot.includes('weekends')) {
+      availableDays = ['sat', 'sun'];
+         } else if (lowerSlot.includes('-')) {
+       const dayParts = lowerSlot.split('-');
+       const dayMap = {
+         'mon': 'mon', 'tue': 'tue', 'wed': 'wed', 'thu': 'thu', 
+         'fri': 'fri', 'sat': 'sat', 'sun': 'sun'
+       };
+       dayParts.forEach(part => {
+         const trimmedPart = part.trim();
+         if (dayMap[trimmedPart]) {
+           availableDays.push(dayMap[trimmedPart]);
+         }
+       });
+     }
+  });
+  
+  // Check day availability if specific day is requested
+  if (requestedDay && availableDays.length > 0) {
+    if (!availableDays.includes(requestedDay)) {
+      console.log(`❌ ${tutor.name}: Not available on ${requestedDay} (available: ${availableDays.join(', ')})`);
+      return false;
+    }
+  }
+  
+  // Check time availability
+  if (timeRange) {
+    const hasTimeOverlap = requestedTimeSlots.some(slot => {
+      const hour = parseInt(slot.split(':')[0]);
+      const isInRange = hour >= timeRange.start && hour < timeRange.end;
+      if (!isInRange) {
+        console.log(`❌ ${tutor.name}: ${slot} not in range ${timeRange.start}:00-${timeRange.end}:00`);
+      }
+      return isInRange;
+    });
     
-    let timeMatches = false;
-    for (const userTime of userPreferences.timeSlots) {
-      const userHour = parseInt(userTime.split(':')[0]);
-      if (userHour >= startHour && userHour <= endHour) {
-        timeMatches = true;
-        break;
+    if (!hasTimeOverlap) {
+      return false;
+    }
+  }
+  
+  console.log(`✅ ${tutor.name}: Available for requested time slots`);
+  return true;
+}
+
+
+
+// ✅ NEW: Exact same logic as frontend filter system
+async function findTutorsWithExactFilterLogic({ subject, timeSlots, teachingLanguage, preferences, interfaceLanguage }) {
+  console.log(`🔍 AI TUTOR FILTERING: subject=${subject}, timeSlots=${JSON.stringify(timeSlots)}, language=${teachingLanguage}`);
+  
+  // Convert MOCK_TUTORS to frontend TEACHERS format for consistency
+  const TEACHERS = MOCK_TUTORS.map((tutor, index) => ({
+    photo: `https://ui-avatars.com/api/?name=${encodeURIComponent(tutor.name)}&background=06b6d4&color=fff&size=96`,
+    name: { 
+      en: tutor.name, 
+      ru: tutor.name
+    },
+    subject: tutor.subject,
+    bio: {
+      en: tutor.bio,
+      ru: tutor.bio
+    },
+    resume: {
+      en: `${tutor.name} specializes in ${tutor.subject} and brings unique expertise to every lesson.`,
+      ru: `${tutor.name} специализируется на ${tutor.subject} и привносит уникальный опыт в каждый урок.`
+    },
+    telegram: '#',
+    about: {
+      en: `${tutor.bio} I've been tutoring for 2+ years and specialize in making complex concepts accessible through interactive learning.`,
+      ru: `${tutor.bio} Я преподаю уже более 2 лет и специализируюсь на том, чтобы делать сложные концепции доступными.`
+    },
+    subjects: [{ en: tutor.subject, ru: tutor.subject }],
+    teachingLanguages: {
+      en: tutor.languagesSpoken ? tutor.languagesSpoken.join(', ') : 'English',
+      ru: tutor.languagesSpoken ? tutor.languagesSpoken.join(', ') : 'English'
+    },
+    subjectsTaught: {
+      en: tutor.subject.charAt(0).toUpperCase() + tutor.subject.slice(1),
+      ru: tutor.subject.charAt(0).toUpperCase() + tutor.subject.slice(1)
+    },
+    teachingStyle: {
+      en: tutor.teachingStyle ? tutor.teachingStyle.charAt(0).toUpperCase() + tutor.teachingStyle.slice(1) : 'Interactive',
+      ru: tutor.teachingStyle ? tutor.teachingStyle.charAt(0).toUpperCase() + tutor.teachingStyle.slice(1) : 'Интерактивный'
+    },
+    experience: {
+      en: '2+ years tutoring experience',
+      ru: '2+ года опыта преподавания'
+    },
+    rate: {
+      en: 'Free (Volunteer)',
+      ru: 'Бесплатно (Волонтер)'
+    },
+    hobbies: {
+      en: tutor.hobbies.join(', '),
+      ru: tutor.hobbies.join(', ')
+    },
+    availability: generateAvailability(tutor.availableTime)
+  }));
+
+  // EXACT same filtering logic as frontend
+  let filtered = [...TEACHERS];
+  
+  // Step 1: Apply mandatory subject filter
+  filtered = filtered.filter(t => matchesSubject(t, subject));
+  
+  // Step 2: Apply availability filter (if time slots provided)
+  if (timeSlots && timeSlots.length > 0) {
+    // Convert time slots to frontend format (days + times)
+    const availabilityFilter = [];
+    
+    // Add time slots
+    availabilityFilter.push(...timeSlots);
+    
+    // Add any day information if provided in user input
+    // For now, assume any day is acceptable if not specified
+    
+    filtered = filtered.filter(t => matchesAvailability(t, availabilityFilter));
+  }
+  
+  // Step 3: Apply language filter
+  if (teachingLanguage) {
+    const languageFilter = [teachingLanguage];
+    filtered = filtered.filter(t => matchesLanguages(t, languageFilter));
+  }
+  
+  console.log(`✅ AI TUTOR FILTERED: ${filtered.length} tutors passed all filters`);
+  filtered.forEach(t => console.log(`   - ${t.name.en}: ${t.subject}`));
+
+  if (filtered.length === 0) {
+    const message = interfaceLanguage === 'Russian' 
+      ? 'К сожалению, нет репетиторов, соответствующих всем вашим требованиям.'
+      : 'Sorry, no tutors match all your requirements.';
+    return { tutorIds: [], explanation: message };
+  }
+
+  // Apply hobby scoring for ranking (same as frontend)
+  const scoredTutors = filtered.map(tutor => {
+    let hobbyScore = 0;
+    if (preferences && preferences.toLowerCase() !== 'no' && preferences.toLowerCase() !== 'none') {
+      const originalTutor = MOCK_TUTORS.find(mt => mt.name === tutor.name.en);
+      if (originalTutor) {
+        const tutorHobbies = originalTutor.hobbies || [];
+        const prefWords = preferences.toLowerCase().split(/[\s,]+/);
+        const matches = prefWords.filter(word => 
+          tutorHobbies.some(hobby => hobby.toLowerCase().includes(word))
+        );
+        hobbyScore = matches.length / prefWords.length; // 0-1 score
       }
     }
     
-    if (timeMatches) {
-      score += 900;
-      scoreBreakdown.time = 900;
-      matchingReasons.push('Time available');
+    return { ...tutor, hobbyScore };
+  });
+
+  // Sort by hobby score (highest first), then alphabetically
+  scoredTutors.sort((a, b) => {
+    if (b.hobbyScore !== a.hobbyScore) {
+      return b.hobbyScore - a.hobbyScore;
     }
-    
-    // Language matching (90 points)
-    const languageMatches = tutor.languagesSpoken.some(lang => 
-      userPreferences.languages.includes(lang)
-    );
-    if (languageMatches) {
-      score += 90;
-      scoreBreakdown.language = 90;
-      matchingReasons.push('Language matches');
-    }
-    
-    // Hobby matching (10 points)
-    const hobbyMatches = tutor.hobbies.some(hobby => 
-      userPreferences.hobbies.includes(hobby)
-    );
-    if (hobbyMatches) {
-      score += 10;
-      scoreBreakdown.hobbies = 10;
-      matchingReasons.push('Hobby matches');
-    }
-    
-    matches.push({
-      name: tutor.name,
-      subject: tutor.subject,
-      score: score,
-      scoreBreakdown: scoreBreakdown,
-      matchingReasons: matchingReasons
-    });
-  }
+    return a.name.en.localeCompare(b.name.en);
+  });
   
-  return matches
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 3);
+  const top3 = scoredTutors.slice(0, 3);
+  
+  const tutorIds = top3.map(tutor => tutor.name.en.toLowerCase().replace(/[^a-z]/g, '-'));
+  const explanation = interfaceLanguage === 'Russian' 
+    ? `Отлично! ${top3.length} репетитор(ов) доступны. Вот ваши лучшие варианты:`
+    : `Wonderful! ${top3.length} tutor(s) found. Here are your top choices:`;
+
+  return { tutorIds, explanation };
 }
 
-// ✅ EXACT same functions as frontend filter system
+// ✅ EXACT same matching functions as frontend
 function matchesSubject(tutor, selectedSubject) {
   if (!selectedSubject) return false;
   return tutor.subject === selectedSubject;
@@ -662,7 +624,7 @@ function matchesLanguages(tutor, selectedLanguages) {
 // ✅ EXACT same availability generation as frontend
 function generateAvailability(tutorAvailableTime) {
   if (!tutorAvailableTime || tutorAvailableTime.length === 0) {
-    return [];
+    return []; // No availability
   }
 
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -738,7 +700,7 @@ function generateAvailability(tutorAvailableTime) {
     });
   }
 
-  return [...new Set(availableSlots)].sort((a, b) => a - b);
+  return [...new Set(availableSlots)].sort((a, b) => a - b); // Remove duplicates and sort
 }
 
 // Main endpoint using EXACT same logic as frontend filter system

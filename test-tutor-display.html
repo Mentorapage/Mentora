@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Tutor Display</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .teacher-card {
+      transition: all 0.3s ease-in-out;
+    }
+    
+    .teacher-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+    }
+    
+    .hover\:bg-gray-750:hover {
+      background-color: #374151;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 min-h-screen text-white p-8">
+  <div class="max-w-6xl mx-auto">
+    <h1 class="text-3xl font-bold text-cyan-300 mb-8">Test Tutor Display</h1>
+    
+    <div class="mb-8">
+      <button onclick="testTutorDisplay()" class="px-6 py-3 bg-cyan-600 hover:bg-cyan-500 text-white font-semibold rounded-xl transition-all duration-200">
+        Test Tutor Display
+      </button>
+    </div>
+    
+    <div id="teachers-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+  </div>
+
+  <script>
+    // Mock data for testing
+    const MOCK_TUTORS = [
+      {
+        name: "Emma Chen",
+        subject: "math",
+        bio: "Passionate math tutor with 3+ years experience. Specializes in algebra and calculus.",
+        photo: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDgiIGN5PSI0OCIgcj0iNDgiIGZpbGw9IiMwNkI2RDEiLz4KPHN2ZyB4PSIyNCIgeT0iMjQiIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgZmlsbD0id2hpdGUiIHZpZXdCb3g9IjAgMCAyNCAyNCI+CiAgPHBhdGggZD0iTTEyIDJMMiA3bDEwIDUgMTAtNS0xMC01ek0yIDE3bDEwIDUgMTAtNU0yIDEybDEwIDUgMTAtNSIvPgo8L3N2Zz4KPC9zdmc+",
+        languagesSpoken: ["English"],
+        teachingStyle: "visual",
+        hobbies: ["chess", "programming"]
+      },
+      {
+        name: "David Kim",
+        subject: "math",
+        bio: "Experienced math educator focused on making complex concepts accessible.",
+        photo: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDgiIGN5PSI0OCIgcj0iNDgiIGZpbGw9IiNBQjQ3RjAiLz4KPHN2ZyB4PSIyNCIgeT0iMjQiIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgZmlsbD0id2hpdGUiIHZpZXdCb3g9IjAgMCAyNCAyNCI+CiAgPHBhdGggZD0iTTEyIDJMMiA3bDEwIDUgMTAtNS0xMC01ek0yIDE3bDEwIDUgMTAtNU0yIDEybDEwIDUgMTAtNSIvPgo8L3N2Zz4KPC9zdmc+",
+        languagesSpoken: ["English"],
+        teachingStyle: "structured",
+        hobbies: ["reading", "hiking"]
+      },
+      {
+        name: "Alex Johnson",
+        subject: "math",
+        bio: "Dedicated tutor helping students build confidence in mathematics.",
+        photo: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDgiIGN5PSI0OCIgcj0iNDgiIGZpbGw9IiNGRjY4NjgiLz4KPHN2ZyB4PSIyNCIgeT0iMjQiIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgZmlsbD0id2hpdGUiIHZpZXdCb3g9IjAgMCAyNCAyNCI+CiAgPHBhdGggZD0iTTEyIDJMMiA3bDEwIDUgMTAtNS0xMC01ek0yIDE3bDEwIDUgMTAtNU0yIDEybDEwIDUgMTAtNSIvPgo8L3N2Zz4KPC9zdmc+",
+        languagesSpoken: ["English"],
+        teachingStyle: "interactive",
+        hobbies: ["chess", "music"]
+      }
+    ];
+
+    const TEACHERS = MOCK_TUTORS.map((tutor, index) => ({
+      photo: tutor.photo,
+      name: { 
+        en: tutor.name, 
+        ru: tutor.name
+      },
+      subject: tutor.subject,
+      bio: {
+        en: tutor.bio,
+        ru: tutor.bio
+      },
+      teachingLanguages: {
+        en: tutor.languagesSpoken.join(', '),
+        ru: tutor.languagesSpoken.join(', ')
+      },
+      teachingStyle: {
+        en: tutor.teachingStyle,
+        ru: tutor.teachingStyle
+      },
+      hobbies: {
+        en: tutor.hobbies.join(', '),
+        ru: tutor.hobbies.join(', ')
+      }
+    }));
+
+    const currentLang = 'en';
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function filterAndDisplayMatchedTutors(tutorIds) {
+      console.log('[AI Filter] Filtering tutors by IDs:', tutorIds);
+      
+      const grid = document.getElementById('teachers-grid');
+      if (!grid) {
+        console.error('[AI Filter] Teachers grid not found');
+        return;
+      }
+      
+      // Clear existing content
+      grid.innerHTML = '';
+      
+      // Add heading for matched tutors
+      const headingDiv = document.createElement('div');
+      headingDiv.className = 'col-span-full text-center mb-6';
+      headingDiv.innerHTML = `
+        <h3 class="text-2xl font-bold text-cyan-300 mb-2">🎯 Based on your request, here are the top ${tutorIds.length} tutor matches:</h3>
+        <p class="text-gray-400">Click on any tutor card to view their full profile</p>
+      `;
+      grid.appendChild(headingDiv);
+      
+      // Filter tutors by the provided IDs
+      const matchedTutors = TEACHERS.filter(tutor => {
+        const tutorId = tutor.name[currentLang].toLowerCase()
+          .replace(/[^\w\s-]/g, '') // Remove special characters except spaces and hyphens
+          .replace(/\s+/g, '-') // Replace spaces with hyphens
+          .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+          .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+        
+        const isMatch = tutorIds.includes(tutorId);
+        console.log(`[AI Filter] Checking tutor "${tutor.name[currentLang]}" -> ID: "${tutorId}" -> Match: ${isMatch}`);
+        
+        return isMatch;
+      });
+      
+      console.log('[AI Filter] Found matched tutors:', matchedTutors.map(t => t.name[currentLang]));
+      
+      // Render only the matched tutors
+      if (matchedTutors.length === 0) {
+        // No tutors found
+        const noResultsDiv = document.createElement('div');
+        noResultsDiv.className = 'col-span-full text-center py-8';
+        noResultsDiv.innerHTML = `
+          <div class="text-gray-400 mb-4">
+            <svg class="w-16 h-16 mx-auto mb-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.47-.881-6.08-2.33"></path>
+            </svg>
+            <p class="text-lg font-semibold text-gray-300">No tutors found matching your criteria</p>
+            <p class="text-sm text-gray-500 mt-2">Try adjusting your preferences or check back later</p>
+          </div>
+        `;
+        grid.appendChild(noResultsDiv);
+      } else {
+        // Create a grid container for the tutor cards
+        const cardsGrid = document.createElement('div');
+        cardsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full';
+        
+        matchedTutors.forEach((t, idx) => {
+          const card = document.createElement('div');
+          card.className = 'teacher-card bg-gray-800 rounded-xl shadow-lg p-4 flex flex-col items-center transition-all duration-300 ease-in-out transform opacity-0 scale-95 cursor-pointer select-none hover:bg-gray-750 hover:shadow-xl hover:scale-105 border border-gray-700 hover:border-cyan-400/30';
+          card.setAttribute('data-tutor-id', idx);
+          
+          // Create enhanced card content with better styling
+          card.innerHTML = `
+            <img src="${t.photo}" alt="${t.name[currentLang]}" class="w-24 h-24 rounded-full mb-3 object-cover border-4 border-cyan-400 select-none pointer-events-none shadow-lg"/>
+            <div class="font-bold text-lg mb-1 select-none pointer-events-none text-white">${t.name[currentLang]}</div>
+            <div class="text-cyan-200 text-sm mb-2 select-none pointer-events-none font-medium">${capitalize(t.subject)}</div>
+            <div class="text-sm text-center mb-3 select-none pointer-events-none line-clamp-2 text-gray-300 leading-relaxed">${t.bio[currentLang]}</div>
+            <div class="text-xs text-gray-400 select-none pointer-events-none">${t.teachingLanguages[currentLang]}</div>
+          `;
+          
+          // Add click handler
+          card.onclick = (e) => {
+            e.stopPropagation();
+            alert(`Clicked on ${t.name[currentLang]}!`);
+          };
+          
+          cardsGrid.appendChild(card);
+          
+          // Staggered fade-in animation
+          setTimeout(() => {
+            card.classList.remove('opacity-0', 'scale-95');
+            card.classList.add('opacity-100', 'scale-100');
+          }, idx * 150);
+        });
+        
+        grid.appendChild(cardsGrid);
+      }
+      
+      // Add a "Show All Tutors" button
+      const showAllDiv = document.createElement('div');
+      showAllDiv.className = 'col-span-full text-center mt-8';
+      showAllDiv.innerHTML = `
+        <button onclick="showAllTutors()" class="px-8 py-3 bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 rounded-xl text-white font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg border border-cyan-400/30">
+          <span class="flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+            </svg>
+            Show All Tutors
+          </span>
+        </button>
+      `;
+      grid.appendChild(showAllDiv);
+    }
+
+    function showAllTutors() {
+      console.log('[AI Filter] Showing all tutors');
+      const grid = document.getElementById('teachers-grid');
+      grid.innerHTML = '';
+      
+      const headingDiv = document.createElement('div');
+      headingDiv.className = 'col-span-full text-center mb-6';
+      headingDiv.innerHTML = `
+        <h3 class="text-2xl font-bold text-cyan-300 mb-2">All Available Tutors</h3>
+      `;
+      grid.appendChild(headingDiv);
+      
+      const cardsGrid = document.createElement('div');
+      cardsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full';
+      
+      TEACHERS.forEach((t, idx) => {
+        const card = document.createElement('div');
+        card.className = 'teacher-card bg-gray-800 rounded-xl shadow-lg p-4 flex flex-col items-center transition-all duration-300 ease-in-out transform opacity-0 scale-95 cursor-pointer select-none hover:bg-gray-750 hover:shadow-xl hover:scale-105 border border-gray-700 hover:border-cyan-400/30';
+        
+        card.innerHTML = `
+          <img src="${t.photo}" alt="${t.name[currentLang]}" class="w-24 h-24 rounded-full mb-3 object-cover border-4 border-cyan-400 select-none pointer-events-none shadow-lg"/>
+          <div class="font-bold text-lg mb-1 select-none pointer-events-none text-white">${t.name[currentLang]}</div>
+          <div class="text-cyan-200 text-sm mb-2 select-none pointer-events-none font-medium">${capitalize(t.subject)}</div>
+          <div class="text-sm text-center mb-3 select-none pointer-events-none line-clamp-2 text-gray-300 leading-relaxed">${t.bio[currentLang]}</div>
+          <div class="text-xs text-gray-400 select-none pointer-events-none">${t.teachingLanguages[currentLang]}</div>
+        `;
+        
+        card.onclick = (e) => {
+          e.stopPropagation();
+          alert(`Clicked on ${t.name[currentLang]}!`);
+        };
+        
+        cardsGrid.appendChild(card);
+        
+        setTimeout(() => {
+          card.classList.remove('opacity-0', 'scale-95');
+          card.classList.add('opacity-100', 'scale-100');
+        }, idx * 100);
+      });
+      
+      grid.appendChild(cardsGrid);
+    }
+
+    function testTutorDisplay() {
+      // Test with the tutor IDs returned by the backend
+      const tutorIds = ["emma-chen", "david-kim", "alex-johnson"];
+      filterAndDisplayMatchedTutors(tutorIds);
+    }
+  </script>
+</body>
+</html> 

@@ -255,7 +255,13 @@
       <div class="max-w-5xl mx-auto py-12 px-4">
         <h2 class="text-3xl font-bold mb-6 text-cyan-300" data-en="Our Teachers" data-ru="Наши преподаватели">Our Teachers</h2>
         
-
+        <!-- AI Support Button - HIDDEN FOR NOW -->
+        <!-- <button id="real-ai-tutor-btn" type="button" onclick="openRealAITutorModal()" class="mb-4 px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold rounded-xl shadow transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-400/50">
+          <span class="inline-flex items-center gap-2">
+            <svg class="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+            AI Support
+          </span>
+        </button> -->
 
         <!-- Advanced Filters -->
         <div id="advanced-filters" class="mb-6 p-6 bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl shadow-xl">
@@ -270,21 +276,21 @@
             <!-- Single-select Subject -->
             <div class="filter-group">
               <label class="block text-sm font-medium text-gray-300 mb-2" data-en="Subject (Required)" data-ru="Предмет (Обязательно)">Subject (Required)</label>
-              <div class="relative">
+            <div class="relative">
                 <select id="subject-filter" class="w-full appearance-none bg-white/10 backdrop-blur-sm border border-cyan-400/50 rounded-lg px-3 py-2 text-white hover:bg-white/20 focus:bg-white/20 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30 transition-all duration-150 pr-8">
                   <option value="" data-en="Select a subject..." data-ru="Выберите предмет...">Select a subject...</option>
-                  <option value="math" data-en="Math" data-ru="Математика">Math</option>
-                  <option value="english" data-en="English" data-ru="Английский">English</option>
+                <option value="math" data-en="Math" data-ru="Математика">Math</option>
+                <option value="english" data-en="English" data-ru="Английский">English</option>
                   <option value="physics" data-en="Physics" data-ru="Физика">Physics</option>
                   <option value="chemistry" data-en="Chemistry" data-ru="Химия">Chemistry</option>
                   <option value="biology" data-en="Biology" data-ru="Биология">Biology</option>
-                </select>
-                <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                  <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                  </svg>
-                </div>
+              </select>
+              <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
               </div>
+            </div>
             </div>
 
             <!-- Multi-select Availability (Day, Time) -->
@@ -294,8 +300,8 @@
                 <button id="availability-dropdown-btn" class="w-full flex items-center justify-between px-3 py-2 bg-white/10 backdrop-blur-sm border border-cyan-400/50 rounded-lg text-white hover:bg-white/20 focus:bg-white/20 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30 transition-all duration-150">
                   <span id="availability-display" class="text-sm truncate" data-en="Select times..." data-ru="Выберите время...">Select times...</span>
                   <svg class="w-4 h-4 text-cyan-400 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                  </svg>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
                 </button>
                 <div id="availability-dropdown" class="absolute z-10 w-full mt-1 bg-gray-800 border border-gray-600 rounded-lg shadow-lg hidden max-h-60 overflow-y-auto">
                   <!-- Monday to Sunday + Time slots -->
@@ -329,7 +335,7 @@
                       <input type="checkbox" value="sunday" class="availability-filter mr-2">
                       <span data-en="Sunday" data-ru="Воскресенье">Sunday</span>
                     </label>
-                  </div>
+              </div>
                   <div class="p-2">
                     <h4 class="text-xs font-semibold text-cyan-300 mb-2" data-en="Time Slots (GMT+6)" data-ru="Временные слоты (GMT+6)">Time Slots (GMT+6)</h4>
                     <label class="flex items-center px-2 py-1 hover:bg-gray-700 cursor-pointer">
@@ -364,9 +370,9 @@
                       <input type="checkbox" value="22:00" class="availability-filter mr-2">
                       <span>22:00</span>
                     </label>
-                  </div>
-                </div>
-              </div>
+            </div>
+          </div>
+        </div>
             </div>
 
             <!-- Multi-select Languages -->
@@ -996,15 +1002,16 @@
     </div>
   </div>
 
-  <!-- Configuration -->
-  <script src="config.js"></script>
-  
+  <!-- AI Tutor Assistant Modal (Dynamically Generated) -->
+
+
+
   <!-- EmailJS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script>
     (function() {
-      emailjs.init(window.EMAILJS_CONFIG.PUBLIC_KEY);
-      console.log('EmailJS initialized with key:', window.EMAILJS_CONFIG.PUBLIC_KEY);
+      emailjs.init('jqDn0eJgHsEGzhMjA');
+      console.log('EmailJS initialized with key: jqDn0eJgHsEGzhMjA');
       console.log('EmailJS version:', emailjs.version);
     })();
   </script>

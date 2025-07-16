@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Fixed Tutor Cards</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .teacher-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform, opacity, box-shadow;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .teacher-card::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, transparent, rgba(6, 182, 212, 0.1), transparent);
+      border-radius: 14px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+    }
+    
+    .teacher-card:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+    }
+    
+    .teacher-card:hover::before {
+      opacity: 1;
+    }
+    
+    .teacher-card-entrance {
+      animation: fadeInScale 0.4s ease-out forwards;
+    }
+    
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    
+    .line-clamp-2 {
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      line-height: 1.4;
+      max-height: 2.8em;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 min-h-screen text-white p-8">
+  <div class="max-w-6xl mx-auto">
+    <h1 class="text-3xl font-bold text-cyan-300 mb-8">Test Fixed Tutor Cards</h1>
+    
+    <!-- Test the exact same card structure as renderTeachers() -->
+    <div id="teachers-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- This will be populated by JavaScript -->
+    </div>
+    
+    <div class="mt-8 text-center">
+      <button onclick="testAIFilter()" class="px-6 py-3 bg-cyan-600 hover:bg-cyan-500 rounded-xl text-white font-semibold transition-all duration-200">
+        Test AI Filter Cards
+      </button>
+      <button onclick="showAllTutors()" class="ml-4 px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-xl text-white font-semibold transition-all duration-200">
+        Show All Tutors
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Mock TEACHERS data
+    const TEACHERS = [
+      {
+        name: { en: "Emma Chen", ru: "Эмма Чен" },
+        subject: "math",
+        bio: { en: "Experienced math tutor with a passion for making complex concepts simple.", ru: "Опытный репетитор по математике с страстью к упрощению сложных концепций." },
+        photo: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face"
+      },
+      {
+        name: { en: "David Kim", ru: "Дэвид Ким" },
+        subject: "math",
+        bio: { en: "Dedicated math educator helping students build strong foundations.", ru: "Преданный преподаватель математики, помогающий студентам строить прочные основы." },
+        photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
+      },
+      {
+        name: { en: "Alex Johnson", ru: "Алекс Джонсон" },
+        subject: "math",
+        bio: { en: "Patient and encouraging math tutor with years of teaching experience.", ru: "Терпеливый и ободряющий репетитор по математике с многолетним опытом преподавания." },
+        photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
+      }
+    ];
+
+    const currentLang = 'en';
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    // Exact same function as renderTeachers()
+    function renderTeachers() {
+      const grid = document.getElementById('teachers-grid');
+      if (!grid) return;
+      
+      grid.innerHTML = '';
+      
+      TEACHERS.forEach((t, idx) => {
+        const card = document.createElement('div');
+        card.className = 'teacher-card bg-gray-800 rounded-xl shadow-lg p-4 flex flex-col items-center transition-all duration-300 ease-in-out transform opacity-0 scale-95 cursor-pointer select-none';
+        card.setAttribute('data-tutor-id', idx);
+        
+        // Create simple card content - EXACTLY the same as renderTeachers()
+        card.innerHTML = `
+          <img src="${t.photo}" alt="${t.name[currentLang]}" class="w-24 h-24 rounded-full mb-3 object-cover border-4 border-cyan-400 select-none pointer-events-none"/>
+          <div class="font-bold text-lg mb-1 select-none pointer-events-none">${t.name[currentLang]}</div>
+          <div class="text-cyan-200 text-sm mb-2 select-none pointer-events-none">${capitalize(t.subject)}</div>
+          <div class="text-sm text-center mb-2 select-none pointer-events-none line-clamp-2">${t.bio[currentLang]}</div>
+        `;
+        
+        grid.appendChild(card);
+        
+        // Staggered entrance animation - same as renderTeachers()
+        setTimeout(() => {
+          card.classList.remove('opacity-0', 'scale-95');
+          card.classList.add('opacity-100', 'scale-100', 'teacher-card-entrance');
+        }, idx * 120);
+      });
+    }
+
+    // Test AI filter function with exact same structure
+    function testAIFilter() {
+      const grid = document.getElementById('teachers-grid');
+      if (!grid) return;
+      
+      // Clear existing content
+      grid.innerHTML = '';
+      
+      // Add heading for matched tutors
+      const headingDiv = document.createElement('div');
+      headingDiv.className = 'col-span-full text-center mb-6';
+      headingDiv.innerHTML = `
+        <h3 class="text-2xl font-bold text-cyan-300 mb-2">🎯 Based on your request, here are the top 3 tutor matches:</h3>
+        <p class="text-gray-400">Click on any tutor card to view their full profile</p>
+      `;
+      grid.appendChild(headingDiv);
+      
+      // Filter tutors (simulate AI matching)
+      const matchedTutors = TEACHERS.filter(tutor => {
+        const tutorId = tutor.name[currentLang].toLowerCase()
+          .replace(/[^\w\s-]/g, '')
+          .replace(/\s+/g, '-')
+          .replace(/-+/g, '-')
+          .replace(/^-|-$/g, '');
+        
+        return ['emma-chen', 'david-kim', 'alex-johnson'].includes(tutorId);
+      });
+      
+      // Use the exact same card structure as renderTeachers()
+      matchedTutors.forEach((t, idx) => {
+        const card = document.createElement('div');
+        card.className = 'teacher-card bg-gray-800 rounded-xl shadow-lg p-4 flex flex-col items-center transition-all duration-300 ease-in-out transform opacity-0 scale-95 cursor-pointer select-none';
+        card.setAttribute('data-tutor-id', idx);
+        
+        // Create simple card content - EXACTLY the same as renderTeachers()
+        card.innerHTML = `
+          <img src="${t.photo}" alt="${t.name[currentLang]}" class="w-24 h-24 rounded-full mb-3 object-cover border-4 border-cyan-400 select-none pointer-events-none"/>
+          <div class="font-bold text-lg mb-1 select-none pointer-events-none">${t.name[currentLang]}</div>
+          <div class="text-cyan-200 text-sm mb-2 select-none pointer-events-none">${capitalize(t.subject)}</div>
+          <div class="text-sm text-center mb-2 select-none pointer-events-none line-clamp-2">${t.bio[currentLang]}</div>
+        `;
+        
+        grid.appendChild(card);
+        
+        // Staggered entrance animation - same as renderTeachers()
+        setTimeout(() => {
+          card.classList.remove('opacity-0', 'scale-95');
+          card.classList.add('opacity-100', 'scale-100', 'teacher-card-entrance');
+        }, idx * 120);
+      });
+      
+      // Add a "Show All Tutors" button
+      const showAllDiv = document.createElement('div');
+      showAllDiv.className = 'col-span-full text-center mt-8';
+      showAllDiv.innerHTML = `
+        <button onclick="showAllTutors()" class="px-8 py-3 bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 rounded-xl text-white font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg border border-cyan-400/30">
+          <span class="flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+            </svg>
+            Show All Tutors
+          </span>
+        </button>
+      `;
+      grid.appendChild(showAllDiv);
+    }
+
+    function showAllTutors() {
+      renderTeachers();
+    }
+
+    // Initialize with all tutors
+    renderTeachers();
+  </script>
+</body>
+</html> 
