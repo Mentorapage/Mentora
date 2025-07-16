@@ -2528,7 +2528,7 @@ function initRealAITutorModal() {
       };
       
       // Use the new AI tutor API endpoint
-      const response = await fetch('http://localhost:3001/api/ai-tutor', {
+      const response = await fetch('/api/ai-tutor', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestPayload)
