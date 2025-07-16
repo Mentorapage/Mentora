@@ -1784,57 +1784,94 @@ function testAnimation() {
 
 // Pure JavaScript animation function
 function animateCapToNav(heroCap, navCap) {
-  console.log('Starting pure JS animation...');
+  console.log('Starting precise cap animation...');
   
-  // Get initial position
+  // Get the nav logo container and title for smooth text transition
+  const navLogo = document.getElementById('nav-logo');
+  const navTitle = document.getElementById('nav-title');
+  
+  // Get initial positions
   const heroRect = heroCap.getBoundingClientRect();
-  const navRect = navCap.getBoundingClientRect();
+  const navCapRect = navCap.getBoundingClientRect();
   
-  // Calculate target position (top-left corner)
-  const targetX = 20; // 20px from left
-  const targetY = 20; // 20px from top
+  // Calculate the exact final position where nav cap should be
+  const navLogoRect = navLogo.getBoundingClientRect();
+  const finalX = navLogoRect.left + 12; // 12px from left edge of nav-logo
+  const finalY = navLogoRect.top + 8;   // 8px from top edge of nav-logo
   
-  // Set initial styles
+  console.log('Animation targets:', {
+    heroStart: { x: heroRect.left, y: heroRect.top },
+    finalPos: { x: finalX, y: finalY },
+    navCapSize: { width: navCapRect.width, height: navCapRect.height }
+  });
+  
+  // Set initial styles for hero cap
   heroCap.style.position = 'fixed';
   heroCap.style.top = heroRect.top + 'px';
   heroCap.style.left = heroRect.left + 'px';
   heroCap.style.zIndex = '9999';
   heroCap.style.transition = 'none';
+  heroCap.style.transform = 'scale(1) rotate(0deg)';
   
-  // Start animation
+  // Start with nav cap hidden and nav title in initial position
+  navCap.style.opacity = '0';
+  navCap.style.transform = 'scale(0)';
+  navTitle.style.marginLeft = '0px';
+  
+  // Animation parameters
   let startTime = Date.now();
-  const duration = 1500; // 1.5 seconds
+  const duration = 2000; // 2 seconds for smooth animation
   
   function animate() {
     const elapsed = Date.now() - startTime;
     const progress = Math.min(elapsed / duration, 1);
     
-    // Easing function (ease-in-out)
+    // Smooth easing function
     const easeProgress = progress < 0.5 
       ? 2 * progress * progress 
       : 1 - Math.pow(-2 * progress + 2, 2) / 2;
     
     // Calculate current position
-    const currentX = heroRect.left + (targetX - heroRect.left) * easeProgress;
-    const currentY = heroRect.top + (targetY - heroRect.top) * easeProgress;
+    const currentX = heroRect.left + (finalX - heroRect.left) * easeProgress;
+    const currentY = heroRect.top + (finalY - heroRect.top) * easeProgress;
     const currentScale = 1 - (0.75 * easeProgress); // Scale from 1 to 0.25
-    const currentRotation = easeProgress * 180; // Rotate 180 degrees
+    const currentRotation = easeProgress * 360; // Full rotation
     
-    // Apply transforms
+    // Apply transforms to hero cap
     heroCap.style.transform = `translate(${currentX - heroRect.left}px, ${currentY - heroRect.top}px) scale(${currentScale}) rotate(${currentRotation}deg)`;
-    heroCap.style.opacity = 1 - (0.5 * easeProgress);
+    
+    // Fade out hero cap gradually
+    heroCap.style.opacity = 1 - (0.8 * easeProgress);
+    
+    // Start text transition in the second half
+    if (progress > 0.5) {
+      const textProgress = (progress - 0.5) * 2; // 0 to 1 in second half
+      const textEase = textProgress < 0.5 
+        ? 2 * textProgress * textProgress 
+        : 1 - Math.pow(-2 * textProgress + 2, 2) / 2;
+      
+      // Move text to the right to make space for the cap
+      navTitle.style.marginLeft = (textEase * 12) + 'px'; // 12px to the right
+    }
     
     if (progress < 1) {
       requestAnimationFrame(animate);
     } else {
-      // Animation complete
+      // Animation complete - final cleanup
       console.log('Animation complete!');
+      
+      // Hide hero cap
       heroCap.style.display = 'none';
       
-      // Show nav cap
+      // Show nav cap with smooth transition
       navCap.style.opacity = '1';
       navCap.style.transform = 'scale(1) rotate(0deg)';
-      navCap.style.transition = 'all 0.5s ease-out';
+      navCap.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+      
+      // Ensure text is in final position
+      navTitle.style.marginLeft = '12px';
+      
+      console.log('Nav cap should now be visible and positioned correctly');
     }
   }
   
