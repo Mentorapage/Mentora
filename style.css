@@ -115,6 +115,19 @@
   transition: margin-left 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Main content smooth entry animation */
+#main-content {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s ease-out, transform 1s ease-out;
+  transition-delay: 2.5s; /* Delay until logo animation completes */
+}
+
+#main-content.content-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* Enhanced teacher card styles */
 .teacher-card {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
