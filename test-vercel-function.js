@@ -1,67 +1,82 @@
-#!/usr/bin/env node
+// Test script for Vercel serverless functions
+const http = require('http');
 
-/**
- * Test script for the Vercel serverless function
- * This simulates a request to the /api/ai-tutor endpoint
- */
-
-import handler from './api/ai-tutor.js';
-import dotenv from 'dotenv';
-
-// Load environment variables
-dotenv.config();
-
-// Mock request and response objects
-const mockRequest = {
-  method: 'POST',
-  body: {
-    prompt: 'I need help with math',
-    conversationState: null
-  }
-};
-
-const mockResponse = {
-  statusCode: 200,
-  headers: {},
-  body: null,
+// Test health endpoint
+function testHealth() {
+  console.log('🧪 Testing /api/health...');
   
-  status(code) {
-    this.statusCode = code;
-    return this;
-  },
-  
-  json(data) {
-    this.body = data;
-    console.log('Response:', JSON.stringify(data, null, 2));
-    return this;
-  },
-  
-  setHeader(name, value) {
-    this.headers[name] = value;
-  }
-};
-
-// Test the function
-async function testFunction() {
-  console.log('🧪 Testing Vercel serverless function...');
-  console.log('📝 Request:', JSON.stringify(mockRequest.body, null, 2));
-  console.log('🔑 OpenAI Key loaded:', process.env.OPENAI_API_KEY ? 'Yes' : 'No');
-  console.log('---');
-  
-  try {
-    await handler(mockRequest, mockResponse);
-    
-    if (mockResponse.statusCode === 200) {
-      console.log('✅ Function test successful!');
-      console.log('📊 Status Code:', mockResponse.statusCode);
-    } else {
-      console.log('❌ Function test failed!');
-      console.log('📊 Status Code:', mockResponse.statusCode);
+  const req = http.request({
+    hostname: 'localhost',
+    port: 3000,
+    path: '/api/health',
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
     }
-  } catch (error) {
-    console.error('💥 Function test error:', error);
-  }
+  }, (res) => {
+    console.log('   Status:', res.statusCode);
+    let data = '';
+    res.on('data', chunk => data += chunk);
+    res.on('end', () => {
+      try {
+        const json = JSON.parse(data);
+        console.log('   ✅ Health endpoint working:', json.status);
+        console.log('   Response:', json);
+      } catch (e) {
+        console.log('   ❌ Invalid JSON response:', data);
+      }
+    });
+  });
+  
+  req.on('error', (err) => {
+    console.log('   ❌ Health endpoint error:', err.message);
+  });
+  
+  req.end();
 }
 
-// Run the test
-testFunction(); 
+// Test AI tutor endpoint
+function testAITutor() {
+  console.log('\n🧪 Testing /api/ai-tutor...');
+  
+  const postData = JSON.stringify({
+    prompt: 'Hello, I need help with math',
+    conversationState: { step: 0 }
+  });
+  
+  const req = http.request({
+    hostname: 'localhost',
+    port: 3000,
+    path: '/api/ai-tutor',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(postData)
+    }
+  }, (res) => {
+    console.log('   Status:', res.statusCode);
+    let data = '';
+    res.on('data', chunk => data += chunk);
+    res.on('end', () => {
+      try {
+        const json = JSON.parse(data);
+        console.log('   ✅ AI tutor endpoint working:', json.reply);
+        console.log('   Response:', json);
+      } catch (e) {
+        console.log('   ❌ Invalid JSON response:', data);
+      }
+    });
+  });
+  
+  req.on('error', (err) => {
+    console.log('   ❌ AI tutor endpoint error:', err.message);
+  });
+  
+  req.write(postData);
+  req.end();
+}
+
+// Run tests
+console.log('🚀 Testing Vercel serverless functions...\n');
+testHealth();
+setTimeout(testAITutor, 1000); 
