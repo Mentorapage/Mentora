@@ -73,6 +73,16 @@ export const MOCK_TUTORS = [
     teachingStyle: 'playful',
     embedding: null
   },
+  {
+    name: 'Alex Rodriguez',
+    subject: 'math',
+    bio: 'Calculus and advanced mathematics tutor from Madrid. I specialize in helping students master complex mathematical concepts through step-by-step problem solving.',
+    availableTime: ['17:00–20:00', 'Tue-Thu-Sat'],
+    hobbies: ['soccer', 'piano', 'chess'],
+    languagesSpoken: ['English', 'Spanish'],
+    teachingStyle: 'methodical',
+    embedding: null
+  },
 
   // ENGLISH TUTORS (6 profiles)
   {
