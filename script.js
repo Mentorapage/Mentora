@@ -1752,7 +1752,7 @@ function initGraduationCapAnimation() {
   navCap.style.opacity = '0';
   navCap.style.transform = 'scale(0)';
   
-  // After 2.5 seconds, start the flight animation
+  // After 2 seconds (entrance animation completes), start the flight animation
   setTimeout(() => {
     console.log('Starting graduation cap animation to navigation...');
     
@@ -1763,9 +1763,9 @@ function initGraduationCapAnimation() {
     setTimeout(() => {
       navCap.classList.add('appear');
       console.log('Nav cap should now appear');
-    }, 2000);
+    }, 1500);
     
-  }, 2500);
+  }, 2000);
 }
 
 // NEW: Apply all the new dynamic effects
