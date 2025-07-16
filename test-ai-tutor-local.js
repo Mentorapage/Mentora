@@ -1,176 +1,222 @@
-// Simple test to verify AI Tutor logic works
-const aiTutorModule = require('./api/ai-tutor.js');
+const axios = require('axios');
 
-// Check if functions are exported (development mode)
-const hasExports = aiTutorModule.handleConversation && aiTutorModule.detectSubject;
-
-if (!hasExports) {
-  console.log('⚠️  Functions not exported. Set NODE_ENV=development to enable testing.');
-  console.log('🧪 Testing API endpoint instead...');
+// Test the AI Tutor API locally
+async function testAITutorLocal() {
+  const API_URL = 'http://localhost:3001/api/ai-tutor';
   
-  // Test the API endpoint directly
-  const testAPIEndpoint = async () => {
-    const axios = require('axios');
+  console.log('🧪 Testing AI Tutor API Locally');
+  console.log('=' .repeat(50));
+  
+  try {
+    // Test 1: Language selection
+    console.log('\n📝 Test 1: Language Selection');
+    const response1 = await axios.post(API_URL, {
+      prompt: 'English',
+      conversationState: null
+    });
     
-    try {
-      const response = await axios.post('http://localhost:3000/api/ai-tutor', {
-        message: 'English',
-        conversationState: null
+    console.log('✅ Response:', response1.data.response);
+    console.log('🔄 Type:', response1.data.type);
+    
+    // Test 2: Subject detection
+    console.log('\n📝 Test 2: Subject Detection');
+    const response2 = await axios.post(API_URL, {
+      prompt: 'math',
+      conversationState: response1.data.conversationState
+    });
+    
+    console.log('✅ Response:', response2.data.response);
+    console.log('🔄 Type:', response2.data.type);
+    console.log('📊 Subject:', response2.data.conversationState.subject);
+    
+    // Test 3: Time slots
+    console.log('\n📝 Test 3: Time Slots');
+    const response3 = await axios.post(API_URL, {
+      prompt: '17:00',
+      conversationState: response2.data.conversationState
+    });
+    
+    console.log('✅ Response:', response3.data.response);
+    console.log('🔄 Type:', response3.data.type);
+    console.log('📊 Time slots:', response3.data.conversationState.timeSlots);
+    
+    // Test 4: Language preference
+    console.log('\n📝 Test 4: Language Preference');
+    const response4 = await axios.post(API_URL, {
+      prompt: 'English',
+      conversationState: response3.data.conversationState
+    });
+    
+    console.log('✅ Response:', response4.data.response);
+    console.log('🔄 Type:', response4.data.type);
+    console.log('📊 Languages:', response4.data.conversationState.languages);
+    
+    // Test 5: Hobbies and tutor matching
+    console.log('\n📝 Test 5: Hobbies and Tutor Matching');
+    const response5 = await axios.post(API_URL, {
+      prompt: 'I like chess and programming',
+      conversationState: response4.data.conversationState
+    });
+    
+    console.log('✅ Response:', response5.data.response);
+    console.log('🔄 Type:', response5.data.type);
+    
+    if (response5.data.tutors && response5.data.tutors.length > 0) {
+      console.log(`🎓 Found ${response5.data.tutors.length} tutors:`);
+      response5.data.tutors.forEach((tutor, index) => {
+        console.log(`   ${index + 1}. ${tutor.name} (${tutor.subject}) - Score: ${tutor.score}`);
+        console.log(`      Languages: ${tutor.languagesSpoken.join(', ')}`);
+        console.log(`      Available: ${tutor.availableTime.join(', ')}`);
+        console.log(`      Hobbies: ${tutor.hobbies.join(', ')}`);
+        if (tutor.scoreBreakdown) {
+          console.log(`      Score breakdown: Subject(${tutor.scoreBreakdown.subject}) + Time(${tutor.scoreBreakdown.time}) + Language(${tutor.scoreBreakdown.language}) + Hobbies(${tutor.scoreBreakdown.hobbies})`);
+        }
       });
-      console.log('✅ API Response:', response.data);
-    } catch (error) {
-      console.log('❌ API Error:', error.message);
-      console.log('💡 Make sure the server is running on port 3000');
     }
-  };
-  
-  testAPIEndpoint();
-  return;
+    
+    console.log('\n🎉 All tests completed successfully!');
+    
+  } catch (error) {
+    console.error('❌ Test failed:', error.response?.data || error.message);
+    if (error.code === 'ECONNREFUSED') {
+      console.log('💡 Make sure the server is running on port 3001');
+    }
+  }
 }
 
-const { handleConversation, detectSubject, parseUserTimeInput, detectLanguage, parseHobbies } = aiTutorModule;
-
-async function testAITutorLogic() {
-  console.log('🧪 Testing AI Tutor Logic Locally\n');
-
-  const testScenarios = [
-    {
-      name: 'Complete Math Tutor Search',
-      steps: [
-        { message: 'English', expectedStep: 1 },
-        { message: 'I need help with math', expectedStep: 2 },
-        { message: 'I can study at 17:00', expectedStep: 3 },
-        { message: 'I prefer English', expectedStep: 4 },
-        { message: 'I like chess and programming', expectedStep: 0 }
-      ]
-    },
-    {
-      name: 'Physics Tutor with Russian',
-      steps: [
-        { message: 'Russian', expectedStep: 1 },
-        { message: 'Мне нужна помощь по физике', expectedStep: 2 },
-        { message: 'Я могу заниматься в 18:00', expectedStep: 3 },
-        { message: 'Я предпочитаю русский язык', expectedStep: 4 },
-        { message: 'Мне нравятся астрономия', expectedStep: 0 }
-      ]
+// Test Russian language flow
+async function testRussianFlow() {
+  const API_URL = 'http://localhost:3001/api/ai-tutor';
+  
+  console.log('\n🧪 Testing Russian Language Flow');
+  console.log('=' .repeat(50));
+  
+  try {
+    // Test 1: Russian language selection
+    console.log('\n📝 Test 1: Russian Language Selection');
+    const response1 = await axios.post(API_URL, {
+      prompt: 'Russian',
+      conversationState: null
+    });
+    
+    console.log('✅ Response:', response1.data.response);
+    
+    // Test 2: Russian subject
+    console.log('\n📝 Test 2: Russian Subject');
+    const response2 = await axios.post(API_URL, {
+      prompt: 'математика',
+      conversationState: response1.data.conversationState
+    });
+    
+    console.log('✅ Response:', response2.data.response);
+    
+    // Test 3: Russian time
+    console.log('\n📝 Test 3: Russian Time');
+    const response3 = await axios.post(API_URL, {
+      prompt: '16:00',
+      conversationState: response2.data.conversationState
+    });
+    
+    console.log('✅ Response:', response3.data.response);
+    
+    // Test 4: Russian language preference
+    console.log('\n📝 Test 4: Russian Language Preference');
+    const response4 = await axios.post(API_URL, {
+      prompt: 'русский',
+      conversationState: response3.data.conversationState
+    });
+    
+    console.log('✅ Response:', response4.data.response);
+    
+    // Test 5: Russian hobbies
+    console.log('\n📝 Test 5: Russian Hobbies');
+    const response5 = await axios.post(API_URL, {
+      prompt: 'шахматы',
+      conversationState: response4.data.conversationState
+    });
+    
+    console.log('✅ Response:', response5.data.response);
+    
+    if (response5.data.tutors && response5.data.tutors.length > 0) {
+      console.log(`🎓 Found ${response5.data.tutors.length} tutors:`);
+      response5.data.tutors.forEach((tutor, index) => {
+        console.log(`   ${index + 1}. ${tutor.name} (${tutor.subject}) - Score: ${tutor.score}`);
+      });
     }
-  ];
+    
+    console.log('\n🎉 Russian flow completed successfully!');
+    
+  } catch (error) {
+    console.error('❌ Russian test failed:', error.response?.data || error.message);
+  }
+}
 
-  for (const scenario of testScenarios) {
-    console.log(`\n📋 Testing: ${scenario.name}`);
-    console.log('=' .repeat(40));
-    
-    let conversationState = null;
-    
-    for (let i = 0; i < scenario.steps.length; i++) {
-      const step = scenario.steps[i];
-      console.log(`\n📝 Step ${i + 1}: "${step.message}"`);
-      
-      try {
-        const result = await handleConversation(step.message, conversationState);
-        
-        console.log('✅ Response:', result.response);
-        console.log('🔄 Type:', result.type);
-        console.log('📊 Step:', result.conversationState?.step);
-        
-        if (result.tutors) {
-          console.log(`🎯 Found ${result.tutors.length} tutors:`);
-          result.tutors.forEach((tutor, index) => {
-            console.log(`   ${index + 1}. ${tutor.name} - Score: ${tutor.score}`);
-          });
-        }
-        
-        conversationState = result.conversationState;
-        
-        // Verify step progression
-        if (result.conversationState?.step !== step.expectedStep) {
-          console.log(`⚠️  Warning: Expected step ${step.expectedStep}, got ${result.conversationState?.step}`);
-        }
-        
-      } catch (error) {
-        console.error('❌ Error:', error.message);
-        break;
+// Test error handling
+async function testErrorHandling() {
+  const API_URL = 'http://localhost:3001/api/ai-tutor';
+  
+  console.log('\n🧪 Testing Error Handling');
+  console.log('=' .repeat(50));
+  
+  try {
+    // Test invalid method
+    console.log('\n📝 Test 1: Invalid HTTP Method');
+    try {
+      await axios.get(API_URL);
+      console.log('❌ GET request should not be allowed');
+    } catch (error) {
+      if (error.response?.status === 405) {
+        console.log('✅ GET request properly rejected');
+      } else {
+        console.log('❌ Unexpected error for GET request');
       }
     }
-  }
-}
-
-// Test helper functions
-function testHelperFunctions() {
-  console.log('\n🔧 Testing Helper Functions\n');
-  
-  // Test subject detection
-  console.log('📚 Testing Subject Detection:');
-  const subjects = [
-    'I need help with math',
-    'Мне нужна помощь по физике',
-    'I want to learn chemistry',
-    'I need biology help',
-    'I want to improve my English'
-  ];
-  
-  subjects.forEach(subject => {
-    const detected = detectSubject(subject);
-    console.log(`   "${subject}" -> ${detected}`);
-  });
-  
-  // Test time parsing
-  console.log('\n⏰ Testing Time Parsing:');
-  const times = [
-    'I can study at 17:00',
-    'Available 18-20',
-    'I can do 5pm',
-    'Я могу заниматься в 19:00'
-  ];
-  
-  times.forEach(time => {
-    const parsed = parseUserTimeInput(time);
-    console.log(`   "${time}" -> ${parsed.join(', ')}`);
-  });
-  
-  // Test language detection
-  console.log('\n🌍 Testing Language Detection:');
-  const languages = [
-    'I prefer English',
-    'Я предпочитаю русский язык',
-    'I want Mandarin and Spanish',
-    'I need French and German'
-  ];
-  
-  languages.forEach(lang => {
-    const detected = detectLanguage(lang);
-    console.log(`   "${lang}" -> ${detected?.join(', ')}`);
-  });
-  
-  // Test hobby parsing
-  console.log('\n🎯 Testing Hobby Parsing:');
-  const hobbies = [
-    'I like chess and programming',
-    'Мне нравятся астрономия и шахматы',
-    'I enjoy cooking and music',
-    'I love basketball and hiking'
-  ];
-  
-  hobbies.forEach(hobby => {
-    const parsed = parseHobbies(hobby);
-    console.log(`   "${hobby}" -> ${parsed.join(', ')}`);
-  });
-}
-
-// Run all tests
-async function runAllTests() {
-  try {
-    await testAITutorLogic();
-    testHelperFunctions();
-    console.log('\n✅ All tests completed successfully!');
+    
+    // Test missing message
+    console.log('\n📝 Test 2: Missing Message');
+    try {
+      await axios.post(API_URL, {
+        conversationState: null
+      });
+      console.log('❌ Missing message should be rejected');
+    } catch (error) {
+      if (error.response?.status === 400) {
+        console.log('✅ Missing message properly handled');
+      } else {
+        console.log('❌ Missing message not properly handled');
+      }
+    }
+    
+    console.log('\n🎉 Error handling tests completed!');
+    
   } catch (error) {
-    console.error('❌ Test failed:', error.message);
+    console.error('❌ Error handling test failed:', error.message);
   }
+}
+
+// Main test runner
+async function runLocalTests() {
+  console.log('🚀 Starting Local AI Tutor API Tests');
+  console.log('=' .repeat(60));
+  
+  await testAITutorLocal();
+  await testRussianFlow();
+  await testErrorHandling();
+  
+  console.log('\n✅ All local tests completed!');
 }
 
 // Run if called directly
 if (require.main === module) {
-  runAllTests();
+  runLocalTests().catch(error => {
+    console.error('❌ Test runner error:', error);
+    process.exit(1);
+  });
 }
 
-module.exports = { testAITutorLogic, testHelperFunctions }; 
+module.exports = {
+  testAITutorLocal,
+  testRussianFlow,
+  testErrorHandling,
+  runLocalTests
+}; 

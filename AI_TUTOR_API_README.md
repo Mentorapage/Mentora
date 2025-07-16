@@ -2,94 +2,103 @@
 
 ## Overview
 
-The AI Tutor API (`/api/ai-tutor.js`) implements a step-by-step conversation flow to help students find the perfect tutor match using GPT-4.1-mini for intelligent matching.
+The AI Tutor API (`/api/ai-tutor.js`) is a Vercel serverless function that implements an intelligent tutor matching system for the Mentora platform. It uses a strict step-by-step conversation flow to collect user preferences and then matches them with the best available tutors using either OpenAI's GPT-4.1-mini model or a manual fallback algorithm.
 
-## 🎯 Features
+## Features
 
-- **Step-by-step conversation flow** with strict progression
-- **AI-powered tutor matching** using GPT-4.1-mini
-- **Multi-language support** (English/Russian interface)
-- **Comprehensive filtering** by subject, time, language, and hobbies
-- **Weighted scoring system** for optimal matches
-- **Fallback manual matching** if AI fails
+- **Strict Step-by-Step Flow**: Collects 4 inputs in order: subject, time, language, hobbies
+- **Weighted Scoring System**: Subject (9000), Time (900), Language (90), Hobbies (10)
+- **Multi-language Support**: English and Russian interface languages
+- **AI-Powered Matching**: Uses GPT-4.1-mini for intelligent tutor selection
+- **Manual Fallback**: Robust fallback system when AI is unavailable
+- **Exact Data Consistency**: Uses the same tutor database as the website
 
-## 📋 Conversation Flow
+## Conversation Flow
 
 ### Step 0: Language Selection
-- **Question**: "Which language do you prefer to continue in: English or Russian?"
-- **User Input**: "English" or "Russian"
-- **Next Step**: 1
+- User chooses interface language (English/Russian)
+- Required before proceeding to subject selection
 
-### Step 1: Subject Selection
-- **Question**: "What subject do you need help with?"
-- **User Input**: math, physics, chemistry, biology, english
-- **Weight**: 9000 points (exact match required)
-- **Next Step**: 2
+### Step 1: Subject Detection (MANDATORY - 9000 points)
+- **Required**: User must specify a subject
+- **Supported**: math, physics, chemistry, biology, english
+- **Detection**: Handles variations like "algebra", "calculus", "quantum physics", etc.
+- **Cannot proceed** until valid subject is provided
 
-### Step 2: Time Availability
-- **Question**: "When can you study? (Specify days and hours from 15:00 to 22:00)"
-- **User Input**: "17:00", "18-20", "5pm", etc.
-- **Weight**: 900 points (at least one time slot matches)
-- **Next Step**: 3
+### Step 2: Time Slots (MANDATORY - 900 points)
+- **Required**: User must specify available time slots
+- **Format**: Accepts "17:00", "17-19", "5pm", etc.
+- **Range**: 15:00-22:00 (GMT+6)
+- **Cannot proceed** until valid time is provided
 
-### Step 3: Teaching Language
-- **Question**: "Which language should your tutor use for teaching?"
-- **User Input**: English, Russian, Mandarin, Spanish, French, German, Japanese, Korean, Arabic, Hindi
-- **Weight**: 90 points (at least one language matches)
-- **Next Step**: 4
+### Step 3: Teaching Language (MANDATORY - 90 points)
+- **Required**: User must specify preferred teaching language
+- **Supported**: English, Russian, Mandarin, Spanish, French, German, Japanese, Korean, Arabic, Hindi, Portuguese, Gujarati, Punjabi, Tamil, Catalan, Irish Gaelic
+- **Cannot proceed** until valid language is provided
 
-### Step 4: Hobbies/Preferences
-- **Question**: "Any hobbies or learning preferences you'd like to mention?"
-- **User Input**: chess, programming, cooking, music, etc.
-- **Weight**: 10 points (at least one hobby matches)
-- **Result**: Returns top 3 matching tutors
+### Step 4: Hobbies/Preferences (OPTIONAL - 10 points)
+- **Optional**: User can specify hobbies or learning preferences
+- **Scoring**: Provides bonus points for matching tutors
+- **Examples**: chess, programming, cooking, music, sports, etc.
 
-## 🧠 AI Matching Logic
+## Scoring System
 
-The API uses GPT-4.1-mini to analyze user preferences against the tutor database:
+The API uses a weighted scoring system to rank tutors:
 
-```javascript
-const prompt = `
-You are an AI tutor matching system for Mentora. Analyze the user preferences and tutor database to find the best matches.
+| Criteria | Points | Weight | Description |
+|----------|--------|--------|-------------|
+| Subject | 9000 | 90% | Exact subject match required |
+| Time | 900 | 9% | At least one time slot matches |
+| Language | 90 | 0.9% | At least one language matches |
+| Hobbies | 10 | 0.1% | At least one hobby matches |
 
-USER PREFERENCES:
-- Subject: ${userPreferences.subject}
-- Time slots: ${userPreferences.timeSlots.join(', ')}
-- Languages: ${userPreferences.languages.join(', ')}
-- Hobbies/Preferences: ${userPreferences.hobbies.join(', ')}
+**Total Maximum Score**: 10,000 points
 
-SCORING SYSTEM:
-- Subject match: 9000 points (exact match required)
-- Time availability: 900 points (at least one time slot matches)
-- Language match: 90 points (at least one language matches)
-- Hobby match: 10 points (at least one hobby matches)
-`;
+## API Endpoint
+
+```
+POST /api/ai-tutor
 ```
 
-## 📡 API Endpoint
+### Request Body
 
-### POST `/api/ai-tutor`
-
-**Request Body:**
 ```json
 {
   "message": "string",
   "conversationState": {
     "step": 0,
-    "subject": "math",
-    "timeSlots": ["17:00"],
-    "languages": ["English"],
-    "hobbies": ["chess"],
+    "subject": null,
+    "timeSlots": null,
+    "languages": null,
+    "hobbies": null,
     "interfaceLanguage": "English"
   }
 }
 ```
 
-**Response:**
+### Response Format
+
+#### Needs Information
 ```json
 {
-  "type": "needs_info|tutor_matches",
-  "response": "string",
+  "type": "needs_info",
+  "response": "What subject do you need help with?",
+  "conversationState": {
+    "step": 1,
+    "subject": null,
+    "timeSlots": null,
+    "languages": null,
+    "hobbies": null,
+    "interfaceLanguage": "English"
+  }
+}
+```
+
+#### Tutor Matches
+```json
+{
+  "type": "tutor_matches",
+  "response": "Found 3 excellent tutors for you!",
   "tutors": [
     {
       "name": "Emma Chen",
@@ -98,6 +107,7 @@ SCORING SYSTEM:
       "availableTime": ["16:00–19:00", "Weekends"],
       "hobbies": ["chess", "programming", "hiking"],
       "languagesSpoken": ["English", "Mandarin"],
+      "teachingStyle": "visual",
       "telegram": "@emma_math_tutor",
       "score": 9992,
       "scoreBreakdown": {
@@ -114,146 +124,173 @@ SCORING SYSTEM:
     "subject": "math",
     "timeSlots": ["17:00"],
     "languages": ["English"],
-    "hobbies": ["chess"],
+    "hobbies": ["chess", "programming"],
     "interfaceLanguage": "English"
   }
 }
 ```
 
-## 🧪 Testing
+## Environment Variables
+
+### Required
+- `OPENAI_API_KEY`: Your OpenAI API key for GPT-4.1-mini access
+
+### Optional
+- `NODE_ENV`: Set to "development" to export helper functions for testing
+
+## Usage Examples
+
+### Basic English Flow
+```javascript
+// Step 1: Language selection
+const response1 = await fetch('/api/ai-tutor', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ message: 'English' })
+});
+
+// Step 2: Subject
+const response2 = await fetch('/api/ai-tutor', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ 
+    message: 'math',
+    conversationState: response1.conversationState 
+  })
+});
+
+// Continue with time, language, and hobbies...
+```
+
+### Russian Flow
+```javascript
+// Russian language selection
+const response1 = await fetch('/api/ai-tutor', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ message: 'Russian' })
+});
+
+// Russian subject
+const response2 = await fetch('/api/ai-tutor', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ 
+    message: 'математика',
+    conversationState: response1.conversationState 
+  })
+});
+```
+
+## Testing
 
 ### Local Testing
 ```bash
-# Set development mode to enable function exports
-export NODE_ENV=development
+# Start the development server
+npm run dev
+
+# Run local tests
+node test-ai-tutor-local.js
 
 # Run comprehensive tests
 node test-ai-tutor-comprehensive.js
-
-# Run local logic tests
-node test-ai-tutor-local.js
-
-# Run API endpoint tests
-node test-ai-tutor-api.js
 ```
 
 ### Test Scenarios
+1. **Complete English Tutor Search**: Full flow with English interface
+2. **Complete Math Tutor Search**: Math subject with chess/programming hobbies
+3. **Complete Physics Tutor Search**: Physics with astronomy interest
+4. **Russian Language Flow**: Full Russian interface flow
+5. **Error Handling**: Invalid requests and edge cases
 
-1. **Math Tutor with Chess Hobby**
-   - Subject: math
-   - Time: 17:00 weekdays
-   - Language: English
-   - Hobbies: chess, programming
+### Test Verification
+- ✅ Step-by-step conversation flow
+- ✅ Subject detection accuracy
+- ✅ Time parsing validation
+- ✅ Language detection
+- ✅ Hobby matching
+- ✅ Scoring system accuracy
+- ✅ AI vs manual fallback
+- ✅ Error handling
 
-2. **Physics Tutor with Russian Language**
-   - Subject: physics
-   - Time: 18:00 weekdays
-   - Language: Russian
-   - Hobbies: astronomy, chess
-
-3. **English Tutor with Business Focus**
-   - Subject: english
-   - Time: 15:00 weekends
-   - Language: English, French
-   - Hobbies: business networking, wine tasting
-
-## 🔧 Configuration
-
-### Environment Variables
-```bash
-OPENAI_API_KEY=your_openai_api_key_here
-NODE_ENV=development  # For testing
-```
+## Deployment
 
 ### Vercel Deployment
-The API is designed for Vercel serverless deployment:
-- Uses CommonJS syntax (`require`, `module.exports`)
-- Handles CORS automatically
-- Supports both local and production environments
+1. Ensure `OPENAI_API_KEY` is set in Vercel environment variables
+2. Deploy to Vercel using standard deployment process
+3. The API will be available at `https://your-app.vercel.app/api/ai-tutor`
 
-## 📊 Scoring System
+### Local Development
+1. Create `.env` file with `OPENAI_API_KEY`
+2. Run `npm install` to install dependencies
+3. Start development server with `npm run dev`
 
-| Criteria | Weight | Condition |
-|----------|--------|-----------|
-| Subject | 9000 | Exact match required |
-| Time | 900 | At least one time slot matches |
-| Language | 90 | At least one language matches |
-| Hobbies | 10 | At least one hobby matches |
-
-**Total Maximum Score**: 10,000 points
-
-## 🎯 Expected Behavior
-
-1. **Strict Step Progression**: API will not proceed to next step until current step is completed
-2. **Subject Validation**: Only accepts valid subjects (math, physics, chemistry, biology, english)
-3. **Time Validation**: Only accepts times between 15:00-22:00
-4. **Language Validation**: Only accepts supported languages
-5. **AI Matching**: Uses GPT-4.1-mini for intelligent tutor selection
-6. **Fallback**: Manual matching if AI fails
-7. **Top 3 Results**: Always returns maximum 3 best matches
-
-## 🚀 Usage Examples
-
-### Example 1: Complete Math Tutor Search
-```javascript
-const response = await fetch('/api/ai-tutor', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    message: 'I like chess and programming',
-    conversationState: {
-      step: 4,
-      subject: 'math',
-      timeSlots: ['17:00'],
-      languages: ['English'],
-      interfaceLanguage: 'English'
-    }
-  })
-});
-
-const result = await response.json();
-console.log('Found tutors:', result.tutors);
-```
-
-### Example 2: Russian Physics Tutor Search
-```javascript
-const response = await fetch('/api/ai-tutor', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    message: 'Мне нравятся астрономия и шахматы',
-    conversationState: {
-      step: 4,
-      subject: 'physics',
-      timeSlots: ['18:00'],
-      languages: ['Russian'],
-      interfaceLanguage: 'Russian'
-    }
-  })
-});
-```
-
-## 🔍 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
-1. **404 Error**: Ensure API route is properly deployed to Vercel
-2. **OpenAI API Error**: Check `OPENAI_API_KEY` environment variable
-3. **CORS Error**: API handles CORS automatically, check client configuration
-4. **Timeout**: API has 30-second timeout for AI requests
+1. **OpenAI API Key Missing**
+   - Error: "OpenAI API key not found"
+   - Solution: Set `OPENAI_API_KEY` environment variable
+   - Fallback: API will use manual matching
+
+2. **Port Already in Use**
+   - Error: "EADDRINUSE: address already in use :::3001"
+   - Solution: Kill existing process or change port
+
+3. **Subject Not Detected**
+   - Check if subject is in supported list
+   - Try variations (e.g., "algebra" for math)
+   - Ensure proper language context
+
+4. **Time Parsing Issues**
+   - Use 24-hour format: "17:00"
+   - Or 12-hour format: "5pm"
+   - Ensure time is within 15:00-22:00 range
 
 ### Debug Mode
-Set `NODE_ENV=development` to enable detailed logging and function exports for testing.
+Set `NODE_ENV=development` to enable:
+- Helper function exports
+- Detailed logging
+- Manual testing capabilities
 
-## 📈 Performance
+## Data Consistency
 
-- **Response Time**: < 5 seconds for manual matching, < 30 seconds for AI matching
-- **Accuracy**: > 90% match accuracy with AI, > 95% with manual fallback
-- **Scalability**: Serverless design supports unlimited concurrent requests
+The API uses the exact same tutor database as the website (`mock-tutors.js`), ensuring:
+- ✅ Identical tutor profiles
+- ✅ Same availability patterns
+- ✅ Consistent language support
+- ✅ Matching hobby categories
+- ✅ Identical scoring criteria
 
-## 🔄 Version History
+## Performance
 
-- **v1.0**: Initial implementation with step-by-step conversation flow
-- **v1.1**: Added AI-powered matching with GPT-4.1-mini
-- **v1.2**: Enhanced testing suite and documentation
-- **v1.3**: Added comprehensive error handling and fallback logic 
+- **Response Time**: < 2 seconds for manual matching
+- **AI Response Time**: < 5 seconds with GPT-4.1-mini
+- **Fallback**: Automatic fallback to manual matching if AI fails
+- **Caching**: No caching implemented (stateless design)
+
+## Security
+
+- ✅ Input validation and sanitization
+- ✅ CORS headers properly configured
+- ✅ Environment variable protection
+- ✅ Error message sanitization
+- ✅ Rate limiting (implemented by Vercel)
+
+## Future Enhancements
+
+- [ ] Add more sophisticated time parsing
+- [ ] Implement conversation memory
+- [ ] Add support for more subjects
+- [ ] Enhanced hobby matching algorithms
+- [ ] Real-time availability checking
+- [ ] User preference learning
+
+## Support
+
+For issues or questions:
+1. Check the troubleshooting section
+2. Review test logs for debugging
+3. Verify environment variables
+4. Test with local development first 

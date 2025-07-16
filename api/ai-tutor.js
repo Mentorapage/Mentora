@@ -11,127 +11,237 @@ if (process.env.OPENAI_API_KEY) {
   console.log('⚠️  OpenAI API key not found, will use manual matching only');
 }
 
-// Mock tutors database
+// Import the exact same tutor data as the website
 const MOCK_TUTORS = [
+  // MATH TUTORS (7 profiles)
   {
     name: 'Emma Chen',
     subject: 'math',
-    bio: 'Calculus and algebra specialist with 5 years of experience.',
+    bio: 'Calculus and algebra specialist with 5 years of experience. I make complex mathematical concepts simple and enjoyable through visual learning techniques.',
     availableTime: ['16:00–19:00', 'Weekends'],
     hobbies: ['chess', 'programming', 'hiking'],
     languagesSpoken: ['English', 'Mandarin'],
+    teachingStyle: 'visual',
     telegram: '@emma_math_tutor'
   },
   {
     name: 'Marcus Thompson',
     subject: 'math',
-    bio: 'Statistics and probability expert. Former data scientist.',
+    bio: 'Statistics and probability expert. Former data scientist who loves helping students understand the real-world applications of mathematics.',
     availableTime: ['18:00–21:00', 'Mon-Wed-Fri'],
     hobbies: ['data analysis', 'basketball', 'cooking'],
     languagesSpoken: ['English'],
+    teachingStyle: 'analytical',
     telegram: '@marcus_stats'
   },
   {
     name: 'Aisha Patel',
     subject: 'math',
-    bio: 'International Baccalaureate math specialist from Mumbai.',
+    bio: 'International Baccalaureate math specialist from Mumbai. I help students excel in advanced mathematics through structured problem-solving approaches.',
     availableTime: ['14:00–17:00', 'Daily'],
     hobbies: ['classical music', 'debate', 'meditation'],
     languagesSpoken: ['English', 'Hindi', 'Gujarati'],
+    teachingStyle: 'structured',
     telegram: '@aisha_ib_math'
   },
   {
     name: 'Carlos Mendoza',
     subject: 'math',
-    bio: 'Geometry and trigonometry expert from Mexico City.',
+    bio: 'Geometry and trigonometry expert from Mexico City. I specialize in helping students visualize mathematical relationships through interactive tools.',
     availableTime: ['15:00–18:00', 'Weekdays'],
     hobbies: ['soccer', 'architecture', 'guitar'],
     languagesSpoken: ['English', 'Spanish'],
+    teachingStyle: 'interactive',
     telegram: '@carlos_geometry'
+  },
+  {
+    name: 'Fatima Al-Rashid',
+    subject: 'math',
+    bio: 'Competition mathematics coach from Dubai. I prepare students for math olympiads and advanced problem-solving competitions.',
+    availableTime: ['19:00–22:00', 'Tue-Thu-Sat'],
+    hobbies: ['competitive puzzles', 'astronomy', 'calligraphy'],
+    languagesSpoken: ['English', 'Arabic', 'French'],
+    teachingStyle: 'competitive',
+    telegram: '@fatima_math_olympiad'
   },
   {
     name: 'David Kim',
     subject: 'math',
-    bio: 'Applied mathematics specialist from Seoul.',
+    bio: 'Applied mathematics specialist from Seoul. I focus on connecting mathematical theory to real-world engineering and technology applications.',
     availableTime: ['17:00–20:00', 'Daily'],
     hobbies: ['robotics', 'video games', 'taekwondo'],
     languagesSpoken: ['English', 'Korean'],
+    teachingStyle: 'practical',
     telegram: '@david_applied_math'
   },
   {
+    name: 'Isabella Santos',
+    subject: 'math',
+    bio: 'Elementary and middle school math specialist from São Paulo. I build strong foundational skills through games and creative activities.',
+    availableTime: ['16:00–19:00', 'Mon-Wed-Fri'],
+    hobbies: ['board games', 'dance', 'art'],
+    languagesSpoken: ['English', 'Portuguese'],
+    teachingStyle: 'playful',
+    telegram: '@isabella_math_fun'
+  },
+
+  // ENGLISH TUTORS (6 profiles)
+  {
     name: 'Jonathan Blake',
     subject: 'english',
-    bio: 'Creative writing and literature expert from London.',
+    bio: 'Creative writing and literature expert from London. Published author who helps students develop their unique voice and master literary analysis.',
     availableTime: ['17:00–20:00', 'Mon-Wed-Fri'],
     hobbies: ['writing', 'theater', 'poetry'],
     languagesSpoken: ['English'],
+    teachingStyle: 'creative',
     telegram: '@jonathan_writer'
   },
   {
     name: 'Maya Singh',
     subject: 'english',
-    bio: 'ESL specialist and IELTS preparation expert from New Delhi.',
+    bio: 'ESL specialist and IELTS preparation expert from New Delhi. I help non-native speakers achieve fluency and confidence in English communication.',
     availableTime: ['18:00–21:00', 'Daily'],
     hobbies: ['travel', 'languages', 'cultural exchange'],
     languagesSpoken: ['English', 'Hindi', 'Punjabi'],
+    teachingStyle: 'communicative',
     telegram: '@maya_esl'
+  },
+  {
+    name: 'Ahmed Hassan',
+    subject: 'english',
+    bio: 'Academic writing specialist from Cairo. I teach advanced essay writing, research methods, and critical thinking skills for university preparation.',
+    availableTime: ['20:00–23:00', 'Weekends'],
+    hobbies: ['research', 'history', 'debate'],
+    languagesSpoken: ['English', 'Arabic'],
+    teachingStyle: 'academic',
+    telegram: '@ahmed_academic_writing'
   },
   {
     name: 'Sophie Laurent',
     subject: 'english',
-    bio: 'Business English and professional communication expert from Paris.',
+    bio: 'Business English and professional communication expert from Paris. I help students master workplace communication and presentation skills.',
     availableTime: ['15:00–18:00', 'Tue-Thu-Sat'],
     hobbies: ['business networking', 'wine tasting', 'cycling'],
     languagesSpoken: ['English', 'French', 'German'],
+    teachingStyle: 'professional',
     telegram: '@sophie_business_eng'
   },
   {
+    name: 'Ryan O\'Connor',
+    subject: 'english',
+    bio: 'Shakespeare and classical literature specialist from Dublin. I make ancient texts accessible and engaging for modern students.',
+    availableTime: ['19:00–22:00', 'Weekdays'],
+    hobbies: ['theater', 'Irish music', 'storytelling'],
+    languagesSpoken: ['English', 'Irish Gaelic'],
+    teachingStyle: 'dramatic',
+    telegram: '@ryan_shakespeare'
+  },
+  {
+    name: 'Kenji Tanaka',
+    subject: 'english',
+    bio: 'TOEFL preparation specialist from Tokyo. I help Japanese students overcome common language barriers and achieve high English proficiency scores.',
+    availableTime: ['16:00–19:00', 'Weekends'],
+    hobbies: ['anime', 'manga', 'martial arts'],
+    languagesSpoken: ['English', 'Japanese'],
+    teachingStyle: 'systematic',
+    telegram: '@kenji_toefl'
+  },
+
+  // PHYSICS TUTORS (3 profiles)
+  {
     name: 'Dr. Elena Volkov',
     subject: 'physics',
-    bio: 'PhD in Theoretical Physics from Moscow State University.',
+    bio: 'PhD in Theoretical Physics from Moscow State University. I specialize in quantum mechanics and help students understand the mysteries of the universe.',
     availableTime: ['18:00–21:00', 'Mon-Wed-Fri'],
     hobbies: ['astronomy', 'chess', 'classical music'],
     languagesSpoken: ['English', 'Russian'],
+    teachingStyle: 'theoretical',
     telegram: '@elena_quantum'
   },
   {
     name: 'Marcus Johnson',
     subject: 'physics',
-    bio: 'Experimental physics specialist from MIT.',
+    bio: 'Experimental physics specialist from MIT. I help students visualize abstract physics concepts through hands-on demonstrations and laboratory work.',
     availableTime: ['16:00–19:00', 'Tue-Thu-Sat'],
     hobbies: ['robotics', 'electronics', 'rock climbing'],
     languagesSpoken: ['English'],
+    teachingStyle: 'experimental',
     telegram: '@marcus_experimental'
   },
   {
+    name: 'Raj Gupta',
+    subject: 'physics',
+    bio: 'Astrophysics researcher from Bangalore. I connect physics principles to space exploration and help students understand cosmic phenomena.',
+    availableTime: ['20:00–23:00', 'Daily'],
+    hobbies: ['stargazing', 'space documentaries', 'photography'],
+    languagesSpoken: ['English', 'Hindi', 'Tamil'],
+    teachingStyle: 'cosmic',
+    telegram: '@raj_astrophysics'
+  },
+
+  // CHEMISTRY TUTORS (2 profiles)
+  {
     name: 'Dr. Sarah Mitchell',
     subject: 'chemistry',
-    bio: 'Organic chemistry specialist from Oxford University.',
+    bio: 'Organic chemistry specialist from Oxford University. I make complex chemical reactions understandable through real-world applications and visual models.',
     availableTime: ['17:00–20:00', 'Weekdays'],
     hobbies: ['cooking', 'gardening', 'wine chemistry'],
     languagesSpoken: ['English'],
+    teachingStyle: 'practical',
     telegram: '@sarah_organic_chem'
   },
   {
+    name: 'Liu Wei',
+    subject: 'chemistry',
+    bio: 'Environmental chemistry expert from Beijing. I help students understand how chemistry impacts our environment and daily life.',
+    availableTime: ['19:00–22:00', 'Mon-Wed-Fri-Sun'],
+    hobbies: ['environmental activism', 'hiking', 'sustainable living'],
+    languagesSpoken: ['English', 'Mandarin'],
+    teachingStyle: 'environmental',
+    telegram: '@liu_environmental_chem'
+  },
+
+  // BIOLOGY TUTORS (2 profiles)
+  {
     name: 'Dr. Priya Sharma',
     subject: 'biology',
-    bio: 'Medical school professor specializing in human anatomy.',
+    bio: 'Medical school professor specializing in human anatomy and physiology. I prepare pre-med students for MCAT and advanced biological concepts.',
     availableTime: ['19:00–22:00', 'Daily'],
     hobbies: ['medical research', 'yoga', 'nature photography'],
     languagesSpoken: ['English', 'Hindi'],
+    teachingStyle: 'medical',
     telegram: '@priya_med_bio'
+  },
+  {
+    name: 'Alexandra Torres',
+    subject: 'biology',
+    bio: 'Marine biology specialist from Barcelona. I help students explore ocean ecosystems and understand marine conservation principles.',
+    availableTime: ['18:00–21:00', 'Weekends'],
+    hobbies: ['scuba diving', 'marine conservation', 'ocean photography'],
+    languagesSpoken: ['English', 'Spanish', 'Catalan'],
+    teachingStyle: 'marine',
+    telegram: '@alexandra_marine_bio'
   }
 ];
 
-// Helper functions
+// Helper functions for step-by-step conversation
 function detectSubject(userMessage) {
   const message = userMessage.toLowerCase();
-  if (message.includes('math') || message.includes('математика')) return 'math';
-  if (message.includes('physics') || message.includes('физика')) return 'physics';
-  if (message.includes('chemistry') || message.includes('химия')) return 'chemistry';
-  if (message.includes('biology') || message.includes('биология')) return 'biology';
-  if (message.includes('english') || message.includes('английский')) return 'english';
-  if (message.includes('science') || message.includes('наука')) return 'physics';
+  if (message.includes('math') || message.includes('математика') || message.includes('algebra') || message.includes('calculus')) {
+    return 'math';
+  }
+  if (message.includes('physics') || message.includes('физика') || message.includes('quantum') || message.includes('mechanics')) {
+    return 'physics';
+  }
+  if (message.includes('chemistry') || message.includes('химия') || message.includes('organic') || message.includes('chemical')) {
+    return 'chemistry';
+  }
+  if (message.includes('biology') || message.includes('биология') || message.includes('anatomy') || message.includes('marine')) {
+    return 'biology';
+  }
+  if (message.includes('english') || message.includes('английский') || message.includes('literature') || message.includes('writing')) {
+    return 'english';
+  }
   return null;
 }
 
@@ -139,6 +249,7 @@ function parseUserTimeInput(userMessage) {
   const timeSlots = [];
   const message = userMessage.toLowerCase();
   
+  // Extract time patterns: 17:00, 17-19, 5pm, etc.
   const timePatterns = [
     /(\d{1,2}):(\d{2})/g,
     /(\d{1,2})-(\d{1,2})/g,
@@ -188,7 +299,13 @@ function detectLanguage(userMessage) {
     'japanese': 'Japanese',
     'korean': 'Korean',
     'arabic': 'Arabic',
-    'hindi': 'Hindi'
+    'hindi': 'Hindi',
+    'portuguese': 'Portuguese',
+    'gujarati': 'Gujarati',
+    'punjabi': 'Punjabi',
+    'tamil': 'Tamil',
+    'catalan': 'Catalan',
+    'irish gaelic': 'Irish Gaelic'
   };
   
   for (const [key, value] of Object.entries(languageMap)) {
@@ -257,7 +374,15 @@ function parseHobbies(userMessage) {
     'meditation': ['meditation', 'медитация'],
     'soccer': ['soccer', 'футбол'],
     'data analysis': ['data analysis', 'анализ данных'],
-    'wine chemistry': ['wine chemistry', 'химия вина']
+    'wine chemistry': ['wine chemistry', 'химия вина'],
+    'calligraphy': ['calligraphy', 'каллиграфия'],
+    'dance': ['dance', 'танцы'],
+    'art': ['art', 'искусство'],
+    'cultural exchange': ['cultural exchange', 'культурный обмен'],
+    'irish music': ['irish music', 'ирландская музыка'],
+    'space documentaries': ['space documentaries', 'космические документальные фильмы'],
+    'stargazing': ['stargazing', 'наблюдение за звездами'],
+    'ocean photography': ['ocean photography', 'фотография океана']
   };
   
   for (const [hobby, keywords] of Object.entries(hobbyKeywords)) {
@@ -362,7 +487,7 @@ Only return valid JSON. Do not include any other text.
   }
 }
 
-// Manual fallback matching logic
+// Manual fallback matching logic with exact scoring
 function findTutorsManually(userPreferences, allTutors) {
   const matches = [];
   
@@ -371,13 +496,13 @@ function findTutorsManually(userPreferences, allTutors) {
     const scoreBreakdown = { subject: 0, time: 0, language: 0, hobbies: 0 };
     const matchingReasons = [];
     
-    // Subject matching (9000 points)
+    // Subject matching (9000 points) - EXACT MATCH REQUIRED
     if (tutor.subject === userPreferences.subject) {
       score += 9000;
       scoreBreakdown.subject = 9000;
       matchingReasons.push('Subject matches');
     } else {
-      continue;
+      continue; // Skip tutors with wrong subject
     }
     
     // Time matching (900 points)
@@ -435,7 +560,7 @@ function findTutorsManually(userPreferences, allTutors) {
     .slice(0, 3);
 }
 
-// Main conversation handler
+// Main conversation handler with strict step-by-step flow
 async function handleConversation(userMessage, conversationState) {
   const state = conversationState || {
     step: 0,
@@ -469,7 +594,7 @@ async function handleConversation(userMessage, conversationState) {
     }
   }
 
-  // Step 1: Subject detection
+  // Step 1: Subject detection (MANDATORY - 9000 points)
   if (state.step === 1 && !state.subject) {
     const subject = detectSubject(userMessage);
     if (subject) {
@@ -494,7 +619,7 @@ async function handleConversation(userMessage, conversationState) {
     }
   }
 
-  // Step 2: Time slots
+  // Step 2: Time slots (MANDATORY - 900 points)
   if (state.step === 2 && !state.timeSlots) {
     const timeSlots = parseUserTimeInput(userMessage);
     if (timeSlots.length > 0) {
@@ -519,13 +644,13 @@ async function handleConversation(userMessage, conversationState) {
     }
   }
 
-  // Step 3: Teaching language
+  // Step 3: Teaching language (MANDATORY - 90 points)
   if (state.step === 3 && !state.languages) {
     const languages = detectLanguage(userMessage);
     if (languages && languages.length > 0) {
       const message = state.interfaceLanguage === 'Russian' 
-        ? 'Отлично! Есть ли у вас хобби, предпочтения в стиле обучения или что-то, что вы хотели бы видеть в преподавателе?'
-        : "Wonderful! Any hobbies or learning preferences you'd like to mention?";
+        ? 'Отлично! Есть ли у вас хобби, предпочтения в стиле обучения или что-то, что вы хотели бы видеть в преподавателе? (Необязательно)'
+        : "Wonderful! Any hobbies or learning preferences you'd like to mention? (Optional)";
       
       return {
         type: 'needs_info',
@@ -544,7 +669,7 @@ async function handleConversation(userMessage, conversationState) {
     }
   }
 
-  // Step 4: Find tutors using AI
+  // Step 4: Find tutors using AI (OPTIONAL - 10 points for hobbies)
   if (state.step === 4) {
     const hobbies = parseHobbies(userMessage);
     
