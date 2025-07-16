@@ -1,9 +1,31 @@
-import OpenAI from 'openai';
-import { MOCK_TUTORS } from '../mock-tutors.js';
+// Use dynamic imports for Vercel compatibility
+let OpenAI;
+let MOCK_TUTORS;
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Initialize modules
+async function initializeModules() {
+  if (!OpenAI) {
+    const openaiModule = await import('openai');
+    OpenAI = openaiModule.default;
+  }
+  if (!MOCK_TUTORS) {
+    const mockModule = await import('../mock-tutors.js');
+    MOCK_TUTORS = mockModule.MOCK_TUTORS;
+  }
+}
+
+// Initialize OpenAI client
+let openai;
+
+async function getOpenAIClient() {
+  if (!openai) {
+    await initializeModules();
+    openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+  }
+  return openai;
+}
 
 // ✅ FIXED: AI Tutor now uses EXACT same logic as frontend filter system
 async function strictStepByStepProcess(userMessage, conversationState) {
@@ -228,7 +250,7 @@ async function findTutorsWithExactFilterLogic({ subject, timeSlots, teachingLang
   console.log('🔍 FILTERING TUTORS:', { subject, timeSlots, teachingLanguage });
   
   // Filter tutors using EXACT same logic as frontend
-  const filteredTutors = MOCK_TUTORS.filter(tutor => {
+  const filteredTutors = (MOCK_TUTORS || []).filter(tutor => {
     // Subject filter
     if (!matchesSubject(tutor, subject)) {
       console.log(`❌ ${tutor.name}: Subject mismatch (${tutor.subject} ≠ ${subject})`);
@@ -335,6 +357,8 @@ async function generateTutorExplanation(tutors, preferences, interfaceLanguage) 
     console.log('🤖 Using GPT-4.1-mini for AI response');
     console.log('🔥 USING GPT-4.1-MINI - NOT ALGORITHM!');
     
+    const openaiClient = await getOpenAIClient();
+    
     const tutorInfo = tutors.map((item, index) => {
       const tutor = item.tutor;
       return `${index + 1}. ${tutor.name} - ${tutor.subject} specialist
@@ -353,7 +377,7 @@ async function generateTutorExplanation(tutors, preferences, interfaceLanguage) 
       ? `Вот ${tutors.length} репетиторов, которые подходят под критерии пользователя${preferences ? ` (предпочтения: ${preferences})` : ''}:\n\n${tutorInfo}\n\nПредоставь краткое объяснение на русском языке, почему эти репетиторы подходят.`
       : `Here are ${tutors.length} tutors that match the user's criteria${preferences ? ` (preferences: ${preferences})` : ''}:\n\n${tutorInfo}\n\nProvide a brief explanation in English of why these tutors are a good match.`;
     
-    const completion = await openai.chat.completions.create({
+    const completion = await openaiClient.chat.completions.create({
       model: 'gpt-4.1-mini-2025-04-14',
       messages: [
         { role: 'system', content: systemPrompt },
@@ -444,6 +468,9 @@ export default async function handler(req, res) {
   console.log('🚀 AI Tutor endpoint called');
   console.log('📝 Method:', req.method);
   console.log('🔑 OpenAI Key available:', process.env.OPENAI_API_KEY ? 'Yes' : 'No');
+  
+  // Initialize modules for Vercel compatibility
+  await initializeModules();
   
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
