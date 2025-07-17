@@ -1141,12 +1141,8 @@ button:focus, .btn:focus {
   display: none !important;
 }
 
-/* Central logo visibility - controlled by JavaScript */
+/* Central logo styling - visibility controlled by section visibility */
 #central-logo {
-  display: none;
-}
-
-#central-logo.show {
   display: block;
 }
 

@@ -21,15 +21,7 @@ function showSection(section, updateURL = true) {
   sections[section].classList.add('fade');
   setTimeout(() => sections[section].classList.remove('fade'), 400);
   
-  // Update central logo visibility
-  const centralLogo = document.getElementById('central-logo');
-  if (centralLogo) {
-    if (section === 'home') {
-      centralLogo.classList.add('show');
-    } else {
-      centralLogo.classList.remove('show');
-    }
-  }
+
   
   // Update URL hash if requested
   if (updateURL) {
