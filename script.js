@@ -1,6 +1,33 @@
 // Mentora SPA Interactivity Script
 // All logic for navigation, language toggle, teachers, modals, and form
 
+// Logo Animation Script
+window.addEventListener('DOMContentLoaded', () => {
+  const flyLogo = document.getElementById('logo-fly');
+  const placeholder = document.getElementById('logo-placeholder');
+  const targetRect = placeholder.getBoundingClientRect();
+  const startRect = flyLogo.getBoundingClientRect();
+
+  // compute movement deltas
+  const deltaX = targetRect.left - startRect.left;
+  const deltaY = targetRect.top - startRect.top;
+
+  // expose to CSS
+  document.body.style.setProperty('--delta-x', deltaX);
+  document.body.style.setProperty('--delta-y', deltaY);
+
+  // start animation
+  requestAnimationFrame(() => {
+    document.body.classList.add('logo-animate');
+  });
+
+  // after animation, embed the cap into header and hide the flying one
+  setTimeout(() => {
+    flyLogo.style.display = 'none';
+    placeholder.innerHTML = '<img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMiA3bDEwIDUgMTAtNS0xMC01ek0yIDE3bDEwIDUgMTAtNU0yIDEybDEwIDUgMTAtNSIgZmlsbD0iIzA2YjZkNCIvPgo8L3N2Zz4K" style="width:30px;vertical-align:middle;" alt="Logo">';
+  }, 1300);
+});
+
 // --- Language Data ---
 const LANGS = ['en', 'ru'];
 let currentLang = 'en';
@@ -1731,115 +1758,9 @@ function initVisualEnhancements() {
   
   // NEW: Apply new dynamic effects
   applyNewDynamicEffects();
-  
-  // NEW: Initialize graduation cap animation
-  initGraduationCapAnimation();
 }
 
-// NEW: Graduation cap animation
-function initGraduationCapAnimation() {
-  console.log('Initializing graduation cap animation...');
-  
-  const logoCap = document.getElementById('logo-cap');
-  const finalPosition = document.getElementById('logo-final-position');
-  const mainContent = document.getElementById('main-content');
-  
-  if (!logoCap || !finalPosition || !mainContent) {
-    console.error('Graduation cap elements not found');
-    return;
-  }
-  
-  console.log('Found elements:', { logoCap, finalPosition, mainContent });
-  
-  // After 2 seconds (entrance animation completes), start the flight animation
-  setTimeout(() => {
-    console.log('Starting graduation cap animation to navigation...');
-    
-    // Use the new REAL movement animation
-    animateCapToNav();
-    
-  }, 2000);
-}
 
-// Test function for debugging
-function testAnimation() {
-  console.log('Test animation triggered manually');
-  const logoCap = document.getElementById('logo-cap');
-  const finalPosition = document.getElementById('logo-final-position');
-  const mainContent = document.getElementById('main-content');
-  const body = document.body;
-  
-  if (logoCap && finalPosition && mainContent) {
-    console.log('Elements found, triggering animation...');
-    
-    // Reset body class and main content
-    body.classList.remove('logo-flying');
-    mainContent.style.opacity = '0';
-    mainContent.style.transform = 'translateY(40px)';
-    
-    // Reset cap position if it was moved
-    if (logoCap.parentElement !== document.getElementById('hero-graduation-cap-container')) {
-      // Move cap back to center if it was moved to final position
-      const container = document.getElementById('hero-graduation-cap-container');
-      container.appendChild(logoCap);
-      logoCap.style.position = 'absolute';
-      logoCap.style.top = '50%';
-      logoCap.style.left = '50%';
-      logoCap.style.transform = 'translate(-50%, -50%)';
-    }
-    
-    // Remove flying class if it exists
-    logoCap.classList.remove('flying');
-    
-    // Use the CSS transition animation
-    animateCapToNav();
-  } else {
-    console.error('Elements not found for test animation');
-    console.log('logoCap:', logoCap);
-    console.log('finalPosition:', finalPosition);
-    console.log('mainContent:', mainContent);
-  }
-}
-
-// Pure CSS transition animation function
-function animateCapToNav() {
-  console.log('Starting CSS transition animation...');
-  
-  // Get the elements
-  const logoCap = document.getElementById('logo-cap');
-  const finalPosition = document.getElementById('logo-final-position');
-  const body = document.body;
-  
-  if (!logoCap || !finalPosition) {
-    console.error('Required elements not found');
-    return;
-  }
-  
-  // Add body class to trigger page content animation
-  body.classList.add('logo-flying');
-  
-  // Add flying class to trigger the CSS transition
-  logoCap.classList.add('flying');
-  
-  // After animation completes, move the cap to the final position in the DOM
-  setTimeout(() => {
-    console.log('Animation complete! Moving cap to final position...');
-    
-    // Remove absolute positioning and move to final position
-    logoCap.style.position = 'static';
-    logoCap.style.transform = 'none';
-    logoCap.style.top = 'auto';
-    logoCap.style.left = 'auto';
-    
-    // Move the cap element to the final position
-    finalPosition.appendChild(logoCap);
-    
-    // Remove body class
-    body.classList.remove('logo-flying');
-    
-    console.log('Cap successfully moved to final position!');
-  }, 1200); // Match the CSS transition duration
-}
 
 // NEW: Apply all the new dynamic effects
 function applyNewDynamicEffects() {
@@ -1918,11 +1839,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderTeachers();
   initVisualEnhancements();
   
-  // Ensure graduation cap animation is called
-  setTimeout(() => {
-    console.log('Calling graduation cap animation...');
-    initGraduationCapAnimation();
-  }, 100);
+
 });
 
 // Re-initialize enhancements when sections change
