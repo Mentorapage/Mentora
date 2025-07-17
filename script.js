@@ -1740,27 +1740,23 @@ function initVisualEnhancements() {
 function initGraduationCapAnimation() {
   console.log('Initializing graduation cap animation...');
   
-  const heroCap = document.getElementById('hero-graduation-cap');
-  const navCap = document.getElementById('nav-cap');
+  const logoCap = document.getElementById('logo-cap');
+  const finalPosition = document.getElementById('logo-final-position');
   const mainContent = document.getElementById('main-content');
   
-  if (!heroCap || !navCap || !mainContent) {
+  if (!logoCap || !finalPosition || !mainContent) {
     console.error('Graduation cap elements not found');
     return;
   }
   
-  console.log('Found elements:', { heroCap, navCap, mainContent });
-  
-  // Start with nav cap hidden only
-  navCap.style.opacity = '0';
-  navCap.style.transform = 'scale(0)';
+  console.log('Found elements:', { logoCap, finalPosition, mainContent });
   
   // After 2 seconds (entrance animation completes), start the flight animation
   setTimeout(() => {
     console.log('Starting graduation cap animation to navigation...');
     
-    // Use pure JavaScript animation
-    animateCapToNav(heroCap, navCap);
+    // Use the new REAL movement animation
+    animateCapToNav();
     
   }, 2000);
 }
@@ -1768,138 +1764,107 @@ function initGraduationCapAnimation() {
 // Test function for debugging
 function testAnimation() {
   console.log('Test animation triggered manually');
-  const heroCap = document.getElementById('hero-graduation-cap');
-  const navCap = document.getElementById('nav-cap');
+  const logoCap = document.getElementById('logo-cap');
+  const finalPosition = document.getElementById('logo-final-position');
   const mainContent = document.getElementById('main-content');
   const body = document.body;
   
-  if (heroCap && navCap && mainContent) {
+  if (logoCap && finalPosition && mainContent) {
     console.log('Elements found, triggering animation...');
     
     // Reset body class and main content
-    body.classList.remove('logo-in-transition');
+    body.classList.remove('logo-flying');
     mainContent.style.opacity = '0';
     mainContent.style.transform = 'translateY(40px)';
     
-    // Use pure JavaScript animation
-    animateCapToNav(heroCap, navCap);
+    // Reset cap position if it was moved
+    if (logoCap.parentElement !== document.getElementById('hero-graduation-cap-container')) {
+      // Move cap back to center if it was moved to final position
+      const container = document.getElementById('hero-graduation-cap-container');
+      container.appendChild(logoCap);
+      logoCap.style.position = 'absolute';
+      logoCap.style.top = '50%';
+      logoCap.style.left = '50%';
+      logoCap.style.transform = 'translate(-50%, -50%)';
+    }
+    
+    // Use the new REAL movement animation
+    animateCapToNav();
   } else {
     console.error('Elements not found for test animation');
-    console.log('heroCap:', heroCap);
-    console.log('navCap:', navCap);
+    console.log('logoCap:', logoCap);
+    console.log('finalPosition:', finalPosition);
     console.log('mainContent:', mainContent);
   }
 }
 
-// Pure JavaScript animation function
-function animateCapToNav(heroCap, navCap) {
-  console.log('Starting pixel-perfect cap animation...');
+// Pure JavaScript animation function - REAL MOVEMENT
+function animateCapToNav() {
+  console.log('Starting REAL cap movement animation...');
   
-  // Get the nav logo container and title for smooth text transition
-  const navLogo = document.getElementById('nav-logo');
-  const navTitle = document.getElementById('nav-title');
+  // Get the elements
+  const logoCap = document.getElementById('logo-cap');
+  const finalPosition = document.getElementById('logo-final-position');
   const mainContent = document.getElementById('main-content');
   const body = document.body;
   
-  // Get initial positions
-  const heroRect = heroCap.getBoundingClientRect();
-  const navCapRect = navCap.getBoundingClientRect();
-  const navLogoRect = navLogo.getBoundingClientRect();
-  
-  // Calculate the EXACT final position where nav cap should be
-  // The nav cap should be positioned exactly where it appears in the final layout
-  const finalX = navLogoRect.left + 0; // 0px from left edge of nav-logo (first element)
-  const finalY = navLogoRect.top + (navLogoRect.height - navCapRect.height) / 2; // Vertically centered
-  
-  console.log('Animation targets:', {
-    heroStart: { x: heroRect.left, y: heroRect.top, width: heroRect.width, height: heroRect.height },
-    finalPos: { x: finalX, y: finalY },
-    navCapSize: { width: navCapRect.width, height: navCapRect.height },
-    navLogoRect: { left: navLogoRect.left, top: navLogoRect.top, width: navLogoRect.width, height: navLogoRect.height }
-  });
-  
-  // Set initial styles for hero cap
-  heroCap.style.position = 'fixed';
-  heroCap.style.top = heroRect.top + 'px';
-  heroCap.style.left = heroRect.left + 'px';
-  heroCap.style.zIndex = '9999';
-  heroCap.style.transition = 'none';
-  heroCap.style.transform = 'scale(1) rotate(0deg)';
-  heroCap.style.width = heroRect.width + 'px';
-  heroCap.style.height = heroRect.height + 'px';
-  
-  // Start with nav cap hidden and nav title in initial position
-  navCap.style.opacity = '0';
-  navCap.style.transform = 'scale(0)';
-  navTitle.style.marginLeft = '0px';
-  
-  // Add body class to trigger page content animation
-  body.classList.add('logo-in-transition');
-  
-  // Animation parameters
-  let startTime = Date.now();
-  const duration = 2500; // 2.5 seconds for smooth animation
-  
-  function animate() {
-    const elapsed = Date.now() - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    
-    // Smooth easing function
-    const easeProgress = progress < 0.5 
-      ? 2 * progress * progress 
-      : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-    
-    // Calculate current position
-    const currentX = heroRect.left + (finalX - heroRect.left) * easeProgress;
-    const currentY = heroRect.top + (finalY - heroRect.top) * easeProgress;
-    const currentScale = 1 - (0.75 * easeProgress); // Scale from 1 to 0.25
-    const currentRotation = easeProgress * 180; // Gentle rotation (180 degrees)
-    
-    // Apply transforms to hero cap
-    heroCap.style.transform = `translate(${currentX - heroRect.left}px, ${currentY - heroRect.top}px) scale(${currentScale}) rotate(${currentRotation}deg)`;
-    
-    // Fade out hero cap gradually
-    heroCap.style.opacity = 1 - (0.9 * easeProgress);
-    
-    // Start text transition in the second half
-    if (progress > 0.6) {
-      const textProgress = (progress - 0.6) / 0.4; // 0 to 1 in last 40%
-      const textEase = textProgress < 0.5 
-        ? 2 * textProgress * textProgress 
-        : 1 - Math.pow(-2 * textProgress + 2, 2) / 2;
-      
-      // Move text to the right to make space for the cap
-      navTitle.style.marginLeft = (textEase * 12) + 'px'; // 12px to the right
-    }
-    
-    if (progress < 1) {
-      requestAnimationFrame(animate);
-    } else {
-      // Animation complete - seamless integration
-      console.log('Animation complete! Starting seamless integration...');
-      
-      // Phase 1: Hide hero cap
-      heroCap.style.display = 'none';
-      
-      // Phase 2: Show nav cap with smooth transition
-      navCap.style.opacity = '1';
-      navCap.style.transform = 'scale(1) rotate(0deg)';
-      navCap.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
-      
-      // Phase 3: Ensure text is in final position
-      navTitle.style.marginLeft = '12px';
-      
-      // Phase 4: Remove body class to complete page transition
-      setTimeout(() => {
-        body.classList.remove('logo-in-transition');
-        console.log('Page transition complete');
-      }, 1200); // Match the CSS transition duration
-      
-      console.log('Nav cap integrated seamlessly into header');
-    }
+  if (!logoCap || !finalPosition) {
+    console.error('Required elements not found');
+    return;
   }
   
-  requestAnimationFrame(animate);
+  // Get the final position coordinates
+  const finalRect = finalPosition.getBoundingClientRect();
+  const capRect = logoCap.getBoundingClientRect();
+  
+  // Calculate the center of the screen (current position)
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+  
+  // Calculate the final position (center of the final position element)
+  const finalX = finalRect.left + (finalRect.width / 2);
+  const finalY = finalRect.top + (finalRect.height / 2);
+  
+  // Calculate deltas
+  const deltaX = finalX - centerX;
+  const deltaY = finalY - centerY;
+  
+  // Calculate scale factor (from 128px to 32px = 0.25)
+  const initialSize = 128; // w-32 = 128px
+  const finalSize = 32;    // w-8 = 32px
+  const scaleFactor = finalSize / initialSize;
+  
+  console.log('Animation calculations:', {
+    center: { x: centerX, y: centerY },
+    final: { x: finalX, y: finalY },
+    delta: { x: deltaX, y: deltaY },
+    scale: scaleFactor
+  });
+  
+  // Add body class to trigger page content animation
+  body.classList.add('logo-flying');
+  
+  // Apply the transform to move the cap
+  logoCap.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleFactor}) rotate(360deg)`;
+  
+  // After animation completes, move the cap to the final position in the DOM
+  setTimeout(() => {
+    console.log('Animation complete! Moving cap to final position...');
+    
+    // Remove absolute positioning and move to final position
+    logoCap.style.position = 'static';
+    logoCap.style.transform = 'none';
+    logoCap.style.top = 'auto';
+    logoCap.style.left = 'auto';
+    
+    // Move the cap element to the final position
+    finalPosition.appendChild(logoCap);
+    
+    // Remove body class
+    body.classList.remove('logo-flying');
+    
+    console.log('Cap successfully moved to final position!');
+  }, 1200); // Match the CSS transition duration
 }
 
 // NEW: Apply all the new dynamic effects

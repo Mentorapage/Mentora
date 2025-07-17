@@ -139,13 +139,8 @@
   <!-- Navbar -->
   <nav class="flex items-center justify-between px-6 py-4 bg-gray-900/80 backdrop-blur sticky top-0 z-30">
     <div id="nav-logo" class="flex items-center space-x-3">
-      <div id="nav-cap" class="w-8 h-8 text-cyan-400 opacity-0 transition-all duration-1000 transform scale-0">
-        <svg fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-          <!-- Tassel -->
-          <circle cx="12" cy="2" r="0.8" fill="#FFD700"/>
-          <path d="M12 1 L12 3 M11 2 L13 2" stroke="#FFD700" stroke-width="0.3" fill="none"/>
-        </svg>
+      <div id="logo-final-position" class="w-8 h-8 flex items-center justify-center">
+        <!-- This is where the cap will land -->
       </div>
       <div id="nav-title" class="text-2xl font-bold tracking-wide text-cyan-400 transition-all duration-1000 ease-out">Mentora</div>
     </div>
@@ -184,14 +179,11 @@
       <div class="max-w-4xl mx-auto py-12 px-4 text-center relative z-10">
         <!-- Animated Graduation Cap Logo -->
         <div id="hero-graduation-cap-container" class="mb-8 flex justify-center relative">
-          <div id="hero-graduation-cap" class="relative">
+          <div id="logo-cap" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             <div class="w-32 h-32 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-full flex items-center justify-center shadow-2xl">
-              <!-- Graduation Cap SVG -->
+              <!-- Graduation Cap SVG - Clean version without tassel -->
               <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                <!-- Tassel -->
-                <circle cx="12" cy="2" r="1" fill="#FFD700"/>
-                <path d="M12 1 L12 3 M11 2 L13 2" stroke="#FFD700" stroke-width="0.5" fill="none"/>
               </svg>
             </div>
             <!-- Glow effect -->

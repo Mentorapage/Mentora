@@ -103,10 +103,7 @@
   animation: graduation-cap-entrance 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-#nav-cap {
-  opacity: 0;
-  transform: scale(0);
-  transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+#logo-final-position {
   position: relative;
   z-index: 1;
 }
@@ -134,9 +131,19 @@
   transition: transform 1.2s ease-out, opacity 1.2s ease-out;
 }
 
-body.logo-in-transition #main-content {
+body.logo-flying #main-content {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Logo cap animation styles */
+#logo-cap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 1.2s ease-out;
+  z-index: 1000;
 }
 
 /* Enhanced teacher card styles */
