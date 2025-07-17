@@ -543,6 +543,15 @@ body.modal-open #join-banner {
   z-index: 1500 !important;
 }
 
+/* Keep dropdowns fixed in position regardless of modal state */
+#subject-dropdown,
+#availability-dropdown,
+#languages-dropdown,
+#hobbies-dropdown {
+  position: fixed !important;
+  z-index: 1500 !important;
+}
+
 /* Removed modal-closing class since we close instantly */
 
 @keyframes fadeIn {
