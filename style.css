@@ -127,6 +127,7 @@
   will-change: transform, opacity, box-shadow;
   position: relative;
   overflow: hidden;
+  z-index: 1000; /* Lower z-index so cards never cover dropdowns */
 }
 
 /* NEW: Enhanced hover effects with 3D transform */
@@ -539,7 +540,7 @@ body.modal-open #join-banner {
 
 /* Ensure dropdowns inside modal appear above modal content */
 #tutor-profile-modal .modal-container .absolute {
-  z-index: 2002 !important;
+  z-index: 1500 !important;
 }
 
 /* Removed modal-closing class since we close instantly */
