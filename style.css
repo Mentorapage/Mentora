@@ -1199,6 +1199,31 @@ button:focus, .btn:focus {
   z-index: 9999 !important;
   position: absolute !important;
   overflow: visible !important;
+  transform: translateZ(0) !important;
+  will-change: transform !important;
+}
+
+/* Ensure all parent containers don't clip dropdowns */
+#advanced-filters,
+.filter-group,
+.multi-select-container,
+#section-teachers,
+main,
+body {
+  overflow: visible !important;
+}
+
+/* Force teacher cards to stay below dropdowns */
+.teacher-card {
+  position: relative !important;
+  z-index: 1 !important;
+  transform: translateZ(0) !important;
+}
+
+#teachers-grid {
+  position: relative !important;
+  z-index: 1 !important;
+  overflow: visible !important;
 }
 
 /* Fix teacher card pseudo-element positioning to prevent left-border artifacts */
