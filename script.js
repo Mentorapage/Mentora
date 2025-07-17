@@ -1089,6 +1089,23 @@ window.showAllTutors = function() {
 };
 
 // Modal Functions
+function closeAllDropdowns() {
+  // Close all filter dropdowns when modal opens
+  const dropdowns = [
+    'subject-dropdown',
+    'availability-dropdown', 
+    'languages-dropdown',
+    'hobbies-dropdown'
+  ];
+  
+  dropdowns.forEach(dropdownId => {
+    const dropdown = document.getElementById(dropdownId);
+    if (dropdown && !dropdown.classList.contains('hidden')) {
+      dropdown.classList.add('hidden');
+    }
+  });
+}
+
 function openTutorProfileModal(tutor) {
   console.log('Opening tutor profile modal for:', tutor.name);
   currentModalTutor = tutor;
@@ -1099,6 +1116,9 @@ function openTutorProfileModal(tutor) {
     console.error('Modal elements not found');
     return;
   }
+  
+  // Close all open dropdowns before opening modal
+  closeAllDropdowns();
   
   // Populate modal content
   populateModalContent(tutor);
