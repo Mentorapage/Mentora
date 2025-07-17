@@ -65,16 +65,40 @@ window.addEventListener('hashchange', (event) => {
 // Default section (will be set based on URL after DOM loads)
 // showSection('home', false);
 
+// Subject translation mapping
+const subjectTranslations = {
+  'math': { en: 'Math', ru: 'Математика' },
+  'english': { en: 'English', ru: 'Английский' },
+  'physics': { en: 'Physics', ru: 'Физика' },
+  'chemistry': { en: 'Chemistry', ru: 'Химия' },
+  'biology': { en: 'Biology', ru: 'Биология' },
+  'history': { en: 'History', ru: 'История' },
+  'astronomy': { en: 'Astronomy', ru: 'Астрономия' },
+  'literature': { en: 'Literature', ru: 'Литература' },
+  'geography': { en: 'Geography', ru: 'География' },
+  'art': { en: 'Art', ru: 'Искусство' },
+  'philosophy': { en: 'Philosophy', ru: 'Философия' }
+};
+
+// Function to get translated subject
+function getTranslatedSubject(subject) {
+  return subjectTranslations[subject]?.[currentLang] || capitalize(subject);
+}
+
 // --- Language Toggle ---
 document.getElementById('lang-toggle').addEventListener('click', () => {
   currentLang = currentLang === 'en' ? 'ru' : 'en';
+  
+  // Update all elements with data-en/data-ru attributes
   document.querySelectorAll('[data-en]').forEach(el => {
     el.textContent = el.dataset[currentLang];
   });
+  
   // Update select options
   document.querySelectorAll('option[data-en]').forEach(opt => {
     opt.textContent = opt.dataset[currentLang];
   });
+  
   // Update teacher cards and modal
   renderTeachers();
   
@@ -299,8 +323,8 @@ const TEACHERS = MOCK_TUTORS.map((tutor, index) => ({
     ru: tutor.languagesSpoken ? tutor.languagesSpoken.join(', ') : 'English'
   },
   subjectsTaught: {
-    en: capitalize(tutor.subject),
-    ru: capitalize(tutor.subject)
+    en: subjectTranslations[tutor.subject]?.en || capitalize(tutor.subject),
+    ru: subjectTranslations[tutor.subject]?.ru || capitalize(tutor.subject)
   },
   teachingStyle: {
     en: tutor.teachingStyle ? capitalize(tutor.teachingStyle) : 'Interactive',
@@ -936,7 +960,7 @@ function renderTeachers() {
     card.innerHTML = `
       <img src="${t.photo}" alt="${t.name[currentLang]}" class="w-24 h-24 rounded-full mb-3 object-cover border-4 border-cyan-400 select-none pointer-events-none float-animation"/>
       <div class="font-bold text-lg mb-1 select-none pointer-events-none gradient-text">${t.name[currentLang]}</div>
-      <div class="text-cyan-200 text-sm mb-2 select-none pointer-events-none neon-glow">${capitalize(t.subject)}</div>
+      <div class="text-cyan-200 text-sm mb-2 select-none pointer-events-none neon-glow">${getTranslatedSubject(t.subject)}</div>
       <div class="text-sm text-center mb-2 select-none pointer-events-none line-clamp-2 text-reveal">${t.bio[currentLang]}</div>
       <div class="text-xs text-gray-400 text-center select-none pointer-events-none">
         ${t.teachingLanguages[currentLang]}
@@ -1026,7 +1050,7 @@ function filterAndDisplayMatchedTutors(tutorIds) {
       card.innerHTML = `
         <img src="${t.photo}" alt="${t.name[currentLang]}" class="w-24 h-24 rounded-full mb-3 object-cover border-4 border-cyan-400 select-none pointer-events-none"/>
         <div class="font-bold text-lg mb-1 select-none pointer-events-none">${t.name[currentLang]}</div>
-        <div class="text-cyan-200 text-sm mb-2 select-none pointer-events-none">${capitalize(t.subject)}</div>
+        <div class="text-cyan-200 text-sm mb-2 select-none pointer-events-none">${getTranslatedSubject(t.subject)}</div>
         <div class="text-sm text-center mb-2 select-none pointer-events-none line-clamp-2">${t.bio[currentLang]}</div>
       `;
       
@@ -1186,7 +1210,7 @@ function populateModalContent(tutor) {
   name.textContent = tutor.name[currentLang];
   
   // Set subject badge with styling
-  subjectBadge.textContent = capitalize(tutor.subject);
+  subjectBadge.textContent = getTranslatedSubject(tutor.subject);
   subjectBadge.className = `px-4 py-1 rounded-full text-sm font-semibold ${tutor.subject}`;
   
   console.log('Header populated successfully');
@@ -1398,7 +1422,7 @@ function openDetailedTutorModal(teacher) {
   // Populate modal content
   document.getElementById('detailed-photo').src = teacher.photo;
   document.getElementById('detailed-name').textContent = teacher.name[currentLang];
-  document.getElementById('detailed-subject').textContent = capitalize(teacher.subject);
+  document.getElementById('detailed-subject').textContent = getTranslatedSubject(teacher.subject);
   document.getElementById('detailed-about').textContent = teacher.about[currentLang];
   document.getElementById('detailed-experience').textContent = teacher.experience[currentLang];
   document.getElementById('detailed-telegram').href = teacher.telegram;
