@@ -1050,10 +1050,13 @@ button:focus, .btn:focus {
 .animate-float-6 { animation: float-6 9s ease-in-out infinite; }
 .animate-bounce-gentle { animation: bounce-gentle 3s ease-in-out infinite; }
 
-/* Particle positioning */
+/* Particle positioning - ensure no particles appear in top-left corner */
 .particle:nth-child(1) { top: 60%; right: 15%; }
 .particle:nth-child(2) { top: 30%; right: 25%; }
 .particle:nth-child(3) { bottom: 60%; right: 30%; }
+
+/* Prevent any elements from appearing in top-left corner */
+.particle:nth-child(n+4) { display: none; }
 
 /* Testimonials */
 .testimonial-slide {
@@ -1125,6 +1128,17 @@ button:focus, .btn:focus {
 /* Ensure pointer-events-none disables all interaction for inner elements */
 .teacher-card .pointer-events-none {
   pointer-events: none !important;
+}
+
+/* Prevent top-left corner artifacts and ensure clean layout */
+.particle {
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Ensure no elements appear in top-left corner */
+.particle:not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(3)) {
+  display: none !important;
 }
 
 /* Responsive adjustments */
