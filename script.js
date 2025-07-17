@@ -91,6 +91,9 @@ document.getElementById('lang-toggle').addEventListener('click', () => {
     populateModalContent(currentModalTutor);
   }
   
+  // Update navigation language
+  updateNavigationLang();
+  
   // Update regular modal language
   updateRegularModalLang();
   
@@ -1490,6 +1493,13 @@ function generateDetailedSchedule(availability) {
     });
     
     scheduleTbody.appendChild(row);
+  });
+}
+
+function updateNavigationLang() {
+  // Update navigation button text
+  document.querySelectorAll('.nav-btn[data-en]').forEach(btn => {
+    btn.textContent = btn.dataset[currentLang];
   });
 }
 
