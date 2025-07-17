@@ -455,11 +455,38 @@ function initMultiSelectDropdown(filterType, checkboxClass) {
       dropdown.style.width = buttonRect.width + 'px';
       dropdown.style.zIndex = '99999';
       
+      // Store reference to button for scroll updates
+      dropdown.dataset.buttonId = button.id;
+      
       dropdown.classList.remove('hidden');
       button.querySelector('svg').classList.add('rotate-180');
+      
+      // Add scroll listener to keep dropdown positioned
+      const updateDropdownPosition = () => {
+        const button = document.getElementById(dropdown.dataset.buttonId);
+        if (button && !dropdown.classList.contains('hidden')) {
+          const buttonRect = button.getBoundingClientRect();
+          dropdown.style.top = (buttonRect.bottom + 4) + 'px';
+          dropdown.style.left = buttonRect.left + 'px';
+          dropdown.style.width = buttonRect.width + 'px';
+        }
+      };
+      
+      // Update position on scroll
+      window.addEventListener('scroll', updateDropdownPosition, { passive: true });
+      
+      // Store the update function for cleanup
+      dropdown.dataset.updateFunction = updateDropdownPosition;
     } else {
       dropdown.classList.add('hidden');
       button.querySelector('svg').classList.remove('rotate-180');
+      
+      // Remove scroll listener
+      if (dropdown.dataset.updateFunction) {
+        window.removeEventListener('scroll', dropdown.dataset.updateFunction);
+        delete dropdown.dataset.updateFunction;
+      }
+      
       // Move dropdown back to original container
       const originalContainer = button.parentElement;
       if (dropdown.parentElement !== originalContainer) {
