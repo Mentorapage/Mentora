@@ -1754,7 +1754,7 @@ function initFlyingCapAnimation() {
   // Position cap centered above the "Mentora: Student Volunteers for Kyrgyzstan" heading
   const titleRect = heroTitle.getBoundingClientRect();
   const centerX = titleRect.left + (titleRect.width / 2) - 64; // 64 = half of 128px width
-  const centerY = titleRect.top - 80; // 80px above the heading
+  const centerY = titleRect.top - 100; // 100px above the heading
   
   logoFly.style.left = centerX + 'px';
   logoFly.style.top = centerY + 'px';
@@ -1762,10 +1762,10 @@ function initFlyingCapAnimation() {
   
   console.log('Cap positioned above heading:', { centerX, centerY, titleRect });
   
-  // Start animation immediately after positioning
+  // Start animation after a short delay
   setTimeout(() => {
     animateCapToNav();
-  }, 100);
+  }, 500);
 }
 
 // Test function for debugging
@@ -1805,20 +1805,27 @@ function animateCapToNav() {
   // Get target position from existing "Mentora" text in navbar
   const targetRect = navTitle.getBoundingClientRect();
   
+  // Calculate the size of the letter "M" in the navbar to match it perfectly
+  const navFontSize = parseInt(window.getComputedStyle(navTitle).fontSize);
+  const targetSize = navFontSize * 0.8; // Slightly smaller than font size to match letter "M"
+  const scaleRatio = targetSize / 128; // 128px is the original cap size
+  
   // Calculate final position (immediately to the left of "Mentora" text)
-  const finalX = targetRect.left - 40; // 40px to the left of the text
-  const finalY = targetRect.top + (targetRect.height / 2) - 16; // Center vertically, 16px = half of 32px cap height
+  const finalX = targetRect.left - targetSize - 8; // 8px gap from text
+  const finalY = targetRect.top + (targetRect.height / 2) - (targetSize / 2); // Center vertically
   
   console.log('Animation targets:', {
     finalPos: { x: finalX, y: finalY },
+    targetSize: targetSize,
+    scaleRatio: scaleRatio,
     targetRect: { left: targetRect.left, top: targetRect.top, width: targetRect.width, height: targetRect.height }
   });
   
   // Add logo-flying class to body for content animation
   document.body.classList.add('logo-flying');
   
-  // Animate the cap with 1.2s transition
-  logoFly.style.transform = `translate(${finalX}px, ${finalY}px) scale(0.25) rotate(360deg)`;
+  // Animate the cap with 1.2s transition - FLYING not teleporting
+  logoFly.style.transform = `translate(${finalX}px, ${finalY}px) scale(${scaleRatio}) rotate(360deg)`;
   
   // After animation completes, lock into nav
   setTimeout(() => {
@@ -1831,8 +1838,10 @@ function animateCapToNav() {
     logoFly.style.transform = '';
     logoFly.style.zIndex = '';
     
-    // Resize to nav size
-    logoFly.className = 'w-8 h-8 text-cyan-400';
+    // Resize to match the letter "M" size
+    logoFly.className = `text-cyan-400`;
+    logoFly.style.width = targetSize + 'px';
+    logoFly.style.height = targetSize + 'px';
     
     // Insert as first child of nav-logo (before "Mentora" text)
     navLogo.insertBefore(logoFly, navTitle);
