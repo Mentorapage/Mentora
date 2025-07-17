@@ -1146,6 +1146,61 @@ button:focus, .btn:focus {
   display: block;
 }
 
+/* Ensure filter dropdowns appear above teacher cards */
+#advanced-filters {
+  position: relative;
+  z-index: 100;
+}
+
+/* Force all dropdown menus to appear above teacher cards */
+#subject-dropdown,
+#availability-dropdown,
+#languages-dropdown,
+#hobbies-dropdown {
+  z-index: 9999 !important;
+  position: absolute !important;
+}
+
+/* Ensure teacher cards have lower z-index */
+.teacher-card {
+  position: relative;
+  z-index: 1;
+}
+
+/* Ensure teachers grid doesn't interfere with dropdowns */
+#teachers-grid {
+  position: relative;
+  z-index: 1;
+}
+
+/* Ensure filter containers don't clip dropdowns */
+.filter-group {
+  position: relative;
+  z-index: 100;
+}
+
+.multi-select-container {
+  position: relative;
+  z-index: 100;
+}
+
+/* Ensure section containers don't clip dropdowns */
+#section-teachers {
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+}
+
+/* Force dropdowns to break out of any overflow constraints */
+#subject-dropdown,
+#availability-dropdown,
+#languages-dropdown,
+#hobbies-dropdown {
+  z-index: 9999 !important;
+  position: absolute !important;
+  overflow: visible !important;
+}
+
 /* Fix teacher card pseudo-element positioning to prevent left-border artifacts */
 .teacher-card::before {
   content: '';
