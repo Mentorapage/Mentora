@@ -1741,29 +1741,31 @@ function initFlyingCapAnimation() {
   console.log('Initializing flying cap animation...');
   
   const logoFly = document.getElementById('logo-fly');
+  const heroTitle = document.querySelector('#hero-title');
   const navTitle = document.querySelector('#nav-title');
   
-  if (!logoFly || !navTitle) {
+  if (!logoFly || !heroTitle || !navTitle) {
     console.error('Flying cap elements not found');
     return;
   }
   
-  console.log('Found elements:', { logoFly, navTitle });
+  console.log('Found elements:', { logoFly, heroTitle, navTitle });
   
-  // Position cap at center of viewport
-  const centerX = window.innerWidth / 2 - 64; // 64 = half of 128px width
-  const centerY = window.innerHeight / 2 - 64; // 64 = half of 128px height
+  // Position cap centered above the "Mentora: Student Volunteers for Kyrgyzstan" heading
+  const titleRect = heroTitle.getBoundingClientRect();
+  const centerX = titleRect.left + (titleRect.width / 2) - 64; // 64 = half of 128px width
+  const centerY = titleRect.top - 80; // 80px above the heading
   
   logoFly.style.left = centerX + 'px';
   logoFly.style.top = centerY + 'px';
   logoFly.style.transform = 'scale(1) rotate(0deg)';
   
-  console.log('Cap positioned at center:', { centerX, centerY });
+  console.log('Cap positioned above heading:', { centerX, centerY, titleRect });
   
-  // Start animation after a short delay
+  // Start animation immediately after positioning
   setTimeout(() => {
     animateCapToNav();
-  }, 500);
+  }, 100);
 }
 
 // Test function for debugging
@@ -1785,6 +1787,7 @@ function testAnimation() {
     logoFly.className = 'w-32 h-32 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-full flex items-center justify-center shadow-2xl absolute z-50';
     logoFly.style.position = 'absolute';
     logoFly.style.zIndex = '50';
+    logoFly.style.transform = 'scale(1) rotate(0deg)';
   }
   
   // Start animation
@@ -1799,13 +1802,12 @@ function animateCapToNav() {
   const navTitle = document.querySelector('#nav-title');
   const navLogo = document.getElementById('nav-logo');
   
-  // Get target position from existing "Mentora" text
+  // Get target position from existing "Mentora" text in navbar
   const targetRect = navTitle.getBoundingClientRect();
-  const navLogoRect = navLogo.getBoundingClientRect();
   
-  // Calculate final position (left of the "Mentora" text)
-  const finalX = navLogoRect.left;
-  const finalY = navLogoRect.top + (navLogoRect.height / 2) - 16; // Center vertically, 16px = half of 32px cap height
+  // Calculate final position (immediately to the left of "Mentora" text)
+  const finalX = targetRect.left - 40; // 40px to the left of the text
+  const finalY = targetRect.top + (targetRect.height / 2) - 16; // Center vertically, 16px = half of 32px cap height
   
   console.log('Animation targets:', {
     finalPos: { x: finalX, y: finalY },
@@ -1815,7 +1817,7 @@ function animateCapToNav() {
   // Add logo-flying class to body for content animation
   document.body.classList.add('logo-flying');
   
-  // Animate the cap
+  // Animate the cap with 1.2s transition
   logoFly.style.transform = `translate(${finalX}px, ${finalY}px) scale(0.25) rotate(360deg)`;
   
   // After animation completes, lock into nav
