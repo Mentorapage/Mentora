@@ -1788,7 +1788,10 @@ function testAnimation() {
       logoCap.style.transform = 'translate(-50%, -50%)';
     }
     
-    // Use the new REAL movement animation
+    // Remove flying class if it exists
+    logoCap.classList.remove('flying');
+    
+    // Use the CSS transition animation
     animateCapToNav();
   } else {
     console.error('Elements not found for test animation');
@@ -1798,14 +1801,13 @@ function testAnimation() {
   }
 }
 
-// Pure JavaScript animation function - REAL MOVEMENT
+// Pure CSS transition animation function
 function animateCapToNav() {
-  console.log('Starting REAL cap movement animation...');
+  console.log('Starting CSS transition animation...');
   
   // Get the elements
   const logoCap = document.getElementById('logo-cap');
   const finalPosition = document.getElementById('logo-final-position');
-  const mainContent = document.getElementById('main-content');
   const body = document.body;
   
   if (!logoCap || !finalPosition) {
@@ -1813,39 +1815,11 @@ function animateCapToNav() {
     return;
   }
   
-  // Get the final position coordinates
-  const finalRect = finalPosition.getBoundingClientRect();
-  const capRect = logoCap.getBoundingClientRect();
-  
-  // Calculate the center of the screen (current position)
-  const centerX = window.innerWidth / 2;
-  const centerY = window.innerHeight / 2;
-  
-  // Calculate the final position (center of the final position element)
-  const finalX = finalRect.left + (finalRect.width / 2);
-  const finalY = finalRect.top + (finalRect.height / 2);
-  
-  // Calculate deltas
-  const deltaX = finalX - centerX;
-  const deltaY = finalY - centerY;
-  
-  // Calculate scale factor (from 128px to 32px = 0.25)
-  const initialSize = 128; // w-32 = 128px
-  const finalSize = 32;    // w-8 = 32px
-  const scaleFactor = finalSize / initialSize;
-  
-  console.log('Animation calculations:', {
-    center: { x: centerX, y: centerY },
-    final: { x: finalX, y: finalY },
-    delta: { x: deltaX, y: deltaY },
-    scale: scaleFactor
-  });
-  
   // Add body class to trigger page content animation
   body.classList.add('logo-flying');
   
-  // Apply the transform to move the cap
-  logoCap.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleFactor}) rotate(360deg)`;
+  // Add flying class to trigger the CSS transition
+  logoCap.classList.add('flying');
   
   // After animation completes, move the cap to the final position in the DOM
   setTimeout(() => {

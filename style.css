@@ -146,6 +146,10 @@ body.logo-flying #main-content {
   z-index: 1000;
 }
 
+#logo-cap.flying {
+  transform: translate(-45vw, -35vh) scale(0.25) rotate(360deg);
+}
+
 /* Enhanced teacher card styles */
 .teacher-card {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
