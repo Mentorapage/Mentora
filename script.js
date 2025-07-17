@@ -80,6 +80,35 @@ const subjectTranslations = {
   'philosophy': { en: 'Philosophy', ru: 'Философия' }
 };
 
+// Language translation mapping
+const languageTranslations = {
+  'English': { en: 'English', ru: 'Английский' },
+  'Russian': { en: 'Russian', ru: 'Русский' },
+  'Kyrgyz': { en: 'Kyrgyz', ru: 'Кыргызский' },
+  'Uzbek': { en: 'Uzbek', ru: 'Узбекский' },
+  'Chinese': { en: 'Chinese', ru: 'Китайский' },
+  'Japanese': { en: 'Japanese', ru: 'Японский' },
+  'Korean': { en: 'Korean', ru: 'Корейский' },
+  'Arabic': { en: 'Arabic', ru: 'Арабский' },
+  'French': { en: 'French', ru: 'Французский' },
+  'German': { en: 'German', ru: 'Немецкий' },
+  'Spanish': { en: 'Spanish', ru: 'Испанский' },
+  'Portuguese': { en: 'Portuguese', ru: 'Португальский' },
+  'Hindi': { en: 'Hindi', ru: 'Хинди' },
+  'Turkish': { en: 'Turkish', ru: 'Турецкий' },
+  'Mandarin': { en: 'Mandarin', ru: 'Мандарин' },
+  'Gujarati': { en: 'Gujarati', ru: 'Гуджарати' },
+  'Irish Gaelic': { en: 'Irish Gaelic', ru: 'Ирландский гэльский' },
+  'Punjabi': { en: 'Punjabi', ru: 'Панджаби' },
+  'Tamil': { en: 'Tamil', ru: 'Тамильский' }
+};
+
+// Function to translate languages
+function translateLanguages(languages) {
+  if (!languages || !Array.isArray(languages)) return '';
+  return languages.map(lang => languageTranslations[lang]?.[currentLang] || lang).join(', ');
+}
+
 // Function to get translated subject
 function getTranslatedSubject(subject) {
   return subjectTranslations[subject]?.[currentLang] || capitalize(subject);
@@ -99,7 +128,7 @@ document.getElementById('lang-toggle').addEventListener('click', () => {
     opt.textContent = opt.dataset[currentLang];
   });
   
-  // Update teacher cards and modal
+  // Update teacher cards and modal (this will re-translate all content including languages)
   renderTeachers();
   
   // Update advanced filter display texts
@@ -319,8 +348,8 @@ const TEACHERS = MOCK_TUTORS.map((tutor, index) => ({
   },
   subjects: extractSubjects(tutor),
   teachingLanguages: {
-    en: tutor.languagesSpoken ? tutor.languagesSpoken.join(', ') : 'English',
-    ru: tutor.languagesSpoken ? tutor.languagesSpoken.join(', ') : 'English'
+    en: tutor.languagesSpoken ? tutor.languagesSpoken.map(lang => languageTranslations[lang]?.en || lang).join(', ') : 'English',
+    ru: tutor.languagesSpoken ? tutor.languagesSpoken.map(lang => languageTranslations[lang]?.ru || lang).join(', ') : 'Английский'
   },
   subjectsTaught: {
     en: subjectTranslations[tutor.subject]?.en || capitalize(tutor.subject),
