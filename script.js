@@ -1,33 +1,6 @@
 // Mentora SPA Interactivity Script
 // All logic for navigation, language toggle, teachers, modals, and form
 
-// Logo Animation Script
-window.addEventListener('DOMContentLoaded', () => {
-  const flyLogo = document.getElementById('logo-fly');
-  const placeholder = document.getElementById('logo-placeholder');
-  const targetRect = placeholder.getBoundingClientRect();
-  const startRect = flyLogo.getBoundingClientRect();
-
-  // compute movement deltas
-  const deltaX = targetRect.left - startRect.left;
-  const deltaY = targetRect.top - startRect.top;
-
-  // expose to CSS
-  document.body.style.setProperty('--delta-x', deltaX);
-  document.body.style.setProperty('--delta-y', deltaY);
-
-  // start animation
-  requestAnimationFrame(() => {
-    document.body.classList.add('logo-animate');
-  });
-
-  // after animation, embed the cap into header and hide the flying one
-  setTimeout(() => {
-    flyLogo.style.display = 'none';
-    placeholder.innerHTML = '<img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMiA3bDEwIDUgMTAtNS0xMC01ek0yIDE3bDEwIDUgMTAtNU0yIDEybDEwIDUgMTAtNSIgZmlsbD0iIzA2YjZkNCIvPgo8L3N2Zz4K" style="width:30px;vertical-align:middle;" alt="Logo">';
-  }, 1300);
-});
-
 // --- Language Data ---
 const LANGS = ['en', 'ru'];
 let currentLang = 'en';
@@ -1758,9 +1731,116 @@ function initVisualEnhancements() {
   
   // NEW: Apply new dynamic effects
   applyNewDynamicEffects();
+  
+  // NEW: Initialize flying cap animation
+  initFlyingCapAnimation();
 }
 
+// NEW: Flying cap animation
+function initFlyingCapAnimation() {
+  console.log('Initializing flying cap animation...');
+  
+  const logoFly = document.getElementById('logo-fly');
+  const navTitle = document.querySelector('#nav-title');
+  
+  if (!logoFly || !navTitle) {
+    console.error('Flying cap elements not found');
+    return;
+  }
+  
+  console.log('Found elements:', { logoFly, navTitle });
+  
+  // Position cap at center of viewport
+  const centerX = window.innerWidth / 2 - 64; // 64 = half of 128px width
+  const centerY = window.innerHeight / 2 - 64; // 64 = half of 128px height
+  
+  logoFly.style.left = centerX + 'px';
+  logoFly.style.top = centerY + 'px';
+  logoFly.style.transform = 'scale(1) rotate(0deg)';
+  
+  console.log('Cap positioned at center:', { centerX, centerY });
+  
+  // Start animation after a short delay
+  setTimeout(() => {
+    animateCapToNav();
+  }, 500);
+}
 
+// Test function for debugging
+function testAnimation() {
+  console.log('Test animation triggered manually');
+  
+  // Reset the page state
+  document.body.classList.remove('logo-flying');
+  
+  // Remove cap from nav if it exists
+  const existingCap = document.querySelector('#nav-logo .w-8');
+  if (existingCap) {
+    existingCap.remove();
+  }
+  
+  // Recreate flying cap
+  const logoFly = document.getElementById('logo-fly');
+  if (logoFly) {
+    logoFly.className = 'w-32 h-32 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-full flex items-center justify-center shadow-2xl absolute z-50';
+    logoFly.style.position = 'absolute';
+    logoFly.style.zIndex = '50';
+  }
+  
+  // Start animation
+  initFlyingCapAnimation();
+}
+
+// Pure JavaScript animation function
+function animateCapToNav() {
+  console.log('Starting flying cap animation...');
+  
+  const logoFly = document.getElementById('logo-fly');
+  const navTitle = document.querySelector('#nav-title');
+  const navLogo = document.getElementById('nav-logo');
+  
+  // Get target position from existing "Mentora" text
+  const targetRect = navTitle.getBoundingClientRect();
+  const navLogoRect = navLogo.getBoundingClientRect();
+  
+  // Calculate final position (left of the "Mentora" text)
+  const finalX = navLogoRect.left;
+  const finalY = navLogoRect.top + (navLogoRect.height / 2) - 16; // Center vertically, 16px = half of 32px cap height
+  
+  console.log('Animation targets:', {
+    finalPos: { x: finalX, y: finalY },
+    targetRect: { left: targetRect.left, top: targetRect.top, width: targetRect.width, height: targetRect.height }
+  });
+  
+  // Add logo-flying class to body for content animation
+  document.body.classList.add('logo-flying');
+  
+  // Animate the cap
+  logoFly.style.transform = `translate(${finalX}px, ${finalY}px) scale(0.25) rotate(360deg)`;
+  
+  // After animation completes, lock into nav
+  setTimeout(() => {
+    console.log('Animation complete! Locking cap into nav...');
+    
+    // Remove absolute positioning
+    logoFly.style.position = 'static';
+    logoFly.style.left = '';
+    logoFly.style.top = '';
+    logoFly.style.transform = '';
+    logoFly.style.zIndex = '';
+    
+    // Resize to nav size
+    logoFly.className = 'w-8 h-8 text-cyan-400';
+    
+    // Insert as first child of nav-logo (before "Mentora" text)
+    navLogo.insertBefore(logoFly, navTitle);
+    
+    // Remove logo-flying class
+    document.body.classList.remove('logo-flying');
+    
+    console.log('Cap successfully integrated into navigation');
+  }, 1200); // Match the 1.2s transition duration
+}
 
 // NEW: Apply all the new dynamic effects
 function applyNewDynamicEffects() {
@@ -1839,7 +1919,11 @@ document.addEventListener('DOMContentLoaded', () => {
   renderTeachers();
   initVisualEnhancements();
   
-
+  // Ensure flying cap animation is called
+  setTimeout(() => {
+    console.log('Calling flying cap animation...');
+    initFlyingCapAnimation();
+  }, 100);
 });
 
 // Re-initialize enhancements when sections change

@@ -136,213 +136,214 @@
   </style>
 </head>
 <body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 min-h-screen text-white">
-  <!-- Header with Logo Placeholder -->
-  <header>
-    <div id="logo-final-position">
-      <h1><span id="logo-placeholder"></span>Mentora</h1>
+  <!-- Flying Graduation Cap -->
+  <div id="logo-fly" class="w-32 h-32 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-full flex items-center justify-center shadow-2xl absolute z-50">
+    <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+      <!-- Tassel -->
+      <circle cx="12" cy="2" r="1" fill="#FFD700"/>
+      <path d="M12 1 L12 3 M11 2 L13 2" stroke="#FFD700" stroke-width="0.5" fill="none"/>
+    </svg>
+    <!-- Glow effect -->
+    <div class="absolute inset-0 w-32 h-32 bg-gradient-to-br from-cyan-400/30 to-cyan-600/30 rounded-full blur-xl animate-pulse"></div>
+  </div>
+  
+  <!-- Test Button -->
+  <button onclick="testAnimation()" class="fixed top-4 right-4 bg-red-500 text-white px-3 py-2 text-sm rounded z-50">TEST ANIMATION</button>
+  <!-- Navbar -->
+  <nav class="flex items-center justify-between px-6 py-4 bg-gray-900/80 backdrop-blur sticky top-0 z-30">
+    <div id="nav-logo" class="flex items-center space-x-3">
+      <div id="nav-title" class="text-2xl font-bold tracking-wide text-cyan-400">Mentora</div>
     </div>
-  </header>
-
-  <!-- Flying Logo -->
-  <img id="logo-fly" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMiA3bDEwIDUgMTAtNS0xMC01ek0yIDE3bDEwIDUgMTAtNU0yIDEybDEwIDUgMTAtNSIgZmlsbD0iIzA2YjZkNCIvPgo8L3N2Zz4K" alt="Graduation Cap" />
-
-  <!-- Main Content -->
-  <main class="main-content">
-    <!-- Navbar -->
-    <nav class="flex items-center justify-between px-6 py-4 bg-gray-900/80 backdrop-blur sticky top-0 z-30">
-      <div id="nav-logo" class="flex items-center space-x-3">
-        <div id="nav-title" class="text-2xl font-bold tracking-wide text-cyan-400 transition-all duration-1000 ease-out">Mentora</div>
-      </div>
-      <div class="flex gap-4 items-center">
-        <button class="nav-btn px-4 py-2 rounded-lg hover:bg-cyan-700 transition" data-section="home" id="nav-home">Home</button>
-        <button class="nav-btn px-4 py-2 rounded-lg hover:bg-cyan-700 transition" data-section="teachers" id="nav-teachers">Teachers</button>
-        <button class="nav-btn px-4 py-2 rounded-lg hover:bg-cyan-700 transition" data-section="become" id="nav-become">Become a Teacher</button>
-        <button class="nav-btn px-4 py-2 rounded-lg hover:bg-cyan-700 transition" data-section="faq" id="nav-faq">FAQ</button>
-        <button id="lang-toggle" class="ml-4 px-3 py-2 rounded-lg bg-gray-800 hover:bg-cyan-700 transition-all duration-300 border border-cyan-400 hover:scale-105 hover:shadow-lg">EN / RU</button>
-      </div>
-    </nav>
-    
-    <!-- Sticky Join Now Banner -->
-    <div id="join-banner" class="fixed top-20 left-1/2 transform -translate-x-1/2 z-20 hidden">
-      <div class="bg-gradient-to-r from-cyan-500 to-cyan-600 rounded-full px-6 py-3 shadow-lg border border-cyan-400/30 backdrop-blur-sm">
-        <button id="join-volunteer-btn" class="text-white font-semibold flex items-center space-x-2 animate-pulse hover:animate-none transition-all duration-300 hover:scale-105">
-          <span data-en="Join as Volunteer" data-ru="Стать волонтером">Join as Volunteer</span>
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-          </svg>
-        </button>
-      </div>
+    <div class="flex gap-4 items-center">
+      <button class="nav-btn px-4 py-2 rounded-lg hover:bg-cyan-700 transition" data-section="home" id="nav-home">Home</button>
+      <button class="nav-btn px-4 py-2 rounded-lg hover:bg-cyan-700 transition" data-section="teachers" id="nav-teachers">Teachers</button>
+      <button class="nav-btn px-4 py-2 rounded-lg hover:bg-cyan-700 transition" data-section="become" id="nav-become">Become a Teacher</button>
+      <button class="nav-btn px-4 py-2 rounded-lg hover:bg-cyan-700 transition" data-section="faq" id="nav-faq">FAQ</button>
+      <button id="lang-toggle" class="ml-4 px-3 py-2 rounded-lg bg-gray-800 hover:bg-cyan-700 transition-all duration-300 border border-cyan-400 hover:scale-105 hover:shadow-lg">EN / RU</button>
     </div>
-    
-    <!-- Main Content Wrapper -->
-    <div id="main-content" class="fade">
-      <!-- Hero Section -->
-      <section id="section-home" class="relative overflow-hidden">
-        <!-- Background Animation -->
-        <div id="hero-particles" class="absolute inset-0 pointer-events-none">
-          <div class="particle absolute w-2 h-2 bg-cyan-400/30 rounded-full animate-float-1"></div>
-          <div class="particle absolute w-1 h-1 bg-cyan-300/40 rounded-full animate-float-3"></div>
-          <div class="particle absolute w-1 h-1 bg-cyan-400/20 rounded-full animate-float-5"></div>
+  </nav>
+  
+  <!-- Sticky Join Now Banner -->
+  <div id="join-banner" class="fixed top-20 left-1/2 transform -translate-x-1/2 z-20 hidden">
+    <div class="bg-gradient-to-r from-cyan-500 to-cyan-600 rounded-full px-6 py-3 shadow-lg border border-cyan-400/30 backdrop-blur-sm">
+      <button id="join-volunteer-btn" class="text-white font-semibold flex items-center space-x-2 animate-pulse hover:animate-none transition-all duration-300 hover:scale-105">
+        <span data-en="Join as Volunteer" data-ru="Стать волонтером">Join as Volunteer</span>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  
+  <!-- Main Content Wrapper -->
+  <main id="main-content" class="fade">
+    <!-- Hero Section -->
+    <section id="section-home" class="relative overflow-hidden">
+      <!-- Background Animation -->
+      <div id="hero-particles" class="absolute inset-0 pointer-events-none">
+        <div class="particle absolute w-2 h-2 bg-cyan-400/30 rounded-full animate-float-1"></div>
+        <div class="particle absolute w-1 h-1 bg-cyan-300/40 rounded-full animate-float-3"></div>
+        <div class="particle absolute w-1 h-1 bg-cyan-400/20 rounded-full animate-float-5"></div>
+      </div>
+      
+      <div class="max-w-4xl mx-auto py-12 px-4 text-center relative z-10">
+        
+        <!-- Counter Widget -->
+        <!--
+        <div class="flex flex-col sm:flex-row justify-center gap-8 mb-16">
+          <div class="bg-gray-800/80 backdrop-blur-sm rounded-xl px-8 py-4 flex flex-col items-center shadow-lg border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-300">
+            <div id="counter-students" class="text-3xl font-bold text-cyan-400">0</div>
+            <div class="text-sm mt-1" data-en="Students Helped" data-ru="Помогли ученикам">Students Helped</div>
+          </div>
+          <div class="bg-gray-800/80 backdrop-blur-sm rounded-xl px-8 py-4 flex flex-col items-center shadow-lg border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-300">
+            <div id="counter-tutors" class="text-3xl font-bold text-cyan-400">0</div>
+            <div class="text-sm mt-1" data-en="Active Volunteer Tutors" data-ru="Активных волонтеров">Active Volunteer Tutors</div>
+          </div>
+        </div>
+        -->
+        <h1 id="hero-title" class="text-4xl md:text-5xl font-bold mb-6 text-cyan-300" data-en="Mentora: Student Volunteers for Kyrgyzstan" data-ru="Mentora: Студенческое волонтерство для Кыргызстана">
+          Mentora: Student Volunteers for Kyrgyzstan
+        </h1>
+        <p class="text-lg md:text-xl mb-16" data-en="A student-led initiative from Bishkek International School. Our mission: free, high-quality tutoring for every student in Kyrgyzstan." data-ru="Студенческая инициатива Bishkek International School. Наша миссия — бесплатное, качественное обучение для каждого ученика Кыргызстана.">
+          A student-led initiative from Bishkek International School. Our mission: free, high-quality tutoring for every student in Kyrgyzstan.
+        </p>
+        <!-- Value Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-20">
+          <div class="bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden hover:scale-105 transition-all duration-300 hover:shadow-cyan-500/20 hover:brightness-110 group p-6 text-center border border-gray-700/50 hover:border-cyan-400/30" aria-label="Learning together, growing together">
+            <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">📘</div>
+            <div class="text-sm" data-en="Learning together, growing together." data-ru="Учимся вместе — растём вместе.">Learning together, growing together.</div>
+          </div>
+          <div class="bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden hover:scale-105 transition-all duration-300 hover:shadow-cyan-500/20 hover:brightness-110 group p-6 text-center border border-gray-700/50 hover:border-cyan-400/30" aria-label="Mentorship that inspires">
+            <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">💡</div>
+            <div class="text-sm" data-en="Mentorship that inspires." data-ru="Наставничество, которое вдохновляет.">Mentorship that inspires.</div>
+          </div>
+          <div class="bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden hover:scale-105 transition-all duration-300 hover:shadow-cyan-500/20 hover:brightness-110 group p-6 text-center border border-gray-700/50 hover:border-cyan-400/30" aria-label="A community of support and care">
+            <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">🤝</div>
+            <div class="text-sm" data-en="A community of support and care." data-ru="Сообщество поддержки и заботы.">A community of support and care.</div>
+          </div>
         </div>
         
-        <div class="max-w-4xl mx-auto py-12 px-4 text-center relative z-10">
-                  <!-- Hero Section Content -->
-          
-          <!-- Counter Widget -->
-          <!--
-          <div class="flex flex-col sm:flex-row justify-center gap-8 mb-16">
-            <div class="bg-gray-800/80 backdrop-blur-sm rounded-xl px-8 py-4 flex flex-col items-center shadow-lg border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-300">
-              <div id="counter-students" class="text-3xl font-bold text-cyan-400">0</div>
-              <div class="text-sm mt-1" data-en="Students Helped" data-ru="Помогли ученикам">Students Helped</div>
-            </div>
-            <div class="bg-gray-800/80 backdrop-blur-sm rounded-xl px-8 py-4 flex flex-col items-center shadow-lg border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-300">
-              <div id="counter-tutors" class="text-3xl font-bold text-cyan-400">0</div>
-              <div class="text-sm mt-1" data-en="Active Volunteer Tutors" data-ru="Активных волонтеров">Active Volunteer Tutors</div>
-            </div>
-          </div>
-          -->
-          <h1 id="hero-title" class="text-4xl md:text-5xl font-bold mb-6 text-cyan-300" data-en="Mentora: Student Volunteers for Kyrgyzstan" data-ru="Mentora: Студенческое волонтерство для Кыргызстана">
-            Mentora: Student Volunteers for Kyrgyzstan
-          </h1>
-          <p class="text-lg md:text-xl mb-16" data-en="A student-led initiative from Bishkek International School. Our mission: free, high-quality tutoring for every student in Kyrgyzstan." data-ru="Студенческая инициатива Bishkek International School. Наша миссия — бесплатное, качественное обучение для каждого ученика Кыргызстана.">
-            A student-led initiative from Bishkek International School. Our mission: free, high-quality tutoring for every student in Kyrgyzstan.
-          </p>
-          <!-- Value Cards -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-20">
-            <div class="bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden hover:scale-105 transition-all duration-300 hover:shadow-cyan-500/20 hover:brightness-110 group p-6 text-center border border-gray-700/50 hover:border-cyan-400/30" aria-label="Learning together, growing together">
-              <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">📘</div>
-              <div class="text-sm" data-en="Learning together, growing together." data-ru="Учимся вместе — растём вместе.">Learning together, growing together.</div>
-            </div>
-            <div class="bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden hover:scale-105 transition-all duration-300 hover:shadow-cyan-500/20 hover:brightness-110 group p-6 text-center border border-gray-700/50 hover:border-cyan-400/30" aria-label="Mentorship that inspires">
-              <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">💡</div>
-              <div class="text-sm" data-en="Mentorship that inspires." data-ru="Наставничество, которое вдохновляет.">Mentorship that inspires.</div>
-            </div>
-            <div class="bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden hover:scale-105 transition-all duration-300 hover:shadow-cyan-500/20 hover:brightness-110 group p-6 text-center border border-gray-700/50 hover:border-cyan-400/30" aria-label="A community of support and care">
-              <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">🤝</div>
-              <div class="text-sm" data-en="A community of support and care." data-ru="Сообщество поддержки и заботы.">A community of support and care.</div>
-            </div>
-          </div>
-          
-          <!-- Student Testimonials -->
-          <div class="mb-24">
-            <h3 class="text-2xl font-bold mb-8 text-cyan-300" data-en="What Students Say" data-ru="Что говорят ученики">What Students Say</h3>
-            <div id="testimonials-container" class="relative max-w-2xl mx-auto">
-              <div id="testimonials" class="overflow-hidden">
-                <div class="testimonial-slide flex transition-all duration-700 ease-in-out">
-                  <div class="testimonial bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 border border-cyan-400/20 shadow-lg min-w-full">
-                    <div class="text-4xl mb-4">⭐</div>
-                    <p class="text-lg mb-4" data-en="Thanks to Mentora, I passed my math finals! The volunteers were super kind and helpful!" data-ru="Благодаря Mentora я сдал финальный экзамен по математике! Волонтеры были очень добрыми и полезными!">Thanks to Mentora, I passed my math finals! The volunteers were super kind and helpful!</p>
-                    <div class="text-sm text-cyan-300" data-en="— Aigerim, Grade 11" data-ru="— Айгерим, 11 класс">— Aigerim, Grade 11</div>
-                  </div>
+        <!-- Student Testimonials -->
+        <div class="mb-24">
+          <h3 class="text-2xl font-bold mb-8 text-cyan-300" data-en="What Students Say" data-ru="Что говорят ученики">What Students Say</h3>
+          <div id="testimonials-container" class="relative max-w-2xl mx-auto">
+            <div id="testimonials" class="overflow-hidden">
+              <div class="testimonial-slide flex transition-all duration-700 ease-in-out">
+                <div class="testimonial bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 border border-cyan-400/20 shadow-lg min-w-full">
+                  <div class="text-4xl mb-4">⭐</div>
+                  <p class="text-lg mb-4" data-en="Thanks to Mentora, I passed my math finals! The volunteers were super kind and helpful!" data-ru="Благодаря Mentora я сдал финальный экзамен по математике! Волонтеры были очень добрыми и полезными!">Thanks to Mentora, I passed my math finals! The volunteers were super kind and helpful!</p>
+                  <div class="text-sm text-cyan-300" data-en="— Aigerim, Grade 11" data-ru="— Айгерим, 11 класс">— Aigerim, Grade 11</div>
                 </div>
               </div>
             </div>
-          </div>
-          <!-- CEO Message -->
-          <div class="flex flex-col md:flex-row items-center bg-gray-800 rounded-2xl shadow-xl p-6 md:p-10 gap-6 max-w-3xl mx-auto hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:brightness-110 group mt-16">
-            <div class="relative">
-              <div class="rounded-full w-28 h-28 bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center border-4 border-cyan-400 group-hover:border-cyan-500 transition-colors duration-300">
-                <span class="text-2xl font-bold text-white">CEO</span>
-              </div>
-              <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-gray-900 animate-pulse"></div>
-            </div>
-            <blockquote class="text-lg md:text-xl text-left group-hover:text-cyan-300 transition-colors duration-300" data-en=""Every student deserves a chance to shine. Mentora is here to make that possible."" data-ru="«Каждый ученик заслуживает шанс раскрыть свой потенциал. Mentora помогает сделать это возможным.»">
-              "Every student deserves a chance to shine. Mentora is here to make that possible."
-            </blockquote>
           </div>
         </div>
-      </section>
-      <!-- Teachers Section -->
-      <section id="section-teachers" class="hidden">
-        <div class="max-w-5xl mx-auto py-12 px-4">
-          <h2 class="text-3xl font-bold mb-6 text-cyan-300" data-en="Our Teachers" data-ru="Наши преподаватели">Our Teachers</h2>
-          
-          <!-- AI Support Button - HIDDEN FOR NOW -->
-          <!-- <button id="real-ai-tutor-btn" type="button" onclick="openRealAITutorModal()" class="mb-4 px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold rounded-xl shadow transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-400/50">
-            <span class="inline-flex items-center gap-2">
-              <svg class="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
-              AI Support
-            </span>
-          </button> -->
-
-          <!-- Advanced Filters -->
-          <div id="advanced-filters" class="mb-6 p-6 bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl shadow-xl">
-            <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-4">
-              <h3 class="text-xl font-bold text-cyan-300 mb-2 lg:mb-0" data-en="Advanced Filters" data-ru="Продвинутые фильтры">Advanced Filters</h3>
-              <button id="clear-all-filters" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-lg transition-all duration-300 hover:scale-105">
-                <span data-en="Clear All" data-ru="Очистить все">Clear All</span>
-              </button>
+        <!-- CEO Message -->
+        <div class="flex flex-col md:flex-row items-center bg-gray-800 rounded-2xl shadow-xl p-6 md:p-10 gap-6 max-w-3xl mx-auto hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:brightness-110 group mt-16">
+          <div class="relative">
+            <div class="rounded-full w-28 h-28 bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center border-4 border-cyan-400 group-hover:border-cyan-500 transition-colors duration-300">
+              <span class="text-2xl font-bold text-white">CEO</span>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <!-- Single-select Subject -->
-              <div class="filter-group">
-                <label class="block text-sm font-medium text-gray-300 mb-2" data-en="Subject (Required)" data-ru="Предмет (Обязательно)">Subject (Required)</label>
-              <div class="relative">
-                  <select id="subject-filter" class="w-full appearance-none bg-white/10 backdrop-blur-sm border border-cyan-400/50 rounded-lg px-3 py-2 text-white hover:bg-white/20 focus:bg-white/20 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30 transition-all duration-150 pr-8">
-                    <option value="" data-en="Select a subject..." data-ru="Выберите предмет...">Select a subject...</option>
-                    <option value="math" data-en="Math" data-ru="Математика">Math</option>
-                    <option value="english" data-en="English" data-ru="Английский">English</option>
-                    <option value="physics" data-en="Physics" data-ru="Физика">Physics</option>
-                    <option value="chemistry" data-en="Chemistry" data-ru="Химия">Chemistry</option>
-                    <option value="biology" data-en="Biology" data-ru="Биология">Biology</option>
-                    <option value="history" data-en="History" data-ru="История">History</option>
-                    <option value="astronomy" data-en="Astronomy" data-ru="Астрономия">Astronomy</option>
-                    <option value="literature" data-en="Literature" data-ru="Литература">Literature</option>
-                    <option value="geography" data-en="Geography" data-ru="География">Geography</option>
-                    <option value="art" data-en="Art" data-ru="Искусство">Art</option>
-                    <option value="philosophy" data-en="Philosophy" data-ru="Философия">Philosophy</option>
-                </select>
-                <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                  <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                  </svg>
-                </div>
-              </div>
-              </div>
+            <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-gray-900 animate-pulse"></div>
+          </div>
+          <blockquote class="text-lg md:text-xl text-left group-hover:text-cyan-300 transition-colors duration-300" data-en=""Every student deserves a chance to shine. Mentora is here to make that possible."" data-ru="«Каждый ученик заслуживает шанс раскрыть свой потенциал. Mentora помогает сделать это возможным.»">
+            "Every student deserves a chance to shine. Mentora is here to make that possible."
+          </blockquote>
+        </div>
+      </div>
+    </section>
+    <!-- Teachers Section -->
+    <section id="section-teachers" class="hidden">
+      <div class="max-w-5xl mx-auto py-12 px-4">
+        <h2 class="text-3xl font-bold mb-6 text-cyan-300" data-en="Our Teachers" data-ru="Наши преподаватели">Our Teachers</h2>
+        
+        <!-- AI Support Button - HIDDEN FOR NOW -->
+        <!-- <button id="real-ai-tutor-btn" type="button" onclick="openRealAITutorModal()" class="mb-4 px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold rounded-xl shadow transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-400/50">
+          <span class="inline-flex items-center gap-2">
+            <svg class="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+            AI Support
+          </span>
+        </button> -->
 
-              <!-- Multi-select Availability (Day, Time) -->
-              <div class="filter-group">
-                <label class="block text-sm font-medium text-gray-300 mb-2" data-en="Availability" data-ru="Доступность">Availability</label>
-                <div class="multi-select-container relative">
-                  <button id="availability-dropdown-btn" class="w-full flex items-center justify-between px-3 py-2 bg-white/10 backdrop-blur-sm border border-cyan-400/50 rounded-lg text-white hover:bg-white/20 focus:bg-white/20 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30 transition-all duration-150">
-                    <span id="availability-display" class="text-sm truncate" data-en="Select times..." data-ru="Выберите время...">Select times...</span>
-                    <svg class="w-4 h-4 text-cyan-400 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                  </svg>
-                  </button>
-                  <div id="availability-dropdown" class="absolute z-10 w-full mt-1 bg-gray-800 border border-gray-600 rounded-lg shadow-lg hidden max-h-60 overflow-y-auto">
-                    <!-- Monday to Sunday + Time slots -->
-                    <div class="p-2 border-b border-gray-600">
-                      <h4 class="text-xs font-semibold text-cyan-300 mb-2" data-en="Days" data-ru="Дни">Days</h4>
-                      <label class="flex items-center px-2 py-1 hover:bg-gray-700 cursor-pointer">
-                        <input type="checkbox" value="monday" class="availability-filter mr-2">
-                        <span data-en="Monday" data-ru="Понедельник">Monday</span>
-                      </label>
-                      <label class="flex items-center px-2 py-1 hover:bg-gray-700 cursor-pointer">
-                        <input type="checkbox" value="tuesday" class="availability-filter mr-2">
-                        <span data-en="Tuesday" data-ru="Вторник">Tuesday</span>
-                      </label>
-                      <label class="flex items-center px-2 py-1 hover:bg-gray-700 cursor-pointer">
-                        <input type="checkbox" value="wednesday" class="availability-filter mr-2">
-                        <span data-en="Wednesday" data-ru="Среда">Wednesday</span>
-                      </label>
-                      <label class="flex items-center px-2 py-1 hover:bg-gray-700 cursor-pointer">
-                        <input type="checkbox" value="thursday" class="availability-filter mr-2">
-                        <span data-en="Thursday" data-ru="Четверг">Thursday</span>
-                      </label>
-                      <label class="flex items-center px-2 py-1 hover:bg-gray-700 cursor-pointer">
-                        <input type="checkbox" value="friday" class="availability-filter mr-2">
-                        <span data-en="Friday" data-ru="Пятница">Friday</span>
-                      </label>
-                      <label class="flex items-center px-2 py-1 hover:bg-gray-700 cursor-pointer">
-                        <input type="checkbox" value="saturday" class="availability-filter mr-2">
-                        <span data-en="Saturday" data-ru="Суббота">Saturday</span>
-                      </label>
-                      <label class="flex items-center px-2 py-1 hover:bg-gray-700 cursor-pointer">
-                        <input type="checkbox" value="sunday" class="availability-filter mr-2">
-                        <span data-en="Sunday" data-ru="Воскресенье">Sunday</span>
-                      </label>
+        <!-- Advanced Filters -->
+        <div id="advanced-filters" class="mb-6 p-6 bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl shadow-xl">
+          <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-4">
+            <h3 class="text-xl font-bold text-cyan-300 mb-2 lg:mb-0" data-en="Advanced Filters" data-ru="Продвинутые фильтры">Advanced Filters</h3>
+            <button id="clear-all-filters" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-lg transition-all duration-300 hover:scale-105">
+              <span data-en="Clear All" data-ru="Очистить все">Clear All</span>
+            </button>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Single-select Subject -->
+            <div class="filter-group">
+              <label class="block text-sm font-medium text-gray-300 mb-2" data-en="Subject (Required)" data-ru="Предмет (Обязательно)">Subject (Required)</label>
+            <div class="relative">
+                <select id="subject-filter" class="w-full appearance-none bg-white/10 backdrop-blur-sm border border-cyan-400/50 rounded-lg px-3 py-2 text-white hover:bg-white/20 focus:bg-white/20 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30 transition-all duration-150 pr-8">
+                  <option value="" data-en="Select a subject..." data-ru="Выберите предмет...">Select a subject...</option>
+                  <option value="math" data-en="Math" data-ru="Математика">Math</option>
+                  <option value="english" data-en="English" data-ru="Английский">English</option>
+                  <option value="physics" data-en="Physics" data-ru="Физика">Physics</option>
+                  <option value="chemistry" data-en="Chemistry" data-ru="Химия">Chemistry</option>
+                  <option value="biology" data-en="Biology" data-ru="Биология">Biology</option>
+                  <option value="history" data-en="History" data-ru="История">History</option>
+                  <option value="astronomy" data-en="Astronomy" data-ru="Астрономия">Astronomy</option>
+                  <option value="literature" data-en="Literature" data-ru="Литература">Literature</option>
+                  <option value="geography" data-en="Geography" data-ru="География">Geography</option>
+                  <option value="art" data-en="Art" data-ru="Искусство">Art</option>
+                  <option value="philosophy" data-en="Philosophy" data-ru="Философия">Philosophy</option>
+              </select>
+              <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </div>
+            </div>
+
+            <!-- Multi-select Availability (Day, Time) -->
+            <div class="filter-group">
+              <label class="block text-sm font-medium text-gray-300 mb-2" data-en="Availability" data-ru="Доступность">Availability</label>
+              <div class="multi-select-container relative">
+                <button id="availability-dropdown-btn" class="w-full flex items-center justify-between px-3 py-2 bg-white/10 backdrop-blur-sm border border-cyan-400/50 rounded-lg text-white hover:bg-white/20 focus:bg-white/20 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30 transition-all duration-150">
+                  <span id="availability-display" class="text-sm truncate" data-en="Select times..." data-ru="Выберите время...">Select times...</span>
+                  <svg class="w-4 h-4 text-cyan-400 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+                </button>
+                <div id="availability-dropdown" class="absolute z-10 w-full mt-1 bg-gray-800 border border-gray-600 rounded-lg shadow-lg hidden max-h-60 overflow-y-auto">
+                  <!-- Monday to Sunday + Time slots -->
+                  <div class="p-2 border-b border-gray-600">
+                    <h4 class="text-xs font-semibold text-cyan-300 mb-2" data-en="Days" data-ru="Дни">Days</h4>
+                    <label class="flex items-center px-2 py-1 hover:bg-gray-700 cursor-pointer">
+                      <input type="checkbox" value="monday" class="availability-filter mr-2">
+                      <span data-en="Monday" data-ru="Понедельник">Monday</span>
+                    </label>
+                    <label class="flex items-center px-2 py-1 hover:bg-gray-700 cursor-pointer">
+                      <input type="checkbox" value="tuesday" class="availability-filter mr-2">
+                      <span data-en="Tuesday" data-ru="Вторник">Tuesday</span>
+                    </label>
+                    <label class="flex items-center px-2 py-1 hover:bg-gray-700 cursor-pointer">
+                      <input type="checkbox" value="wednesday" class="availability-filter mr-2">
+                      <span data-en="Wednesday" data-ru="Среда">Wednesday</span>
+                    </label>
+                    <label class="flex items-center px-2 py-1 hover:bg-gray-700 cursor-pointer">
+                      <input type="checkbox" value="thursday" class="availability-filter mr-2">
+                      <span data-en="Thursday" data-ru="Четверг">Thursday</span>
+                    </label>
+                    <label class="flex items-center px-2 py-1 hover:bg-gray-700 cursor-pointer">
+                      <input type="checkbox" value="friday" class="availability-filter mr-2">
+                      <span data-en="Friday" data-ru="Пятница">Friday</span>
+                    </label>
+                    <label class="flex items-center px-2 py-1 hover:bg-gray-700 cursor-pointer">
+                      <input type="checkbox" value="saturday" class="availability-filter mr-2">
+                      <span data-en="Saturday" data-ru="Суббота">Saturday</span>
+                    </label>
+                    <label class="flex items-center px-2 py-1 hover:bg-gray-700 cursor-pointer">
+                      <input type="checkbox" value="sunday" class="availability-filter mr-2">
+                      <span data-en="Sunday" data-ru="Воскресенье">Sunday</span>
+                    </label>
               </div>
                   <div class="p-2">
                     <h4 class="text-xs font-semibold text-cyan-300 mb-2" data-en="Time Slots (GMT+6)" data-ru="Временные слоты (GMT+6)">Time Slots (GMT+6)</h4>
@@ -926,7 +927,6 @@
         </div>
       </div>
     </section>
-    </div>
   </main>
   <!-- Tutor Profile Modal -->
   <div id="tutor-profile-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm">
