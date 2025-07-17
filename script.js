@@ -1106,6 +1106,7 @@ function openTutorProfileModal(tutor) {
   // Show modal
   modal.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
+  document.body.classList.add('modal-open'); // Add class to disable sticky elements
   
   // Trigger smooth animation
   requestAnimationFrame(() => {
@@ -1142,6 +1143,7 @@ window.closeTutorProfileModal = function() {
   modal.classList.add('hidden');
   modalContainer.classList.remove('modal-open', 'modal-closing');
   document.body.style.overflow = ''; // Restore scroll
+  document.body.classList.remove('modal-open'); // Remove class to restore sticky elements
   currentModalTutor = null;
   console.log('✅ Modal closed successfully');
 };

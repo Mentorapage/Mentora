@@ -515,12 +515,26 @@ button:focus, .btn:focus {
   transform: scale(0.95);
   opacity: 0;
   transition: none; /* No transition by default for instant closing */
+  z-index: 9999; /* Ensure modal sits on top of everything */
 }
 
 .modal-container.modal-open {
   transform: scale(1) !important;
   opacity: 1 !important;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); /* Only transition when opening */
+}
+
+/* Modal backdrop - ensure it covers everything */
+#tutor-profile-modal {
+  z-index: 9998; /* High z-index for backdrop */
+}
+
+/* Disable sticky filter bar when modal is open */
+body.modal-open nav,
+body.modal-open #advanced-filters,
+body.modal-open #join-banner {
+  position: static !important;
+  z-index: auto !important;
 }
 
 /* Removed modal-closing class since we close instantly */
