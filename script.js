@@ -823,7 +823,7 @@ function renderTeachers() {
     resultsDiv.innerHTML = `
       <div class="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/20 rounded-full border border-cyan-400/30">
         <span class="text-cyan-300 font-semibold">${filtered.length}</span>
-        <span class="text-gray-300">
+        <span class="text-gray-300" data-en="tutors found" data-ru="преподавателей найдено">
           ${currentLang === 'en' ? 'tutors found' : 'преподавателей найдено'}
         </span>
         <span class="text-cyan-400 sparkle">✨</span>
@@ -844,7 +844,7 @@ function renderTeachers() {
       const score = calculateHobbyMatchScore(t, advancedFilters.hobbies);
       if (score > 0) {
         const percentage = Math.round(score * 100);
-        hobbyMatchInfo = `<div class="text-xs text-green-400 mt-1 neon-glow">🎯 ${percentage}% hobby match</div>`;
+        hobbyMatchInfo = `<div class="text-xs text-green-400 mt-1 neon-glow" data-en="🎯 ${percentage}% hobby match" data-ru="🎯 ${percentage}% совпадение по интересам">🎯 ${percentage}% ${currentLang === 'en' ? 'hobby match' : 'совпадение по интересам'}</div>`;
       }
     }
     
@@ -898,8 +898,8 @@ function filterAndDisplayMatchedTutors(tutorIds) {
   const headingDiv = document.createElement('div');
   headingDiv.className = 'col-span-full text-center mb-6';
   headingDiv.innerHTML = `
-    <h3 class="text-2xl font-bold text-cyan-300 mb-2">🎯 Based on your request, here are the top ${tutorIds.length} tutor matches:</h3>
-    <p class="text-gray-400">Click on any tutor card to view their full profile</p>
+    <h3 class="text-2xl font-bold text-cyan-300 mb-2" data-en="🎯 Based on your request, here are the top ${tutorIds.length} tutor matches:" data-ru="🎯 По вашему запросу, вот лучшие ${tutorIds.length} совпадения преподавателей:">🎯 ${currentLang === 'en' ? `Based on your request, here are the top ${tutorIds.length} tutor matches:` : `По вашему запросу, вот лучшие ${tutorIds.length} совпадения преподавателей:`}</h3>
+    <p class="text-gray-400" data-en="Click on any tutor card to view their full profile" data-ru="Нажмите на карточку преподавателя, чтобы просмотреть полный профиль">${currentLang === 'en' ? 'Click on any tutor card to view their full profile' : 'Нажмите на карточку преподавателя, чтобы просмотреть полный профиль'}</p>
   `;
   grid.appendChild(headingDiv);
   
@@ -918,18 +918,18 @@ function filterAndDisplayMatchedTutors(tutorIds) {
   
   // Render only the matched tutors
   if (matchedTutors.length === 0) {
-    // No tutors found
-    const noResultsDiv = document.createElement('div');
-    noResultsDiv.className = 'col-span-full text-center py-8';
-    noResultsDiv.innerHTML = `
-      <div class="text-gray-400 mb-4">
-        <svg class="w-16 h-16 mx-auto mb-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.47-.881-6.08-2.33"></path>
-        </svg>
-        <p class="text-lg font-semibold text-gray-300">No tutors found matching your criteria</p>
-        <p class="text-sm text-gray-500 mt-2">Try adjusting your preferences or check back later</p>
-      </div>
-    `;
+      // No tutors found
+  const noResultsDiv = document.createElement('div');
+  noResultsDiv.className = 'col-span-full text-center py-8';
+  noResultsDiv.innerHTML = `
+    <div class="text-gray-400 mb-4">
+      <svg class="w-16 h-16 mx-auto mb-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.47-.881-6.08-2.33"></path>
+      </svg>
+      <p class="text-lg font-semibold text-gray-300" data-en="No tutors found matching your criteria" data-ru="Не найдено преподавателей, соответствующих вашим критериям">${currentLang === 'en' ? 'No tutors found matching your criteria' : 'Не найдено преподавателей, соответствующих вашим критериям'}</p>
+      <p class="text-sm text-gray-500 mt-2" data-en="Try adjusting your preferences or check back later" data-ru="Попробуйте изменить ваши предпочтения или загляните позже">${currentLang === 'en' ? 'Try adjusting your preferences or check back later' : 'Попробуйте изменить ваши предпочтения или загляните позже'}</p>
+    </div>
+  `;
     grid.appendChild(noResultsDiv);
   } else {
     // Use the exact same card structure as renderTeachers()
@@ -971,7 +971,7 @@ function filterAndDisplayMatchedTutors(tutorIds) {
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
         </svg>
-        Show All Tutors
+        <span data-en="Show All Tutors" data-ru="Показать всех преподавателей">${currentLang === 'en' ? 'Show All Tutors' : 'Показать всех преподавателей'}</span>
       </span>
     </button>
   `;
@@ -2636,10 +2636,10 @@ function initRealAITutorModal() {
           modal.classList.add('hidden');
           document.body.classList.remove('modal-open');
           
-          // Show manual filters with a helpful message
-          const fallbackMessage = currentLang === 'en' 
-            ? 'No tutors found matching your criteria. Try using the manual filters below to find suitable tutors.'
-            : 'Преподаватели, соответствующие вашим критериям, не найдены. Попробуйте использовать ручные фильтры ниже для поиска подходящих преподавателей.';
+                      // Show manual filters with a helpful message
+            const fallbackMessage = currentLang === 'en' 
+              ? 'No tutors found matching your criteria. Try using the manual filters below to find suitable tutors.'
+              : 'Не найдено преподавателей, соответствующих вашим критериям. Попробуйте использовать ручные фильтры ниже для поиска подходящих преподавателей.';
           
           showManualFiltersFallback(fallbackMessage);
           
