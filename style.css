@@ -1141,14 +1141,13 @@ button:focus, .btn:focus {
   display: none !important;
 }
 
-/* Central logo visibility - only show on home page */
+/* Central logo visibility - controlled by JavaScript */
 #central-logo {
-  display: block;
+  display: none;
 }
 
-/* Hide central logo when not on home page */
-body:not(.home-page) #central-logo {
-  display: none;
+#central-logo.show {
+  display: block;
 }
 
 /* Fix teacher card pseudo-element positioning to prevent left-border artifacts */
