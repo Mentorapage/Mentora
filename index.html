@@ -279,27 +279,64 @@
             <!-- Single-select Subject -->
             <div class="filter-group">
               <label class="block text-sm font-medium text-gray-300 mb-2" data-en="Subject (Required)" data-ru="Предмет (Обязательно)">Subject (Required)</label>
-            <div class="relative">
-                <select id="subject-filter" class="w-full appearance-none bg-white/10 backdrop-blur-sm border border-cyan-400/50 rounded-lg px-3 py-2 text-white hover:bg-white/20 focus:bg-white/20 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30 transition-all duration-150 pr-8">
-                  <option value="" data-en="Select a subject..." data-ru="Выберите предмет...">Select a subject...</option>
-                  <option value="math" data-en="Math" data-ru="Математика">Math</option>
-                  <option value="english" data-en="English" data-ru="Английский">English</option>
-                  <option value="physics" data-en="Physics" data-ru="Физика">Physics</option>
-                  <option value="chemistry" data-en="Chemistry" data-ru="Химия">Chemistry</option>
-                  <option value="biology" data-en="Biology" data-ru="Биология">Biology</option>
-                  <option value="history" data-en="History" data-ru="История">History</option>
-                  <option value="astronomy" data-en="Astronomy" data-ru="Астрономия">Astronomy</option>
-                  <option value="literature" data-en="Literature" data-ru="Литература">Literature</option>
-                  <option value="geography" data-en="Geography" data-ru="География">Geography</option>
-                  <option value="art" data-en="Art" data-ru="Искусство">Art</option>
-                  <option value="philosophy" data-en="Philosophy" data-ru="Философия">Philosophy</option>
-              </select>
-              <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
+              <div class="multi-select-container relative">
+                <button id="subject-dropdown-btn" class="w-full flex items-center justify-between px-3 py-2 bg-white/10 backdrop-blur-sm border border-cyan-400/50 rounded-lg text-white hover:bg-white/20 focus:bg-white/20 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30 transition-all duration-150">
+                  <span id="subject-display" class="text-sm truncate" data-en="Select a subject..." data-ru="Выберите предмет...">Select a subject...</span>
+                  <svg class="w-4 h-4 text-cyan-400 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </button>
+                <div id="subject-dropdown" class="absolute z-50 w-full mt-1 bg-gray-800 border border-gray-600 rounded-lg shadow-lg hidden max-h-40 overflow-y-auto">
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="radio" name="subject-filter" value="" class="subject-filter mr-2">
+                    <span data-en="Select a subject..." data-ru="Выберите предмет...">Select a subject...</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="radio" name="subject-filter" value="math" class="subject-filter mr-2">
+                    <span data-en="Math" data-ru="Математика">Math</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="radio" name="subject-filter" value="english" class="subject-filter mr-2">
+                    <span data-en="English" data-ru="Английский">English</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="radio" name="subject-filter" value="physics" class="subject-filter mr-2">
+                    <span data-en="Physics" data-ru="Физика">Physics</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="radio" name="subject-filter" value="chemistry" class="subject-filter mr-2">
+                    <span data-en="Chemistry" data-ru="Химия">Chemistry</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="radio" name="subject-filter" value="biology" class="subject-filter mr-2">
+                    <span data-en="Biology" data-ru="Биология">Biology</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="radio" name="subject-filter" value="history" class="subject-filter mr-2">
+                    <span data-en="History" data-ru="История">History</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="radio" name="subject-filter" value="astronomy" class="subject-filter mr-2">
+                    <span data-en="Astronomy" data-ru="Астрономия">Astronomy</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="radio" name="subject-filter" value="literature" class="subject-filter mr-2">
+                    <span data-en="Literature" data-ru="Литература">Literature</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="radio" name="subject-filter" value="geography" class="subject-filter mr-2">
+                    <span data-en="Geography" data-ru="География">Geography</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="radio" name="subject-filter" value="art" class="subject-filter mr-2">
+                    <span data-en="Art" data-ru="Искусство">Art</span>
+                  </label>
+                  <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
+                    <input type="radio" name="subject-filter" value="philosophy" class="subject-filter mr-2">
+                    <span data-en="Philosophy" data-ru="Философия">Philosophy</span>
+                  </label>
+                </div>
               </div>
-            </div>
             </div>
 
             <!-- Multi-select Availability (Day, Time) -->
@@ -312,7 +349,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
                 </button>
-                <div id="availability-dropdown" class="absolute z-10 w-full mt-1 bg-gray-800 border border-gray-600 rounded-lg shadow-lg hidden max-h-60 overflow-y-auto">
+                <div id="availability-dropdown" class="absolute z-50 w-full mt-1 bg-gray-800 border border-gray-600 rounded-lg shadow-lg hidden max-h-60 overflow-y-auto">
                   <!-- Monday to Sunday + Time slots -->
                   <div class="p-2 border-b border-gray-600">
                     <h4 class="text-xs font-semibold text-cyan-300 mb-2" data-en="Days" data-ru="Дни">Days</h4>
@@ -394,7 +431,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                   </svg>
                 </button>
-                <div id="languages-dropdown" class="absolute z-10 w-full mt-1 bg-gray-800 border border-gray-600 rounded-lg shadow-lg hidden max-h-40 overflow-y-auto">
+                <div id="languages-dropdown" class="absolute z-50 w-full mt-1 bg-gray-800 border border-gray-600 rounded-lg shadow-lg hidden max-h-40 overflow-y-auto">
                   <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
                     <input type="checkbox" value="English" class="language-filter mr-2">
                     <span>English</span>
@@ -465,7 +502,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                   </svg>
                 </button>
-                <div id="hobbies-dropdown" class="absolute z-10 w-full mt-1 bg-gray-800 border border-gray-600 rounded-lg shadow-lg hidden max-h-40 overflow-y-auto">
+                <div id="hobbies-dropdown" class="absolute z-50 w-full mt-1 bg-gray-800 border border-gray-600 rounded-lg shadow-lg hidden max-h-40 overflow-y-auto">
                   <label class="flex items-center px-3 py-2 hover:bg-gray-700 cursor-pointer">
                     <input type="checkbox" value="chess" class="hobby-filter mr-2">
                     <span>♟️ Chess</span>

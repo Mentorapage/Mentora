@@ -379,17 +379,8 @@ let advancedFilters = {
 function initAdvancedFilters() {
   console.log('Initializing advanced filters...');
   
-  // Initialize single-select subject filter
-  const subjectFilter = document.getElementById('subject-filter');
-  if (subjectFilter) {
-    subjectFilter.addEventListener('change', () => {
-      advancedFilters.subject = subjectFilter.value;
-      updateFilterSummary();
-      renderTeachers();
-    });
-  }
-  
   // Initialize each multi-select dropdown
+  initMultiSelectDropdown('subject', 'subject-filter');
   initMultiSelectDropdown('availability', 'availability-filter');
   initMultiSelectDropdown('languages', 'language-filter');
   initMultiSelectDropdown('hobbies', 'hobby-filter');
@@ -402,7 +393,7 @@ function initAdvancedFilters() {
   
   // Close dropdowns when clicking outside
   document.addEventListener('click', (e) => {
-    const dropdowns = ['availability', 'languages', 'hobbies'];
+    const dropdowns = ['subject', 'availability', 'languages', 'hobbies'];
     dropdowns.forEach(type => {
       const dropdown = document.getElementById(`${type}-dropdown`);
       const button = document.getElementById(`${type}-dropdown-btn`);
@@ -430,7 +421,7 @@ function initMultiSelectDropdown(filterType, checkboxClass) {
     const isHidden = dropdown.classList.contains('hidden');
     
     // Close all other dropdowns
-    ['availability', 'languages', 'hobbies'].forEach(type => {
+    ['subject', 'availability', 'languages', 'hobbies'].forEach(type => {
       if (type !== filterType) {
         const otherDropdown = document.getElementById(`${type}-dropdown`);
         const otherBtn = document.getElementById(`${type}-dropdown-btn`);
@@ -451,12 +442,19 @@ function initMultiSelectDropdown(filterType, checkboxClass) {
     }
   });
   
-  // Handle checkbox changes
-  const checkboxes = dropdown.querySelectorAll(`.${checkboxClass}`);
-  checkboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', () => {
-      updateFilterState(filterType, checkbox.value, checkbox.checked);
-      updateDisplayText(filterType, display);
+  // Handle input changes (checkboxes for multi-select, radio for single-select)
+  const inputs = dropdown.querySelectorAll(`.${checkboxClass}`);
+  inputs.forEach(input => {
+    input.addEventListener('change', () => {
+      if (filterType === 'subject') {
+        // Single-select: radio buttons
+        advancedFilters.subject = input.value;
+        updateSubjectDisplay(display, input.value);
+      } else {
+        // Multi-select: checkboxes
+        updateFilterState(filterType, input.value, input.checked);
+        updateDisplayText(filterType, display);
+      }
       updateFilterSummary();
       renderTeachers();
     });
@@ -473,6 +471,20 @@ function updateFilterState(filterType, value, checked) {
   }
   
   console.log(`Updated ${filterType} filters:`, advancedFilters[filterType]);
+}
+
+function updateSubjectDisplay(display, value) {
+  const placeholders = { en: 'Select a subject...', ru: 'Выберите предмет...' };
+  
+  if (!value || value === '') {
+    display.textContent = placeholders[currentLang];
+    display.classList.remove('text-cyan-300');
+    display.classList.add('text-gray-400');
+  } else {
+    display.textContent = value;
+    display.classList.add('text-cyan-300');
+    display.classList.remove('text-gray-400');
+  }
 }
 
 function updateDisplayText(filterType, display) {
@@ -547,8 +559,15 @@ function updateFilterSummary() {
 function removeFilter(type, value) {
   if (type === 'subject') {
     advancedFilters.subject = '';
-    const subjectFilter = document.getElementById('subject-filter');
-    if (subjectFilter) subjectFilter.value = '';
+    // Uncheck all subject radio buttons
+    document.querySelectorAll('.subject-filter').forEach(radio => {
+      radio.checked = false;
+    });
+    // Update display
+    const display = document.getElementById('subject-display');
+    if (display) {
+      updateSubjectDisplay(display, '');
+    }
   } else {
     const filterTypeMap = {
       availability: 'availability',
@@ -600,8 +619,14 @@ function clearAllFilters() {
   };
   
   // Reset subject filter
-  const subjectFilter = document.getElementById('subject-filter');
-  if (subjectFilter) subjectFilter.value = '';
+  advancedFilters.subject = '';
+  document.querySelectorAll('.subject-filter').forEach(radio => {
+    radio.checked = false;
+  });
+  const subjectDisplay = document.getElementById('subject-display');
+  if (subjectDisplay) {
+    updateSubjectDisplay(subjectDisplay, '');
+  }
   
   // Uncheck all checkboxes
   document.querySelectorAll('.availability-filter, .language-filter, .hobby-filter').forEach(checkbox => {
