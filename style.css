@@ -1141,6 +1141,32 @@ button:focus, .btn:focus {
   display: none !important;
 }
 
+/* Central logo visibility - only show on home page */
+#central-logo {
+  display: block;
+}
+
+/* Hide central logo when not on home page */
+body:not(.home-page) #central-logo {
+  display: none;
+}
+
+/* Fix teacher card pseudo-element positioning to prevent left-border artifacts */
+.teacher-card::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, transparent, rgba(6, 182, 212, 0.1), transparent);
+  border-radius: 14px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+  pointer-events: none;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .particle {

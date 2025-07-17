@@ -21,6 +21,12 @@ function showSection(section, updateURL = true) {
   sections[section].classList.add('fade');
   setTimeout(() => sections[section].classList.remove('fade'), 400);
   
+  // Update body class for central logo visibility
+  document.body.classList.remove('home-page');
+  if (section === 'home') {
+    document.body.classList.add('home-page');
+  }
+  
   // Update URL hash if requested
   if (updateURL) {
     const newHash = section === 'home' ? '' : section;
