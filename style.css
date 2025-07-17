@@ -115,19 +115,8 @@
   transition: margin-left 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Flying cap animation */
-#logo-fly {
-  transition: transform 1.2s ease-out;
-}
-
-/* Main content slide animation */
+/* Fixed logo styles */
 #main-content {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 1.2s ease-out, transform 1.2s ease-out;
-}
-
-body.logo-flying #main-content {
   opacity: 1;
   transform: translateY(0);
 }

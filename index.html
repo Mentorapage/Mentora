@@ -136,8 +136,8 @@
   </style>
 </head>
 <body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 min-h-screen text-white">
-  <!-- Flying Graduation Cap -->
-  <div id="logo-fly" class="w-32 h-32 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-full flex items-center justify-center shadow-2xl absolute z-50">
+  <!-- Fixed Graduation Cap Logo Above All Content -->
+  <div class="w-32 h-32 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-full flex items-center justify-center shadow-2xl mx-auto mb-8">
     <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 24 24">
       <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
       <!-- Tassel -->
@@ -147,12 +147,17 @@
     <!-- Glow effect -->
     <div class="absolute inset-0 w-32 h-32 bg-gradient-to-br from-cyan-400/30 to-cyan-600/30 rounded-full blur-xl animate-pulse"></div>
   </div>
-  
-  <!-- Test Button -->
-  <button onclick="testAnimation()" class="fixed top-4 right-4 bg-red-500 text-white px-3 py-2 text-sm rounded z-50">TEST ANIMATION</button>
   <!-- Navbar -->
   <nav class="flex items-center justify-between px-6 py-4 bg-gray-900/80 backdrop-blur sticky top-0 z-30">
     <div id="nav-logo" class="flex items-center space-x-3">
+      <div class="w-8 h-8 text-cyan-400">
+        <svg fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          <!-- Tassel -->
+          <circle cx="12" cy="2" r="0.8" fill="#FFD700"/>
+          <path d="M12 1 L12 3 M11 2 L13 2" stroke="#FFD700" stroke-width="0.3" fill="none"/>
+        </svg>
+      </div>
       <div id="nav-title" class="text-2xl font-bold tracking-wide text-cyan-400">Mentora</div>
     </div>
     <div class="flex gap-4 items-center">

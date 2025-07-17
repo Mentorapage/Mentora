@@ -1732,125 +1732,23 @@ function initVisualEnhancements() {
   // NEW: Apply new dynamic effects
   applyNewDynamicEffects();
   
-  // NEW: Initialize flying cap animation
-  initFlyingCapAnimation();
+  // NEW: Initialize fixed logo
+  initFixedLogo();
 }
 
-// NEW: Flying cap animation
-function initFlyingCapAnimation() {
-  console.log('Initializing flying cap animation...');
-  
-  const logoFly = document.getElementById('logo-fly');
-  const heroTitle = document.querySelector('#hero-title');
-  const navTitle = document.querySelector('#nav-title');
-  
-  if (!logoFly || !heroTitle || !navTitle) {
-    console.error('Flying cap elements not found');
-    return;
-  }
-  
-  console.log('Found elements:', { logoFly, heroTitle, navTitle });
-  
-  // Position cap centered above the "Mentora: Student Volunteers for Kyrgyzstan" heading
-  const titleRect = heroTitle.getBoundingClientRect();
-  const centerX = titleRect.left + (titleRect.width / 2) - 64; // 64 = half of 128px width
-  const centerY = titleRect.top - 100; // 100px above the heading
-  
-  logoFly.style.left = centerX + 'px';
-  logoFly.style.top = centerY + 'px';
-  logoFly.style.transform = 'scale(1) rotate(0deg)';
-  
-  console.log('Cap positioned above heading:', { centerX, centerY, titleRect });
-  
-  // Start animation after a short delay
-  setTimeout(() => {
-    animateCapToNav();
-  }, 500);
+// Fixed logo - no animation needed
+function initFixedLogo() {
+  console.log('Fixed logo initialized - no animation needed');
 }
 
-// Test function for debugging
+// No test function needed for fixed logo
 function testAnimation() {
-  console.log('Test animation triggered manually');
-  
-  // Reset the page state
-  document.body.classList.remove('logo-flying');
-  
-  // Remove cap from nav if it exists
-  const existingCap = document.querySelector('#nav-logo .w-8');
-  if (existingCap) {
-    existingCap.remove();
-  }
-  
-  // Recreate flying cap
-  const logoFly = document.getElementById('logo-fly');
-  if (logoFly) {
-    logoFly.className = 'w-32 h-32 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-full flex items-center justify-center shadow-2xl absolute z-50';
-    logoFly.style.position = 'absolute';
-    logoFly.style.zIndex = '50';
-    logoFly.style.transform = 'scale(1) rotate(0deg)';
-  }
-  
-  // Start animation
-  initFlyingCapAnimation();
+  console.log('Fixed logo - no animation to test');
 }
 
-// Pure JavaScript animation function
+// No animation function needed for fixed logo
 function animateCapToNav() {
-  console.log('Starting flying cap animation...');
-  
-  const logoFly = document.getElementById('logo-fly');
-  const navTitle = document.querySelector('#nav-title');
-  const navLogo = document.getElementById('nav-logo');
-  
-  // Get target position from existing "Mentora" text in navbar
-  const targetRect = navTitle.getBoundingClientRect();
-  
-  // Calculate the size of the letter "M" in the navbar to match it perfectly
-  const navFontSize = parseInt(window.getComputedStyle(navTitle).fontSize);
-  const targetSize = navFontSize * 0.8; // Slightly smaller than font size to match letter "M"
-  const scaleRatio = targetSize / 128; // 128px is the original cap size
-  
-  // Calculate final position (immediately to the left of "Mentora" text)
-  const finalX = targetRect.left - targetSize - 8; // 8px gap from text
-  const finalY = targetRect.top + (targetRect.height / 2) - (targetSize / 2); // Center vertically
-  
-  console.log('Animation targets:', {
-    finalPos: { x: finalX, y: finalY },
-    targetSize: targetSize,
-    scaleRatio: scaleRatio,
-    targetRect: { left: targetRect.left, top: targetRect.top, width: targetRect.width, height: targetRect.height }
-  });
-  
-  // Add logo-flying class to body for content animation
-  document.body.classList.add('logo-flying');
-  
-  // Animate the cap with 1.2s transition - FLYING not teleporting
-  logoFly.style.transform = `translate(${finalX}px, ${finalY}px) scale(${scaleRatio}) rotate(360deg)`;
-  
-  // After animation completes, lock into nav
-  setTimeout(() => {
-    console.log('Animation complete! Locking cap into nav...');
-    
-    // Remove absolute positioning
-    logoFly.style.position = 'static';
-    logoFly.style.left = '';
-    logoFly.style.top = '';
-    logoFly.style.transform = '';
-    logoFly.style.zIndex = '';
-    
-    // Resize to match the letter "M" size
-    logoFly.className = `text-cyan-400`;
-    logoFly.style.width = targetSize + 'px';
-    logoFly.style.height = targetSize + 'px';
-    
-    // Insert as first child of nav-logo (before "Mentora" text)
-    navLogo.insertBefore(logoFly, navTitle);
-    
-    // Remove logo-flying class
-    document.body.classList.remove('logo-flying');
-    
-    console.log('Cap successfully integrated into navigation');
-  }, 1200); // Match the 1.2s transition duration
+  console.log('Fixed logo - no animation needed');
 }
 
 // NEW: Apply all the new dynamic effects
@@ -1930,10 +1828,10 @@ document.addEventListener('DOMContentLoaded', () => {
   renderTeachers();
   initVisualEnhancements();
   
-  // Ensure flying cap animation is called
+  // Ensure fixed logo is initialized
   setTimeout(() => {
-    console.log('Calling flying cap animation...');
-    initFlyingCapAnimation();
+    console.log('Fixed logo initialized');
+    initFixedLogo();
   }, 100);
 });
 
