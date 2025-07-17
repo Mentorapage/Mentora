@@ -91,6 +91,9 @@ document.getElementById('lang-toggle').addEventListener('click', () => {
     populateModalContent(currentModalTutor);
   }
   
+  // Update regular modal language
+  updateRegularModalLang();
+  
   // Update detailed modal if open
   updateDetailedModalLang();
   // Update FAQ content
@@ -1487,6 +1490,13 @@ function generateDetailedSchedule(availability) {
     });
     
     scheduleTbody.appendChild(row);
+  });
+}
+
+function updateRegularModalLang() {
+  // Update all translatable content in the regular modal
+  document.querySelectorAll('#tutor-profile-modal [data-en]').forEach(el => {
+    el.textContent = el.dataset[currentLang];
   });
 }
 
